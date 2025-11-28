@@ -1,0 +1,24 @@
+[project]
+name = "agent-design-patterns"
+version = "0.1.0"
+requires-python = ">=3.10"
+
+[tool.pyrefly]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:google.adk.*",
+    "ignore::DeprecationWarning:google.genai.*",
+]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D203",   # incorrect-blank-line-before-class (conflicts with D211)
+    "D213",   # multi-line-summary-second-line (conflicts with D212)
+    "COM812", # missing-trailing-comma (conflicts with formatter)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"test_*.py" = ["S101"]
+"tests/*" = ["S101"]
