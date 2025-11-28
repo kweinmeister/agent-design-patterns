@@ -271,9 +271,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (document.getElementById("pattern-list")) {
 		App.init();
 	}
-    
-    // Always setup form handling if a run-form is present
-    if (document.querySelector(".run-form")) {
-        App.setupFormHandling();
-    }
+
+	// Always setup form handling if a run-form is present
+	if (document.querySelector(".run-form")) {
+		App.setupFormHandling();
+	}
 });

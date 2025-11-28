@@ -6,7 +6,7 @@ import pytest
 from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
 
-from patterns.reflection.agent import root_agent
+from patterns.reflection.agent import STATE_CURRENT_DOC, root_agent
 
 
 @pytest.mark.asyncio
@@ -51,8 +51,13 @@ async def test_reflection_loop() -> None:
         msg = "Session is None"
         raise ValueError(msg)
 
-    for _step in session.state.get("history", []):
-        pass
+    # Verify we have the expected roles in the history
+    roles = {step["role"] for step in history}
+    assert "InitialWriterAgent" in roles, "Should have initial writer step"
+    assert "CriticAgent" in roles, "Should have critic step"
+    assert "RefinerAgent" in roles, "Should have refiner step"
+
+    assert session.state.get(STATE_CURRENT_DOC, "") == history[-1]["content"]
 
 
 if __name__ == "__main__":
