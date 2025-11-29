@@ -1,6 +1,6 @@
+copilotkit==0.1.43a0
+fastapi==0.115.4
+jinja2==3.1.6
 google-adk==1.18.0
 python-dotenv==1.2.1
-fastapi>=0.115.0
 uvicorn==0.38.0
-jinja2==3.1.6
-copilotkit<0.2.0
