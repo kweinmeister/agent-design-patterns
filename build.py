@@ -49,7 +49,9 @@ def build() -> None:
         p_copy["demo_url"] = ""
         static_patterns.append(p_copy)
 
-    (OUTPUT_DIR / "patterns.json").write_text(json.dumps(static_patterns, indent=2) + "\n")
+    (OUTPUT_DIR / "patterns.json").write_text(
+        json.dumps(static_patterns, indent=2) + "\n"
+    )
 
     api_root = OUTPUT_DIR / "api/patterns"
     logger.info("Processing %d patterns...", len(patterns_data))

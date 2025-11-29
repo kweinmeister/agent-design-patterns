@@ -38,9 +38,9 @@ def ingest() -> None:
     # Load and embed documents
     chunks = load_knowledge(knowledge_file)
     documents = []
-    for chunk in chunks:
-        embedding = embeddings.embed_text(chunk)
-        documents.append((chunk, embedding))
+    if chunks:
+        embeddings_list = embeddings.embed_texts(chunks)
+        documents = list(zip(chunks, embeddings_list, strict=True))
 
     # Add to database
     db.add_documents(db_path, documents)

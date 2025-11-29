@@ -41,3 +41,24 @@ def embed_query(text: str) -> list[float]:
         msg = "Failed to generate embedding"
         raise ValueError(msg)
     return result.embeddings[0].values
+
+
+def embed_texts(texts: list[str]) -> list[list[float]]:
+    """Generate embeddings for a batch of texts."""
+    result = client.models.embed_content(
+        model=EMBEDDING_MODEL,
+        contents=texts,
+        config=types.EmbedContentConfig(
+            task_type="RETRIEVAL_DOCUMENT", title="Embedding of text chunks"
+        ),
+    )
+    if not result.embeddings:
+        msg = "Failed to generate embeddings"
+        raise ValueError(msg)
+    output = []
+    for e in result.embeddings:
+        if not e.values:
+            msg = "Missing embedding values"
+            raise ValueError(msg)
+        output.append(e.values)
+    return output

@@ -97,9 +97,6 @@ async function handleQuery(event) {
 	history.scrollTop = history.scrollHeight;
 
 	try {
-		// Use the pattern demo endpoint which calls run_agent
-		await fetch(`/demo/rag?prompt=${encodeURIComponent(query)}`);
-
 		const queryResponse = await fetch("/rag/query", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },

@@ -46,7 +46,7 @@ graph TD
 
 ## How it Works
 
-1. **Ingestion**: Before the agent can answer questions, knowledge must be ingested. The `ingest.py` script reads data (e.g., from a CSV), generates embeddings for each chunk using a model like `text-embedding-004`, and saves them to a local SQLite database.
+1. **Ingestion**: Before the agent can answer questions, knowledge must be ingested. The `ingest.py` script reads data (e.g., from a CSV), generates embeddings for each chunk using a model like `models/gemini-embedding-001`, and saves them to a local SQLite database.
 2. **Retrieval**: When the user asks a question, the agent calls the `retrieve_knowledge` tool. This tool embeds the user's query and searches the vector database for the most similar content.
 3. **Generation**: The retrieved text chunks are returned to the agent. The agent then uses this context to generate a natural language response that directly answers the user's question based on the provided facts.
 
