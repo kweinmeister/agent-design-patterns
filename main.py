@@ -1,0 +1,92 @@
+"""Main application entry point."""
+
+import importlib
+import logging
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
+from pathlib import Path
+from typing import Any
+
+import uvicorn
+from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
+load_dotenv()
+
+# Registry for patterns
+patterns = []
+logger = logging.getLogger(__name__)
+
+
+def load_patterns() -> None:
+    """Dynamically load patterns from the patterns directory."""
+    patterns.clear()
+    patterns_dir = Path(__file__).parent / "patterns"
+
+    # Ensure patterns directory exists
+    if not patterns_dir.exists():
+        return
+
+    # Iterate over subdirectories in patterns
+    for item in patterns_dir.iterdir():
+        if item.is_dir():
+            # Skip template directory
+            if item.name == "template":
+                continue
+
+            # Check for ui.py or ui package
+            ui_path = item / "ui.py"
+            ui_package_path = item / "ui"
+
+            if ui_path.exists() or (
+                ui_package_path.is_dir() and (ui_package_path / "__init__.py").exists()
+            ):
+                try:
+                    # Import the module
+                    module_name = f"patterns.{item.name}.ui"
+                    module = importlib.import_module(module_name)
+
+                    # Check for register function
+                    if hasattr(module, "register"):
+                        metadata = module.register(app)
+                        patterns.append(metadata)
+                except (ImportError, AttributeError):
+                    logger.exception("Error loading pattern %s", item.name)
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
+    """Load patterns on startup."""
+    load_patterns()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
+
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+# Mount patterns directory to serve raw files
+app.mount("/api/patterns", StaticFiles(directory="patterns"), name="patterns")
+
+
+@app.get("/patterns.json")
+def get_patterns() -> list[dict[str, Any]]:
+    """Return the list of available patterns."""
+    return patterns
+
+
+@app.get("/")
+def read_root() -> FileResponse:
+    """Serve the static index.html."""
+    return FileResponse("templates/index.html")
+
+
+def main() -> None:
+    """Run the application."""
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)  # noqa: S104
+
+
+if __name__ == "__main__":
+    main()

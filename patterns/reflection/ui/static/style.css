@@ -1,0 +1,12 @@
+/* patterns/reflection/ui/static/style.css */
+
+/* Only keep specific overrides */
+.result-card.critique h3 {
+	color: var(--error-color);
+	border-bottom-color: rgba(248, 81, 73, 0.3);
+}
+
+.result-card.final h3 {
+	color: var(--success-color);
+	border-bottom-color: rgba(46, 160, 67, 0.3);
+}

@@ -1,0 +1,19 @@
+{% extends "layout_pattern.html" %}
+
+{% block title %}Template Demo{% endblock %}
+
+{% block pattern_name %}Template Pattern{% endblock %}
+{% block pattern_desc %}
+    A template for creating new patterns.
+{% endblock %}
+{% block form_action %}/demo/template{% endblock %}
+{% block placeholder %}Say hello...{% endblock %}
+
+{% block results %}
+    {% if result %}
+    <div class="result-card">
+        <h3>Agent Response</h3>
+        <div class="content">{{ result }}</div>
+    </div>
+    {% endif %}
+{% endblock %}

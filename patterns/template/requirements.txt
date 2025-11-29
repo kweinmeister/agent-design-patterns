@@ -1,0 +1,1 @@
+# Add pattern-specific requirements here
