@@ -36,7 +36,7 @@ def build() -> None:
     response.raise_for_status()
     # Replace absolute URLs with relative ones for static hosting
     content = response.text.replace("http://testserver/", "./")
-    (OUTPUT_DIR / "index.html").write_text(content)
+    (OUTPUT_DIR / "index.html").write_text(content + "\n")
 
     logger.info("Generating patterns.json...")
     patterns_resp = client.get("/patterns.json")
@@ -49,7 +49,7 @@ def build() -> None:
         p_copy["demo_url"] = ""
         static_patterns.append(p_copy)
 
-    (OUTPUT_DIR / "patterns.json").write_text(json.dumps(static_patterns, indent=2))
+    (OUTPUT_DIR / "patterns.json").write_text(json.dumps(static_patterns, indent=2) + "\n")
 
     api_root = OUTPUT_DIR / "api/patterns"
     logger.info("Processing %d patterns...", len(patterns_data))
