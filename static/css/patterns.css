@@ -145,7 +145,6 @@ button.loading::after {
 .pattern-description {
 	color: var(--text-muted);
 	line-height: 1.6;
-	max-width: 600px;
 }
 
 .run-form {
@@ -159,4 +158,71 @@ button.loading::after {
 	flex: 1;
 	width: 100%;
 	min-width: 0;
+}
+
+/* Code Browser */
+.code-browser {
+	display: flex;
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-lg);
+	overflow: hidden;
+	background: var(--card-bg);
+	margin-top: 2rem;
+	height: 500px;
+}
+
+.code-nav {
+	width: 200px;
+	background: var(--sidebar-bg);
+	border-right: 1px solid var(--border-color);
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+}
+
+.code-nav-item {
+	padding: 0.75rem 1rem;
+	cursor: pointer;
+	color: var(--text-muted);
+	font-size: 0.9rem;
+	border-bottom: 1px solid var(--border-color);
+	transition:
+		background 0.2s,
+		color 0.2s;
+	text-align: left;
+	background: none;
+	width: 100%;
+	border-radius: 0;
+}
+
+.code-nav-item:hover {
+	background: var(--hover-bg);
+	color: var(--text-color);
+	transform: none;
+}
+
+.code-nav-item.active {
+	background: rgba(31, 111, 235, 0.1);
+	color: var(--accent-color);
+	border-left: 3px solid var(--accent-color);
+}
+
+.code-content {
+	flex: 1;
+	overflow: auto;
+	padding: 1rem;
+	background: #0d1117; /* Darker code bg */
+}
+
+.code-content pre {
+	margin: 0;
+	font-family: var(--font-mono);
+	font-size: 0.9rem;
+	color: var(--text-color);
+	display: none;
+}
+
+.code-content pre.active {
+	display: block;
 }

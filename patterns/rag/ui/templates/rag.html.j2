@@ -1,0 +1,62 @@
+{% extends "base.html.j2" %}
+{% block title %}
+  RAG Pattern Demo
+{% endblock title %}
+{%
+block head %}
+<link rel="stylesheet" href="/rag/static/style.css" />
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+{% endblock head %}
+{% block content %}
+  <div class="container">
+    <div class="rag-layout">
+      <!-- Left Column: Chat Interface -->
+      <div class="chat-column">
+        <div class="card chat-card">
+          <div class="card-header">
+            <h2>Ask a Question</h2>
+            <span class="status-badge" id="agent-status">Ready</span>
+          </div>
+          <div class="chat-history" id="chat-history">
+            <!-- Messages will appear here -->
+            <div class="message system">Try asking a question before and after ingesting knowledge!</div>
+          </div>
+          <div class="input-area">
+            <form id="query-form" onsubmit="handleQuery(event)">
+              <input type="text"
+                     id="query-input"
+                     placeholder="e.g., What dangers exist in the galaxy?"
+                     autocomplete="off" />
+              <button type="submit" class="btn-primary">
+                <span class="icon">➤</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Right Column: Knowledge Base -->
+      <div class="knowledge-column">
+        <div class="card knowledge-card">
+          <div class="card-header">
+            <h2>Knowledge Base</h2>
+            <div class="actions">
+              <button onclick="resetKnowledge()"
+                      class="btn-secondary btn-sm"
+                      title="Clear Database">Reset</button>
+              <button onclick="ingestKnowledge()"
+                      class="btn-primary btn-sm"
+                      id="ingest-btn">Ingest Data</button>
+            </div>
+          </div>
+          <div class="knowledge-content" id="knowledge-list">
+            <div class="empty-state">
+              <span class="icon">📭</span>
+              <p>Knowledge base is empty</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/rag/static/rag.js?v=8"></script>
+{% endblock content %}

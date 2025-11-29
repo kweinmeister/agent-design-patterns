@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 client = TestClient(app)
 OUTPUT_DIR = Path("docs")
-ALLOWLIST = ["agent.py", "README.md", "__init__.py"]
 
 
 def build() -> None:
@@ -35,7 +34,9 @@ def build() -> None:
     logger.info("Generating index.html...")
     response = client.get("/")
     response.raise_for_status()
-    (OUTPUT_DIR / "index.html").write_bytes(response.content)
+    # Replace absolute URLs with relative ones for static hosting
+    content = response.text.replace("http://testserver/", "./")
+    (OUTPUT_DIR / "index.html").write_text(content + "\n")
 
     logger.info("Generating patterns.json...")
     patterns_resp = client.get("/patterns.json")
@@ -48,22 +49,38 @@ def build() -> None:
         p_copy["demo_url"] = ""
         static_patterns.append(p_copy)
 
-    (OUTPUT_DIR / "patterns.json").write_text(json.dumps(static_patterns, indent=2))
+    (OUTPUT_DIR / "patterns.json").write_text(
+        json.dumps(static_patterns, indent=2) + "\n"
+    )
 
     api_root = OUTPUT_DIR / "api/patterns"
     logger.info("Processing %d patterns...", len(patterns_data))
 
+    process_patterns(patterns_data, api_root)
+
+
+def process_patterns(patterns_data: list[dict], api_root: Path) -> None:
+    """Process and copy pattern files."""
     for pattern in patterns_data:
         p_id = pattern["id"]
         p_dir = api_root / p_id
         p_dir.mkdir(parents=True, exist_ok=True)
 
-        for filename in ALLOWLIST:
-            src_path = Path("patterns") / p_id / filename
-            dest_path = p_dir / filename
+        src_dir = Path("patterns") / p_id
+        if not src_dir.exists():
+            continue
 
-            if src_path.exists():
-                shutil.copy2(src_path, dest_path)
+        for src_path in src_dir.iterdir():
+            if not src_path.is_file():
+                continue
+
+            filename = src_path.name
+
+            # Copy README.md and non-test Python files
+            if filename == "README.md" or (
+                filename.endswith(".py") and not filename.startswith("test")
+            ):
+                shutil.copy2(src_path, p_dir / filename)
 
     logger.info("Build complete!")
 

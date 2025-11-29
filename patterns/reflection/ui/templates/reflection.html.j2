@@ -1,0 +1,46 @@
+{% extends "simple_agent_layout.html.j2" %}
+{% block title %}
+  Reflection Demo{%
+  endblock title %}
+  {% block head %}
+  {% endblock head %}
+  {% block pattern_name %}
+    Reflection
+    Pattern
+  {% endblock pattern_name %}
+  {% block pattern_desc %}
+    An agent that critiques and
+    refines its own work. Try asking for a poem or a short story.
+  {% endblock pattern_desc %}
+  {%
+  block form_action %}/demo/reflection
+{% endblock form_action %}
+{% block placeholder %}
+  e.g.
+  Write a haiku about rust
+{% endblock placeholder %}
+{% block results %}
+  {% if result %}
+    <div class="results-grid">
+      {% for step in result.history %}
+        {% set css_class = "result-card" %}
+        {% if
+          step.role == "Critic" %}
+          {% set css_class = "result-card critique" %}
+        {% elif
+          step.role == "Refiner" %}
+          {% set css_class = "result-card final" %}
+        {% endif
+        %}
+        <div class="{{ css_class }}">
+          <h3>{{ step.role }}</h3>
+          <div class="content">{{ step.content }}</div>
+        </div>
+      {% endfor %}
+      <div class="result-card final">
+        <h3>Final Result</h3>
+        <div class="content">{{ result.final }}</div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock results %}
