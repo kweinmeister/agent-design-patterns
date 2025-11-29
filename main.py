@@ -52,7 +52,7 @@ def load_patterns() -> None:
                     if hasattr(module, "register"):
                         metadata = module.register(app)
                         patterns.append(metadata)
-                except Exception:
+                except (ImportError, AttributeError):
                     logger.exception("Error loading pattern %s", item.name)
 
 

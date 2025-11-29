@@ -34,10 +34,12 @@ def build() -> None:
 
     logger.info("Generating index.html...")
     response = client.get("/")
+    response.raise_for_status()
     (OUTPUT_DIR / "index.html").write_bytes(response.content)
 
     logger.info("Generating patterns.json...")
     patterns_resp = client.get("/patterns.json")
+    patterns_resp.raise_for_status()
     patterns_data = patterns_resp.json()
 
     static_patterns = []

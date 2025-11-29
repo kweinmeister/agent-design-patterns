@@ -18,9 +18,11 @@ BINARY_OPERATORS = {
     ast.Mult: operator.mul,
     ast.Div: operator.truediv,
     ast.Pow: operator.pow,
+    ast.FloorDiv: operator.floordiv,
 }
 
 UNARY_OPERATORS = {
+    ast.UAdd: operator.pos,
     ast.USub: operator.neg,
 }
 
@@ -59,7 +61,6 @@ def calculator(expression: str) -> str:
 
     """
     try:
-        # Limit length to prevent DoS via massive expressions
         if len(expression) > MAX_EXPRESSION_LENGTH:
             return "Error: Expression too long"
         return str(safe_eval(ast.parse(expression, mode="eval").body))
