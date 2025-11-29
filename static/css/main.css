@@ -183,7 +183,7 @@ iframe {
 
 /* Code Viewer */
 .code-viewer {
-	display: none;
+	display: flex; /* Controlled by .hidden class */
 	height: 100%;
 	flex-direction: row;
 }
@@ -224,15 +224,6 @@ iframe {
 	padding: 0;
 }
 
-pre {
-	margin: 0;
-	padding: 1.5rem;
-	font-family: var(--font-mono);
-	font-size: 0.9rem;
-	line-height: 1.5;
-	background: #0d1117; /* Default background */
-}
-
 /* Code Viewer specific overrides if needed */
 .code-content pre {
 	height: 100%; /* Ensure it fills the viewer */
@@ -240,7 +231,7 @@ pre {
 
 /* Info Viewer */
 .info-viewer {
-	display: none;
+	display: block; /* Controlled by .hidden class */
 	height: 100%;
 	width: 100%;
 	background: #0d1117;

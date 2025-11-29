@@ -117,3 +117,34 @@ a:hover {
 ::-webkit-scrollbar-thumb:hover {
 	background: #555;
 }
+
+pre {
+	margin: 0;
+	padding: 1.5rem;
+	font-family: var(--font-mono);
+	font-size: 0.9rem;
+	line-height: 1.5;
+	background: #0d1117;
+}
+
+/* Utility Classes */
+.text-muted {
+	color: var(--text-muted);
+}
+
+.error-message {
+	padding: 1rem;
+	color: var(--error-color);
+}
+
+.loading-message {
+	padding: 1rem;
+}
+
+.d-block {
+	display: block;
+}
+
+.d-flex {
+	display: flex;
+}
