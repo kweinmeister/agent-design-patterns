@@ -251,19 +251,29 @@ const App = {
 		const fileList = document.getElementById("code-file-list");
 		fileList.innerHTML = "";
 
-		Object.entries(files).forEach(([filename, content]) => {
+		Object.keys(files).forEach((filename) => {
 			const div = document.createElement("div");
 			div.className = "file-item";
 			div.textContent = filename;
-			div.onclick = () => {
-				document.querySelectorAll(".file-item").forEach((b) => {
-					b.classList.remove("active");
-				});
-				div.classList.add("active");
-				this.showFileContent(filename, content);
-			};
+			div.dataset.filename = filename;
 			fileList.appendChild(div);
 		});
+
+		// Use event delegation on the container
+		fileList.onclick = (e) => {
+			const div = e.target.closest(".file-item");
+			if (!div) return;
+
+			// Update UI
+			fileList.querySelectorAll(".file-item").forEach((b) => {
+				b.classList.remove("active");
+			});
+			div.classList.add("active");
+
+			// Show content
+			const filename = div.dataset.filename;
+			this.showFileContent(filename, files[filename]);
+		};
 	},
 
 	showFileContent(filename, content) {

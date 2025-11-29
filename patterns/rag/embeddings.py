@@ -15,32 +15,31 @@ EMBEDDING_DIMENSIONS = int(os.getenv("EMBEDDING_DIMENSIONS", "768"))
 client = genai.Client()
 
 
-def embed_text(text: str) -> list[float]:
-    """Generate an embedding for the given text using Gemini API."""
+def _embed_content(text: str, task_type: str, title: str | None = None) -> list[float]:
+    """Generate an embedding for a given text and task type."""
+    config_args = {"task_type": task_type}
+    if title:
+        config_args["title"] = title
+
     result = client.models.embed_content(
         model=EMBEDDING_MODEL,
         contents=text,
-        config=types.EmbedContentConfig(
-            task_type="RETRIEVAL_DOCUMENT", title="Embedding of single text chunk"
-        ),
+        config=types.EmbedContentConfig(**config_args),
     )
     if not result.embeddings or not result.embeddings[0].values:
-        msg = "Failed to generate embedding"
+        msg = f"Failed to generate embedding for task {task_type}"
         raise ValueError(msg)
     return result.embeddings[0].values
+
+
+def embed_text(text: str) -> list[float]:
+    """Generate an embedding for the given text using Gemini API."""
+    return _embed_content(text, "RETRIEVAL_DOCUMENT", "Embedding of single text chunk")
 
 
 def embed_query(text: str) -> list[float]:
     """Generate an embedding for a query text."""
-    result = client.models.embed_content(
-        model=EMBEDDING_MODEL,
-        contents=text,
-        config=types.EmbedContentConfig(task_type="RETRIEVAL_QUERY"),
-    )
-    if not result.embeddings or not result.embeddings[0].values:
-        msg = "Failed to generate embedding"
-        raise ValueError(msg)
-    return result.embeddings[0].values
+    return _embed_content(text, "RETRIEVAL_QUERY")
 
 
 def embed_texts(texts: list[str]) -> list[list[float]]:
@@ -55,10 +54,10 @@ def embed_texts(texts: list[str]) -> list[list[float]]:
     if not result.embeddings:
         msg = "Failed to generate embeddings"
         raise ValueError(msg)
-    output = []
+    embeddings = []
     for e in result.embeddings:
-        if not e.values:
-            msg = "Missing embedding values"
+        if e.values is None:
+            msg = "Missing embedding values in one or more results"
             raise ValueError(msg)
-        output.append(e.values)
-    return output
+        embeddings.append(e.values)
+    return embeddings

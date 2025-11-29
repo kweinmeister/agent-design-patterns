@@ -76,15 +76,10 @@ def process_patterns(patterns_data: list[dict], api_root: Path) -> None:
 
             filename = src_path.name
 
-            # Always include README.md
-            if filename == "README.md":
-                shutil.copy2(src_path, p_dir / filename)
-                continue
-
-            # Include .py files, but exclude tests
-            if filename.endswith(".py"):
-                if filename.startswith("test"):
-                    continue
+            # Copy README.md and non-test Python files
+            if filename == "README.md" or (
+                filename.endswith(".py") and not filename.startswith("test")
+            ):
                 shutil.copy2(src_path, p_dir / filename)
 
     logger.info("Build complete!")

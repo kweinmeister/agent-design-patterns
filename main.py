@@ -62,7 +62,7 @@ def load_patterns() -> None:
 
 
 @asynccontextmanager
-async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None]:
     """Load patterns on startup."""
     load_patterns()
     yield

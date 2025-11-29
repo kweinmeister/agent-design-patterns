@@ -12,6 +12,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from google.adk.agents import BaseAgent
 from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
 
@@ -25,7 +26,7 @@ class PatternUI(ABC):
         name: str,
         description: str,
         icon: str,
-        agent: Any,  # noqa: ANN401
+        agent: BaseAgent,
         current_file: str,
         template_name: str | None = None,
     ) -> None:
@@ -60,7 +61,7 @@ class PatternUI(ABC):
 
     async def run_agent_generator(
         self, user_request: str
-    ) -> AsyncGenerator[tuple[Any, InMemoryRunner, str], None]:
+    ) -> AsyncGenerator[tuple[Any, InMemoryRunner, str]]:
         """Run the agent and yield events, runner, and session_id."""
         runner = InMemoryRunner(agent=self.agent, app_name=self.app_name)
         session_id = str(uuid.uuid4())
