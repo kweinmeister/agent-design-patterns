@@ -61,5 +61,6 @@ Use this pattern when your agent needs to:
 
 ## Resources
 
-- [Agent Development Kit (ADK) Documentation: Tools](https://google.github.io/adk-docs/tools/)
+- [Google Cloud Architecture: Tool Use Pattern](https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/function-calling)
 - [Gemini API: Function Calling](https://ai.google.dev/gemini-api/docs/function-calling)
+- [Agent Development Kit (ADK) Documentation: Tools](https://google.github.io/adk-docs/tools/)

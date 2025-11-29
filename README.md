@@ -21,6 +21,7 @@ Each pattern in this repository contains a self-contained ADK implementation (`a
 | **[Reflection](patterns/reflection/)** | An agent that critiques its own output to fix errors and improve quality. It utilizes a "Draft → Critique → Refine" loop to ensure accuracy before finalizing a response. |
 | **[Tool Use](patterns/tool_use/)** | An agent equipped with executable functions (e.g., a calculator or API) to perform specific, deterministic tasks that fall outside the scope of text generation. |
 | **[Template](patterns/template/)** | A standardized scaffold for creating and testing new agent patterns within this framework. |
+| **[RAG](patterns/rag/)** | An agent that retrieves relevant information from a knowledge base to augment its context before generating a response. |
 
 ---
 

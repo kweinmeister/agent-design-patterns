@@ -1,0 +1,22 @@
+{% extends "base.html.j2" %}
+{% block content %}
+  <div class="container">
+    <div class="input-section">
+      <p class="pattern-description">
+        {% block pattern_desc %}
+        {% endblock pattern_desc %}
+      </p>
+      <form action="{%- block form_action -%}{%- endblock form_action -%}"
+            method="get"
+            class="run-form">
+        <input type="text"
+               name="prompt"
+               value="{{ prompt }}"
+               placeholder="{%- block placeholder -%}{%- endblock placeholder -%}" />
+        <button type="submit">Run Agent</button>
+      </form>
+    </div>
+    {% block results %}
+    {% endblock results %}
+  </div>
+{% endblock content %}

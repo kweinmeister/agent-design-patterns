@@ -12,7 +12,6 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from google.adk.agents import Agent
 from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
 
@@ -26,7 +25,7 @@ class PatternUI(ABC):
         name: str,
         description: str,
         icon: str,
-        agent: Agent,
+        agent: Any,  # noqa: ANN401
         current_file: str,
         template_name: str | None = None,
     ) -> None:
@@ -45,7 +44,19 @@ class PatternUI(ABC):
             directory=[self.templates_dir, Path("templates").resolve()]
         )
         self.app_name = f"{pattern_id}_app"
-        self.template_name = template_name or f"{pattern_id}.html"
+        self.template_name = template_name or f"{pattern_id}.html.j2"
+        self.pattern_dir = current_dir.parent
+
+    def get_code_files(self) -> dict[str, str]:
+        """Get code files for the pattern."""
+        files = {}
+        for item in self.pattern_dir.glob("*.py"):
+            if item.name == "__init__.py" or item.name.startswith("test_"):
+                continue
+            files[item.name] = item.read_text()
+
+        # Sort by filename
+        return dict(sorted(files.items()))
 
     async def run_agent_generator(
         self, user_request: str
@@ -98,6 +109,13 @@ class PatternUI(ABC):
             )
             add_fastapi_endpoint(app, sdk, copilotkit_path)
 
+        # Code files route
+
+        @app.get(f"/api/code/{self.pattern_id}")
+        def get_files_endpoint() -> dict[str, str]:
+            """Get code files for the pattern."""
+            return self.get_code_files()
+
         # Demo route
         @app.get(f"/demo/{self.pattern_id}", response_class=HTMLResponse)
         async def demo(request: Request, prompt: str = "") -> HTMLResponse:
@@ -107,7 +125,12 @@ class PatternUI(ABC):
 
             return self.templates.TemplateResponse(
                 self.template_name,
-                {"request": request, "prompt": prompt, "result": result},
+                {
+                    "request": request,
+                    "prompt": prompt,
+                    "result": result,
+                    "code_files": self.get_code_files(),
+                },
             )
 
     def register(

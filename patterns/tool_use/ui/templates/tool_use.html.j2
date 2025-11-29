@@ -1,0 +1,32 @@
+{% extends "simple_agent_layout.html.j2" %}
+{% block title %}
+  Tool Use
+  Demo
+{% endblock title %}
+{% block pattern_name %}
+  Tool Use Pattern
+{% endblock pattern_name %}
+{%
+block pattern_desc %} This agent can use a calculator tool to answer
+mathematical questions. Try asking "What is 123 * 456?" or "Calculate 50 / 2".{%
+endblock pattern_desc %}
+{% block form_action %}
+  /demo/tool_use
+{% endblock form_action %}
+{% block
+  placeholder %}
+  Enter a math question...
+{% endblock placeholder %}
+{% block results %}
+  {% if
+    result %}
+    <div class="results-grid">
+      {% for step in result.history %}
+        <div class="result-card">
+          <h3>{{ step.role }}</h3>
+          <div class="content">{{ step.content }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock results %}

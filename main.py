@@ -9,15 +9,17 @@ from typing import Any
 
 import uvicorn
 from dotenv import load_dotenv
-from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, Request, Response
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 load_dotenv()
 
 # Registry for patterns
 patterns = []
 logger = logging.getLogger(__name__)
+
+templates = Jinja2Templates(directory="templates")
 
 
 def load_patterns() -> None:
@@ -55,6 +57,9 @@ def load_patterns() -> None:
                 except (ImportError, AttributeError):
                     logger.exception("Error loading pattern %s", item.name)
 
+    # Sort patterns alphabetically by name
+    patterns.sort(key=lambda x: x.get("name", ""))
+
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
@@ -78,9 +83,9 @@ def get_patterns() -> list[dict[str, Any]]:
 
 
 @app.get("/")
-def read_root() -> FileResponse:
+def read_root(request: Request) -> Response:
     """Serve the static index.html."""
-    return FileResponse("templates/index.html")
+    return templates.TemplateResponse("index.html.j2", {"request": request})
 
 
 def main() -> None:

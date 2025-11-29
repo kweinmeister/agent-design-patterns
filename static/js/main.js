@@ -144,7 +144,7 @@ const App = {
 		}
 
 		// Fetch Content
-		this.loadFile(id, "agent.py");
+		this.loadCodeFiles(id);
 		this.loadReadme(id);
 
 		// Reset View
@@ -218,35 +218,76 @@ const App = {
 		}
 	},
 
-	async loadFile(patternId, filePath) {
+	async loadCodeFiles(patternId) {
+		const fileList = document.getElementById("code-file-list");
 		const display = this.elements.codeDisplay;
 
+		fileList.innerHTML = '<div style="padding:1rem">Loading...</div>';
+		display.textContent = "";
+
 		try {
-			display.textContent = "Loading...";
-			const res = await fetch(`api/patterns/${patternId}/${filePath}`);
+			const res = await fetch(`api/code/${patternId}`);
+			if (!res.ok) throw new Error(res.statusText);
 
-			if (!res.ok) {
-				display.textContent = `Error: ${res.statusText}`;
-				return;
+			const files = await res.json();
+			this.renderCodeFileList(files);
+
+			// Select first file by default
+			const firstFile = Object.keys(files)[0];
+			if (firstFile) {
+				this.showFileContent(firstFile, files[firstFile]);
+				// Mark first item active
+				const firstBtn = fileList.querySelector(".file-item");
+				if (firstBtn) firstBtn.classList.add("active");
 			}
+		} catch (e) {
+			console.error("Failed to load files:", e);
+			fileList.innerHTML = `<div style="padding:1rem; color:var(--error-color)">Error loading files</div>`;
+			display.textContent = "Failed to load code files.";
+		}
+	},
 
-			const text = await res.text();
-			display.textContent = text;
-			display.className = filePath.endsWith(".py")
-				? "language-python"
-				: "language-markdown";
+	renderCodeFileList(files) {
+		const fileList = document.getElementById("code-file-list");
+		fileList.innerHTML = "";
 
-			if (window.hljs) {
-				delete display.dataset.highlighted;
-				hljs.highlightElement(display);
-			}
-		} catch (_e) {
-			display.textContent = "Failed to load file.";
+		Object.entries(files).forEach(([filename, content]) => {
+			const div = document.createElement("div");
+			div.className = "file-item";
+			div.textContent = filename;
+			div.onclick = () => {
+				document.querySelectorAll(".file-item").forEach((b) => {
+					b.classList.remove("active");
+				});
+				div.classList.add("active");
+				this.showFileContent(filename, content);
+			};
+			fileList.appendChild(div);
+		});
+	},
+
+	showFileContent(filename, content) {
+		const display = this.elements.codeDisplay;
+		display.textContent = content;
+
+		// Determine language
+		let lang = "plaintext";
+		if (filename.endsWith(".py")) lang = "python";
+		else if (filename.endsWith(".js")) lang = "javascript";
+		else if (filename.endsWith(".html")) lang = "xml";
+		else if (filename.endsWith(".css")) lang = "css";
+		else if (filename.endsWith(".md")) lang = "markdown";
+
+		display.className = `language-${lang}`;
+
+		if (window.hljs) {
+			delete display.dataset.highlighted;
+			hljs.highlightElement(display);
 		}
 	},
 
 	async copyCode() {
-		const btn = this.elements.copyBtn;
+		const btn = document.getElementById("copy-btn");
 		const text = this.elements.codeDisplay.textContent;
 		const originalIcon = btn.innerHTML;
 

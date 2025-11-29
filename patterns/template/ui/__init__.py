@@ -20,7 +20,7 @@ class TemplateUI(PatternUI):
             icon="📝",
             agent=root_agent,
             current_file=__file__,
-            template_name="pattern.html",
+            template_name="pattern.html.j2",
         )
 
     async def run_agent(self, user_request: str) -> str:

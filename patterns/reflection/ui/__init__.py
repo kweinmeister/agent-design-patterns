@@ -22,7 +22,7 @@ class ReflectionUI(PatternUI):
             icon="🪞",
             agent=root_agent,
             current_file=__file__,
-            template_name="reflection.html",
+            template_name="reflection.html.j2",
         )
 
     async def run_agent(self, user_request: str) -> dict[str, Any]:

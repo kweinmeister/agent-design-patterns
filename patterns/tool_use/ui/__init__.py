@@ -22,7 +22,7 @@ class ToolUseUI(PatternUI):
             icon="🛠️",
             agent=root_agent,
             current_file=__file__,
-            template_name="tool_use.html",
+            template_name="tool_use.html.j2",
         )
 
     async def run_agent(self, user_request: str) -> dict[str, Any]:
