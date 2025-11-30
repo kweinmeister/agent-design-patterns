@@ -3,10 +3,12 @@
 import asyncio
 
 import pytest
+from fastapi import FastAPI
 from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
 
 from patterns.template.agent import root_agent
+from patterns.template.ui import register
 
 
 @pytest.mark.asyncio
@@ -44,3 +46,11 @@ async def test_hello_world_agent() -> None:
 
 if __name__ == "__main__":
     asyncio.run(test_hello_world_agent())
+
+
+def test_template_registration() -> None:
+    """Test that Template pattern can be registered without error."""
+    app = FastAPI()
+    meta = register(app)
+    assert meta["id"] == "template"
+    assert meta["name"] == "Template Pattern"

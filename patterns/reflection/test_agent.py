@@ -3,10 +3,12 @@
 import asyncio
 
 import pytest
+from fastapi import FastAPI
 from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
 
 from patterns.reflection.agent import STATE_CURRENT_DOC, root_agent
+from patterns.reflection.ui import register
 
 
 @pytest.mark.asyncio
@@ -64,3 +66,11 @@ async def test_reflection_loop() -> None:
 
 if __name__ == "__main__":
     asyncio.run(test_reflection_loop())
+
+
+def test_reflection_registration() -> None:
+    """Test that Reflection pattern can be registered without error."""
+    app = FastAPI()
+    meta = register(app)
+    assert meta["id"] == "reflection"
+    assert meta["name"] == "Reflection"

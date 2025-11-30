@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from patterns.rag import db, ingest
 from patterns.rag.agent import rag_agent
-from patterns.utils import PatternUI
+from patterns.utils import configure_pattern, run_agent_standard
 
 router = APIRouter()
 
@@ -18,35 +18,19 @@ class QueryRequest(BaseModel):
     query: str
 
 
-class RagUI(PatternUI):
-    """UI integration for the RAG pattern."""
+async def run_rag_agent(user_request: str) -> dict[str, Any]:
+    """Run the RAG agent and capture the output."""
+    response_text = ""
 
-    def __init__(self) -> None:
-        """Initialize the RagUI."""
-        super().__init__(
-            pattern_id="rag",
-            name="RAG",
-            description="Retrieves relevant information to ground responses",
-            icon="📚",
-            agent=rag_agent,
-            current_file=__file__,
-            template_name="rag.html.j2",
-        )
+    async for event, _runner, _session_id in run_agent_standard(
+        rag_agent, user_request, "rag_app"
+    ):
+        if event.content and event.content.parts:
+            text = event.content.parts[0].text
+            if text:
+                response_text += text
 
-    async def run_agent(self, user_request: str) -> dict[str, Any]:
-        """Run the RAG agent and capture the output."""
-        response_text = ""
-
-        async for event, _runner, _session_id in self.run_agent_generator(user_request):
-            if event.content and event.content.parts:
-                text = event.content.parts[0].text
-                if text:
-                    response_text += text
-
-        return {"final": response_text.strip()}
-
-
-pattern_ui = RagUI()
+    return {"final": response_text.strip()}
 
 
 def register(app: FastAPI) -> dict[str, str]:
@@ -57,27 +41,38 @@ def register(app: FastAPI) -> dict[str, str]:
     # Ensure database connections are closed when the app shuts down
     app.add_event_handler("shutdown", db.close_connections)
 
-    @app.post("/rag/ingest")
+    @router.post("/rag/ingest")
     async def ingest_knowledge(background_tasks: BackgroundTasks) -> dict[str, str]:
         """Trigger knowledge ingestion in the background."""
         background_tasks.add_task(ingest.ingest)
         return {"status": "Ingestion started"}
 
-    @app.post("/rag/reset")
+    @router.post("/rag/reset")
     def reset_knowledge() -> dict[str, str]:
         """Reset the knowledge base."""
         db.reset_db(db.DB_PATH)
         return {"status": "Knowledge base reset"}
 
-    @app.get("/rag/knowledge")
+    @router.get("/rag/knowledge")
     def get_knowledge() -> dict[str, list[str]]:
         """Get current knowledge base content."""
         documents = db.get_all_documents(db.DB_PATH)
         return {"documents": documents}
 
-    @app.post("/rag/query")
+    @router.post("/rag/query")
     async def query_rag(request: QueryRequest) -> dict[str, str]:
         """Run the RAG agent."""
-        return await pattern_ui.run_agent(request.query)
+        return await run_rag_agent(request.query)
 
-    return pattern_ui.register(app, copilotkit_path="/copilotkit/rag")
+    return configure_pattern(
+        app=app,
+        router=router,
+        pattern_id="rag",
+        name="RAG",
+        description="Retrieves relevant information to ground responses",
+        icon="📚",
+        base_file=__file__,
+        handler=run_rag_agent,
+        template_name="rag.html.j2",
+        copilotkit_path="/copilotkit/rag",
+    )

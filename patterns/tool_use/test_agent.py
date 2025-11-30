@@ -3,10 +3,12 @@
 import asyncio
 
 import pytest
+from fastapi import FastAPI
 from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
 
 from patterns.tool_use.agent import root_agent
+from patterns.tool_use.ui import register
 
 
 @pytest.mark.asyncio
@@ -47,3 +49,11 @@ async def test_tool_use_agent() -> None:
 
 if __name__ == "__main__":
     asyncio.run(test_tool_use_agent())
+
+
+def test_tool_use_registration() -> None:
+    """Test that Tool Use pattern can be registered without error."""
+    app = FastAPI()
+    meta = register(app)
+    assert meta["id"] == "tool_use"
+    assert meta["name"] == "Tool Use"
