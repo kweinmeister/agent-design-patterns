@@ -160,7 +160,6 @@ const App = {
 		});
 
 		// Update Visibility
-		// Update Visibility
 		this.elements.demoFrame.classList.toggle("hidden", viewName !== "demo");
 		this.elements.codeViewer.classList.toggle("hidden", viewName !== "code");
 		this.elements.infoViewer.classList.toggle("hidden", viewName !== "info");

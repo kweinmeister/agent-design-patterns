@@ -192,18 +192,16 @@ body {
 	min-height: 0;
 }
 
-/* ... (unchanged) ... */
-
 .input-area {
 	margin-top: 0;
 	padding-top: 1.5rem;
-	border-top: 1px solid rgba(255, 255, 255, 0.1);
+	border-top: 1px solid var(--glass-border);
 	position: relative;
 }
 
 .card {
-	background: rgba(255, 255, 255, 0.05);
-	border: 1px solid rgba(255, 255, 255, 0.1);
+	background: var(--glass-bg);
+	border: 1px solid var(--glass-border);
 	border-radius: 16px;
 	padding: 1.5rem;
 	display: flex;
@@ -218,7 +216,7 @@ body {
 	align-items: center;
 	margin-bottom: 1.5rem;
 	padding-bottom: 1rem;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	border-bottom: 1px solid var(--glass-border);
 }
 
 .card-header h2 {
@@ -248,7 +246,7 @@ body {
 
 .message.system {
 	align-self: center;
-	background: rgba(255, 255, 255, 0.05);
+	background: var(--glass-bg);
 	color: var(--text-muted);
 	font-size: 0.9rem;
 	text-align: center;
@@ -263,7 +261,7 @@ body {
 
 .message.agent {
 	align-self: flex-start;
-	background: rgba(255, 255, 255, 0.1);
+	background: var(--glass-border);
 	color: var(--text-color);
 	border-bottom-left-radius: 2px;
 }
@@ -278,12 +276,7 @@ body {
 	padding-left: 1.5rem;
 }
 
-.input-area {
-	margin-top: 0;
-	padding-top: 1.5rem;
-	border-top: 1px solid rgba(255, 255, 255, 0.1);
-	position: relative;
-}
+
 
 #query-form {
 	display: flex;
@@ -292,8 +285,8 @@ body {
 
 #query-input {
 	flex: 1;
-	background: rgba(0, 0, 0, 0.2);
-	border: 1px solid rgba(255, 255, 255, 0.1);
+	background: var(--glass-bg-dark);
+	border: 1px solid var(--glass-border);
 	border-radius: 8px;
 	padding: 0.75rem 1rem;
 	color: white;
@@ -304,7 +297,7 @@ body {
 #query-input:focus {
 	outline: none;
 	border-color: var(--accent-color);
-	background: rgba(0, 0, 0, 0.3);
+	background: var(--glass-bg-dark-hover);
 }
 
 .btn-primary {
@@ -333,8 +326,8 @@ body {
 }
 
 .knowledge-item {
-	background: rgba(255, 255, 255, 0.03);
-	border: 1px solid rgba(255, 255, 255, 0.05);
+	background: var(--glass-bg-subtle);
+	border: 1px solid var(--glass-bg);
 	border-radius: 8px;
 	padding: 1rem;
 	margin-bottom: 0.75rem;
@@ -345,7 +338,7 @@ body {
 
 .knowledge-item:hover {
 	transform: translateX(4px);
-	background: rgba(255, 255, 255, 0.05);
+	background: var(--glass-bg);
 }
 
 .doc-icon {
@@ -390,8 +383,8 @@ body {
 }
 
 .btn-secondary {
-	background: rgba(255, 255, 255, 0.1);
-	border: 1px solid rgba(255, 255, 255, 0.1);
+	background: var(--glass-border);
+	border: 1px solid var(--glass-border);
 	color: var(--text-color);
 	border-radius: 6px;
 	cursor: pointer;
@@ -399,7 +392,7 @@ body {
 }
 
 .btn-secondary:hover {
-	background: rgba(255, 255, 255, 0.15);
+	background: var(--glass-bg-hover);
 }
 
 /* Loading Animation */
@@ -439,7 +432,7 @@ body {
 	display: inline-block;
 	width: 12px;
 	height: 12px;
-	border: 2px solid rgba(255, 255, 255, 0.3);
+	border: 2px solid var(--glass-border-light);
 	border-radius: 50%;
 	border-top-color: white;
 	animation: spin 1s ease-in-out infinite;

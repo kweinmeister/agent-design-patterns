@@ -40,6 +40,15 @@
 	--radius-sm: 4px;
 	--radius-md: 6px;
 	--radius-lg: 8px;
+
+	/* Glassmorphism */
+	--glass-bg: rgba(255, 255, 255, 0.05);
+	--glass-bg-subtle: rgba(255, 255, 255, 0.03);
+	--glass-bg-hover: rgba(255, 255, 255, 0.1);
+	--glass-bg-dark: rgba(0, 0, 0, 0.2);
+	--glass-bg-dark-hover: rgba(0, 0, 0, 0.3);
+	--glass-border: rgba(255, 255, 255, 0.1);
+	--glass-border-light: rgba(255, 255, 255, 0.3);
 }
 
 body {
