@@ -5,10 +5,12 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
+from fastapi import FastAPI
 from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
 
 from patterns.rag.agent import rag_agent
+from patterns.rag.ui import register
 
 
 @pytest.fixture
@@ -72,3 +74,12 @@ def test_rag_agent_end_to_end(mock_retrieval: Any) -> None:  # noqa: ANN401
 
     # Verify retrieval was called
     mock_retrieval.assert_called()
+
+
+def test_rag_registration() -> None:
+    """Test that RAG pattern can be registered without error."""
+    app = FastAPI()
+    meta = register(app)
+    assert meta.id == "rag"
+    assert meta.name == "RAG"
+    assert meta.demo_url == "/demo/rag"

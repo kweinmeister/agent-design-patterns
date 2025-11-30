@@ -1,17 +1,15 @@
 {% extends "simple_agent_layout.html.j2" %}
 {% block title %}
-  Agent Pattern
+  {{ pattern.name }}
 {% endblock title %}
 {% block pattern_name %}
-  Template Pattern
+  {{ pattern.name }}
 {% endblock pattern_name %}
-{% block
-  pattern_desc %}
-  A template for creating new patterns.
+{% block pattern_desc %}
+  {{ pattern.description }}.
 {% endblock pattern_desc %}
-{% block
-  form_action %}
-  /demo/template
+{% block form_action %}
+  /demo/{{ pattern.id }}
 {% endblock form_action %}
 {% block placeholder %}
   Say hello...

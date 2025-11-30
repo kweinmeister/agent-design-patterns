@@ -1,17 +1,15 @@
 {% extends "simple_agent_layout.html.j2" %}
 {% block title %}
-  Tool Use
-  Demo
+  {{ pattern.name }}
 {% endblock title %}
 {% block pattern_name %}
-  Tool Use Pattern
+  {{ pattern.name }}
 {% endblock pattern_name %}
-{%
-block pattern_desc %} This agent can use a calculator tool to answer
-mathematical questions. Try asking "What is 123 * 456?" or "Calculate 50 / 2".{%
-endblock pattern_desc %}
+{% block pattern_desc %}
+  {{ pattern.description }}. Try asking "What is 123 * 456?" or "Calculate 50 / 2".
+{% endblock pattern_desc %}
 {% block form_action %}
-  /demo/tool_use
+  /demo/{{ pattern.id }}
 {% endblock form_action %}
 {% block
   placeholder %}

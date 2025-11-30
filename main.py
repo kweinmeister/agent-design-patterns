@@ -5,7 +5,6 @@ import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Any
 
 import uvicorn
 from dotenv import load_dotenv
@@ -13,10 +12,12 @@ from fastapi import FastAPI, Request, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from patterns.utils import PatternMetadata
+
 load_dotenv()
 
 # Registry for patterns
-patterns = []
+patterns: list[PatternMetadata] = []
 logger = logging.getLogger(__name__)
 
 templates = Jinja2Templates(directory="templates")
@@ -58,7 +59,7 @@ def load_patterns() -> None:
                     logger.exception("Error loading pattern %s", item.name)
 
     # Sort patterns alphabetically by name
-    patterns.sort(key=lambda x: x.get("name", ""))
+    patterns.sort(key=lambda x: x.name)
 
 
 @asynccontextmanager
@@ -77,7 +78,7 @@ app.mount("/api/patterns", StaticFiles(directory="patterns"), name="patterns")
 
 
 @app.get("/patterns.json")
-def get_patterns() -> list[dict[str, Any]]:
+def get_patterns() -> list[PatternMetadata]:
     """Return the list of available patterns."""
     return patterns
 

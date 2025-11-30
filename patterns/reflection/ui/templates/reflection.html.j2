@@ -1,20 +1,18 @@
 {% extends "simple_agent_layout.html.j2" %}
 {% block title %}
-  Reflection Demo{%
-  endblock title %}
+  {{ pattern.name }}
+{% endblock title %}
   {% block head %}
   {% endblock head %}
   {% block pattern_name %}
-    Reflection
-    Pattern
+    {{ pattern.name }}
   {% endblock pattern_name %}
-  {% block pattern_desc %}
-    An agent that critiques and
-    refines its own work. Try asking for a poem or a short story.
+{% block pattern_desc %}
+    {{ pattern.description }}. Try asking for a poem or a short story.
   {% endblock pattern_desc %}
-  {%
-  block form_action %}/demo/reflection
-{% endblock form_action %}
+  {% block form_action %}
+    /demo/{{ pattern.id }}
+  {% endblock form_action %}
 {% block placeholder %}
   e.g.
   Write a haiku about rust
