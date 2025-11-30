@@ -52,5 +52,6 @@ def test_template_registration() -> None:
     """Test that Template pattern can be registered without error."""
     app = FastAPI()
     meta = register(app)
-    assert meta["id"] == "template"
-    assert meta["name"] == "Template Pattern"
+    assert meta.id == "template"
+    assert meta.name == "Template Pattern"
+    assert meta.demo_url == "/demo/template"

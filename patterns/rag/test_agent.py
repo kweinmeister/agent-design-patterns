@@ -80,5 +80,6 @@ def test_rag_registration() -> None:
     """Test that RAG pattern can be registered without error."""
     app = FastAPI()
     meta = register(app)
-    assert meta["id"] == "rag"
-    assert meta["name"] == "RAG"
+    assert meta.id == "rag"
+    assert meta.name == "RAG"
+    assert meta.demo_url == "/demo/rag"

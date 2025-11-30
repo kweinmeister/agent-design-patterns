@@ -14,6 +14,7 @@ from fastapi.templating import Jinja2Templates
 from google.adk.agents import BaseAgent
 from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
+from pydantic import BaseModel
 
 
 class PatternContext:
@@ -69,6 +70,16 @@ async def run_agent_standard(
         yield event, runner, session_id
 
 
+class PatternMetadata(BaseModel):
+    """Metadata for a pattern."""
+
+    id: str
+    name: str
+    description: str
+    icon: str
+    demo_url: str
+
+
 def configure_pattern(  # noqa: PLR0913
     app: FastAPI,
     router: APIRouter,
@@ -80,7 +91,7 @@ def configure_pattern(  # noqa: PLR0913
     handler: Callable[[str], Awaitable[Any]],
     template_name: str,
     copilotkit_path: str | None = None,
-) -> dict[str, str]:
+) -> PatternMetadata:
     """Configure a pattern with standard routes and integration.
 
     Args:
@@ -96,7 +107,7 @@ def configure_pattern(  # noqa: PLR0913
         copilotkit_path: Optional path for CopilotKit integration.
 
     Returns:
-        Metadata dictionary for the pattern.
+        Metadata object for the pattern.
 
     """
     ctx = PatternContext(base_file, template_name)
@@ -131,12 +142,13 @@ def configure_pattern(  # noqa: PLR0913
                 "prompt": prompt,
                 "result": result,
                 "code_files": ctx.get_code_files(),
-                "pattern": {
-                    "id": pattern_id,
-                    "name": name,
-                    "description": description,
-                    "icon": icon,
-                },
+                "pattern": PatternMetadata(
+                    id=pattern_id,
+                    name=name,
+                    description=description,
+                    icon=icon,
+                    demo_url=f"/demo/{pattern_id}",
+                ),
             },
         )
 
@@ -156,10 +168,10 @@ def configure_pattern(  # noqa: PLR0913
     # Include the router in the main app
     app.include_router(router)
 
-    return {
-        "id": pattern_id,
-        "name": name,
-        "description": description,
-        "icon": icon,
-        "demo_url": f"/demo/{pattern_id}",
-    }
+    return PatternMetadata(
+        id=pattern_id,
+        name=name,
+        description=description,
+        icon=icon,
+        demo_url=f"/demo/{pattern_id}",
+    )

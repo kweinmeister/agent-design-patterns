@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from patterns.rag import db, ingest
 from patterns.rag.agent import rag_agent
-from patterns.utils import configure_pattern, run_agent_standard
+from patterns.utils import PatternMetadata, configure_pattern, run_agent_standard
 
 router = APIRouter()
 
@@ -33,7 +33,7 @@ async def run_rag_agent(user_request: str) -> dict[str, Any]:
     return {"final": response_text.strip()}
 
 
-def register(app: FastAPI) -> dict[str, str]:
+def register(app: FastAPI) -> PatternMetadata:
     """Register the pattern with the main application.
 
     Returns metadata about the pattern.

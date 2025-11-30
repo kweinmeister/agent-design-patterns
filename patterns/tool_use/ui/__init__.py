@@ -5,7 +5,7 @@ from typing import Any
 from fastapi import APIRouter, FastAPI
 
 from patterns.tool_use.agent import root_agent
-from patterns.utils import configure_pattern, run_agent_standard
+from patterns.utils import PatternMetadata, configure_pattern, run_agent_standard
 
 router = APIRouter()
 
@@ -25,7 +25,7 @@ async def run_tool_use_agent(user_request: str) -> dict[str, Any]:
     return {"history": history}
 
 
-def register(app: FastAPI) -> dict[str, str]:
+def register(app: FastAPI) -> PatternMetadata:
     """Register the pattern with the main application.
 
     Returns metadata about the pattern.

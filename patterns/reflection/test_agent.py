@@ -72,5 +72,6 @@ def test_reflection_registration() -> None:
     """Test that Reflection pattern can be registered without error."""
     app = FastAPI()
     meta = register(app)
-    assert meta["id"] == "reflection"
-    assert meta["name"] == "Reflection"
+    assert meta.id == "reflection"
+    assert meta.name == "Reflection"
+    assert meta.demo_url == "/demo/reflection"

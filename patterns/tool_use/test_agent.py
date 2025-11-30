@@ -55,5 +55,6 @@ def test_tool_use_registration() -> None:
     """Test that Tool Use pattern can be registered without error."""
     app = FastAPI()
     meta = register(app)
-    assert meta["id"] == "tool_use"
-    assert meta["name"] == "Tool Use"
+    assert meta.id == "tool_use"
+    assert meta.name == "Tool Use"
+    assert meta.demo_url == "/demo/tool_use"
