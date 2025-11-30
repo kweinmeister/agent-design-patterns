@@ -1,13 +1,16 @@
 """UI integration for the RAG pattern."""
 
-from typing import Any
-
 from fastapi import APIRouter, BackgroundTasks, FastAPI
 from pydantic import BaseModel
 
 from patterns.rag import db, ingest
 from patterns.rag.agent import rag_agent
-from patterns.utils import PatternMetadata, configure_pattern, run_agent_standard
+from patterns.utils import (
+    PatternConfig,
+    PatternMetadata,
+    configure_pattern,
+    run_agent_standard,
+)
 
 router = APIRouter()
 
@@ -18,7 +21,7 @@ class QueryRequest(BaseModel):
     query: str
 
 
-async def run_rag_agent(user_request: str) -> dict[str, Any]:
+async def run_rag_agent(user_request: str) -> dict[str, str]:
     """Run the RAG agent and capture the output."""
     response_text = ""
 
@@ -67,12 +70,14 @@ def register(app: FastAPI) -> PatternMetadata:
     return configure_pattern(
         app=app,
         router=router,
-        pattern_id="rag",
-        name="RAG",
-        description="Retrieves relevant information to ground responses",
-        icon="📚",
-        base_file=__file__,
-        handler=run_rag_agent,
-        template_name="rag.html.j2",
-        copilotkit_path="/copilotkit/rag",
+        config=PatternConfig(
+            id="rag",
+            name="RAG",
+            description="Retrieves relevant information to ground responses",
+            icon="📚",
+            base_file=__file__,
+            handler=run_rag_agent,
+            template_name="rag.html.j2",
+            copilotkit_path="/copilotkit/rag",
+        ),
     )

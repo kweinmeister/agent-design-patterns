@@ -3,7 +3,12 @@
 from fastapi import APIRouter, FastAPI
 
 from patterns.template.agent import root_agent
-from patterns.utils import PatternMetadata, configure_pattern, run_agent_standard
+from patterns.utils import (
+    PatternConfig,
+    PatternMetadata,
+    configure_pattern,
+    run_agent_standard,
+)
 
 router = APIRouter()
 
@@ -27,11 +32,14 @@ def register(app: FastAPI) -> PatternMetadata:
     return configure_pattern(
         app=app,
         router=router,
-        pattern_id="template",
-        name="Template Pattern",
-        description="A template for creating new patterns",
-        icon="📝",
-        base_file=__file__,
-        handler=run_template_agent,
-        template_name="pattern.html.j2",
+        config=PatternConfig(
+            id="template",
+            name="Template Pattern",
+            description="A starting point for new patterns",
+            icon="📝",
+            base_file=__file__,
+            handler=run_template_agent,
+            template_name="pattern.html.j2",
+            copilotkit_path="/copilotkit/template",
+        ),
     )

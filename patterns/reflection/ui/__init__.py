@@ -5,7 +5,12 @@ from typing import Any
 from fastapi import APIRouter, FastAPI
 
 from patterns.reflection.agent import STATE_CURRENT_DOC, root_agent
-from patterns.utils import PatternMetadata, configure_pattern, run_agent_standard
+from patterns.utils import (
+    PatternConfig,
+    PatternMetadata,
+    configure_pattern,
+    run_agent_standard,
+)
 
 router = APIRouter()
 
@@ -48,12 +53,14 @@ def register(app: FastAPI) -> PatternMetadata:
     return configure_pattern(
         app=app,
         router=router,
-        pattern_id="reflection",
-        name="Reflection",
-        description="Critiques and refines its own output to improve quality",
-        icon="🪞",
-        base_file=__file__,
-        handler=run_reflection_agent,
-        template_name="reflection.html.j2",
-        copilotkit_path="/copilotkit/reflection",
+        config=PatternConfig(
+            id="reflection",
+            name="Reflection",
+            description="An agent that critiques and refines its own work",
+            icon="🤔",
+            base_file=__file__,
+            handler=run_reflection_agent,
+            template_name="reflection.html.j2",
+            copilotkit_path="/copilotkit/reflection",
+        ),
     )

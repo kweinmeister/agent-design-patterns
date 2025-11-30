@@ -14,7 +14,7 @@ from fastapi.templating import Jinja2Templates
 from google.adk.agents import BaseAgent
 from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class PatternContext:
@@ -80,37 +80,38 @@ class PatternMetadata(BaseModel):
     demo_url: str
 
 
-def configure_pattern(  # noqa: PLR0913
+class PatternConfig(BaseModel):
+    """Configuration for a pattern."""
+
+    id: str
+    name: str
+    description: str
+    icon: str
+    base_file: str
+    handler: Callable[[str], Awaitable[Any]]
+    template_name: str
+    copilotkit_path: str | None = None
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+
+def configure_pattern(
     app: FastAPI,
     router: APIRouter,
-    pattern_id: str,
-    name: str,
-    description: str,
-    icon: str,
-    base_file: str,
-    handler: Callable[[str], Awaitable[Any]],
-    template_name: str,
-    copilotkit_path: str | None = None,
+    config: PatternConfig,
 ) -> PatternMetadata:
     """Configure a pattern with standard routes and integration.
 
     Args:
         app: The main FastAPI app.
         router: The pattern's APIRouter.
-        pattern_id: The pattern ID.
-        name: The pattern name.
-        description: The pattern description.
-        icon: The pattern icon.
-        base_file: The __file__ of the calling module.
-        handler: The async function to run the agent.
-        template_name: The name of the Jinja2 template.
-        copilotkit_path: Optional path for CopilotKit integration.
+        config: The pattern configuration.
 
     Returns:
         Metadata object for the pattern.
 
     """
-    ctx = PatternContext(base_file, template_name)
+    ctx = PatternContext(config.base_file, config.template_name)
     static_dir = ctx.base_path / "static"
 
     # Mount static files if directory exists
@@ -118,22 +119,22 @@ def configure_pattern(  # noqa: PLR0913
     # and can be tricky with static assets in templates.
     if static_dir.exists():
         app.mount(
-            f"/{pattern_id}/static",
+            f"/{config.id}/static",
             StaticFiles(directory=static_dir),
-            name=f"{pattern_id}_static",
+            name=f"{config.id}_static",
         )
 
     # API: Get Code
-    @router.get(f"/api/code/{pattern_id}")
+    @router.get(f"/api/code/{config.id}")
     def get_code() -> dict[str, str]:
         return ctx.get_code_files()
 
     # API: Demo Page
-    @router.get(f"/demo/{pattern_id}", response_class=HTMLResponse)
+    @router.get(f"/demo/{config.id}", response_class=HTMLResponse)
     async def demo(request: Request, prompt: str = "") -> HTMLResponse:
         result = None
         if prompt:
-            result = await handler(prompt)
+            result = await config.handler(prompt)
 
         return ctx.templates.TemplateResponse(
             ctx.template_name,
@@ -143,35 +144,35 @@ def configure_pattern(  # noqa: PLR0913
                 "result": result,
                 "code_files": ctx.get_code_files(),
                 "pattern": PatternMetadata(
-                    id=pattern_id,
-                    name=name,
-                    description=description,
-                    icon=icon,
-                    demo_url=f"/demo/{pattern_id}",
+                    id=config.id,
+                    name=config.name,
+                    description=config.description,
+                    icon=config.icon,
+                    demo_url=f"/demo/{config.id}",
                 ),
             },
         )
 
     # CopilotKit integration
-    if copilotkit_path:
+    if config.copilotkit_path:
         sdk = CopilotKitRemoteEndpoint(
             actions=[
                 Action(
-                    name=f"run_{pattern_id}_agent",
-                    description=f"Runs a {name} agent.",
-                    handler=handler,
+                    name=f"run_{config.id}_agent",
+                    description=f"Runs a {config.name} agent.",
+                    handler=config.handler,
                 ),
             ],
         )
-        add_fastapi_endpoint(app, sdk, copilotkit_path)
+        add_fastapi_endpoint(app, sdk, config.copilotkit_path)
 
     # Include the router in the main app
     app.include_router(router)
 
     return PatternMetadata(
-        id=pattern_id,
-        name=name,
-        description=description,
-        icon=icon,
-        demo_url=f"/demo/{pattern_id}",
+        id=config.id,
+        name=config.name,
+        description=config.description,
+        icon=config.icon,
+        demo_url=f"/demo/{config.id}",
     )

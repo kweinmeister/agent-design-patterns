@@ -5,7 +5,12 @@ from typing import Any
 from fastapi import APIRouter, FastAPI
 
 from patterns.tool_use.agent import root_agent
-from patterns.utils import PatternMetadata, configure_pattern, run_agent_standard
+from patterns.utils import (
+    PatternConfig,
+    PatternMetadata,
+    configure_pattern,
+    run_agent_standard,
+)
 
 router = APIRouter()
 
@@ -33,12 +38,14 @@ def register(app: FastAPI) -> PatternMetadata:
     return configure_pattern(
         app=app,
         router=router,
-        pattern_id="tool_use",
-        name="Tool Use",
-        description="Uses external tools to perform tasks",
-        icon="🛠️",
-        base_file=__file__,
-        handler=run_tool_use_agent,
-        template_name="tool_use.html.j2",
-        copilotkit_path="/copilotkit/tool_use",
+        config=PatternConfig(
+            id="tool_use",
+            name="Tool Use",
+            description="Demonstrates an agent that can use tools",
+            icon="🛠️",
+            base_file=__file__,
+            handler=run_tool_use_agent,
+            template_name="tool_use.html.j2",
+            copilotkit_path="/copilotkit/tool_use",
+        ),
     )
