@@ -9,14 +9,14 @@
   {
     "id": "reflection",
     "name": "Reflection",
-    "description": "Critiques and refines its own output to improve quality",
-    "icon": "\ud83e\ude9e",
+    "description": "An agent that critiques and refines its own work",
+    "icon": "\ud83e\udd14",
     "demo_url": ""
   },
   {
     "id": "tool_use",
     "name": "Tool Use",
-    "description": "Uses external tools to perform tasks",
+    "description": "Demonstrates an agent that can use tools",
     "icon": "\ud83d\udee0\ufe0f",
     "demo_url": ""
   }

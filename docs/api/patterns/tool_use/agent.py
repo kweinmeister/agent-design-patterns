@@ -2,38 +2,14 @@
 
 import ast
 import operator
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any
 
 from google.adk.agents import LlmAgent
 
 from patterns.config import GEMINI_MODEL
 
-# Safe operators mapping
-BINARY_OPERATORS = {
-    ast.Add: operator.add,
-    ast.Sub: operator.sub,
-    ast.Mult: operator.mul,
-    ast.Div: operator.truediv,
-}
-
-
-def safe_eval(node: ast.AST) -> float | int:
-    """Evaluate an AST node safely."""
-    if isinstance(node, ast.Constant):
-        if isinstance(node.value, (int, float)):
-            return node.value
-        msg = f"Unsupported type: {type(node.value)}"
-        raise TypeError(msg)
-
-    if isinstance(node, ast.BinOp):
-        op_type = type(node.op)
-        if op_type in BINARY_OPERATORS:
-            return BINARY_OPERATORS[cast("Any", op_type)](
-                safe_eval(node.left),
-                safe_eval(node.right),
-            )
-
-    raise TypeError(node)
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 def calculator(expression: str) -> str:
@@ -46,6 +22,27 @@ def calculator(expression: str) -> str:
         The result of the evaluation as a string.
 
     """
+    # Safe operators mapping
+    binary_operators: dict[type[ast.operator], Callable[[Any, Any], Any]] = {
+        ast.Add: operator.add,
+        ast.Sub: operator.sub,
+        ast.Mult: operator.mul,
+        ast.Div: operator.truediv,
+    }
+
+    def safe_eval(node: ast.AST) -> float | int:
+        """Evaluate an AST node safely."""
+        if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return node.value
+
+        if isinstance(node, ast.BinOp) and type(node.op) in binary_operators:
+            return binary_operators[type(node.op)](
+                safe_eval(node.left),
+                safe_eval(node.right),
+            )
+
+        raise TypeError(node)
+
     try:
         return str(safe_eval(ast.parse(expression, mode="eval").body))
     except (SyntaxError, ValueError, TypeError) as e:

@@ -1,0 +1,30 @@
+# --- System & Python ---
+.git
+.gitignore
+__pycache__/
+*.py[cod]
+*$py.class
+.DS_Store
+
+# --- Virtual Environments (Critical to ignore) ---
+.venv/
+venv/
+env/
+
+# --- IDE Settings ---
+.vscode/
+.idea/
+
+# --- Project Specific Ignored Folders ---
+docs/
+.github/
+
+# --- Development Files ---
+requirements-dev.txt
+build.py
+TODO.txt
+
+# --- Tests ---
+tests/
+test_*.py
+*_test.py

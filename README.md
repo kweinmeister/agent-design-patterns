@@ -57,9 +57,10 @@ The `docs/` directory contains a static, read-only version of the application. T
 
 2. **Configure Environment:**
 
+    Copy the example environment file and edit it with your API keys and configuration. See the[Google ADK Documentation](<https://google.github.io/adk-docs/agents/models/#using-google-gemini-models> for more information.
+
     ```bash
     cp .env.example .env
-    # Edit .env and add your GOOGLE_API_KEY
     ```
 
 3. **Install Dependencies:**
@@ -80,10 +81,24 @@ Access the interface at **`http://localhost:8000`**.
 
 ### Deploying to Cloud Run
 
+First, set your Google Cloud project configuration. note, you can also specify these in your `.env` file.
+
+```bash
+export GOOGLE_CLOUD_PROJECT=your-project-id
+export GOOGLE_CLOUD_LOCATION=us-central1
+export EMBEDDING_MODEL=gemini-embedding-001
+export GEMINI_MODEL=gemini-2.5-flash
+export RAG_DB_PATH=/tmp/rag_demo.db
+```
+
 Once you have tested the application locally, you can deploy the live, dynamic version to Google Cloud Run:
 
 ```bash
-gcloud run deploy agent-patterns --source . --allow-unauthenticated
+gcloud run deploy agent-patterns \
+  --source . \
+  --region $GOOGLE_CLOUD_LOCATION \
+  --allow-unauthenticated \
+  --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=true,GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION,EMBEDDING_MODEL=$EMBEDDING_MODEL,GEMINI_MODEL=$GEMINI_MODEL,RAG_DB_PATH=$RAG_DB_PATH
 ```
 
 ### Building the Static Site

@@ -85,7 +85,7 @@ const App = {
 			this.renderSidebar();
 		} catch (e) {
 			console.error("Failed to load patterns:", e);
-			this.elements.sidebarList.innerHTML = `<div style="padding:1rem; color:var(--error-color)">Failed to load patterns.</div>`;
+			this.elements.sidebarList.innerHTML = `<div class="error-message">Failed to load patterns.</div>`;
 		}
 	},
 
@@ -123,8 +123,8 @@ const App = {
 
 		// UI Updates
 		this.elements.pageTitle.textContent = name;
-		this.elements.viewToggle.style.display = "flex";
-		this.elements.welcomeScreen.style.display = "none";
+		this.elements.viewToggle.classList.remove("hidden");
+		this.elements.welcomeScreen.classList.add("hidden");
 
 		// Sidebar Active State
 		document.querySelectorAll(".pattern-link").forEach((link) => {
@@ -135,10 +135,10 @@ const App = {
 		const demoBtn = document.querySelector('.toggle-btn[data-view="demo"]');
 		if (demoBtn) {
 			if (!url) {
-				demoBtn.style.display = "none";
+				demoBtn.classList.add("hidden");
 				if (demoBtn.classList.contains("active")) this.switchView("info");
 			} else {
-				demoBtn.style.display = "block";
+				demoBtn.classList.remove("hidden");
 				this.elements.demoFrame.src = url;
 			}
 		}
@@ -160,12 +160,9 @@ const App = {
 		});
 
 		// Update Visibility
-		this.elements.demoFrame.style.display =
-			viewName === "demo" ? "block" : "none";
-		this.elements.codeViewer.style.display =
-			viewName === "code" ? "flex" : "none";
-		this.elements.infoViewer.style.display =
-			viewName === "info" ? "block" : "none";
+		this.elements.demoFrame.classList.toggle("hidden", viewName !== "demo");
+		this.elements.codeViewer.classList.toggle("hidden", viewName !== "code");
+		this.elements.infoViewer.classList.toggle("hidden", viewName !== "info");
 	},
 
 	async loadReadme(patternId) {
@@ -183,7 +180,7 @@ const App = {
 		} catch {
 			console.error("Failed to load README:");
 			container.innerHTML =
-				'<p style="color: var(--text-muted);">No information available.</p>';
+				'<p class="text-muted">No information available.</p>';
 		}
 	},
 
@@ -222,7 +219,7 @@ const App = {
 		const fileList = document.getElementById("code-file-list");
 		const display = this.elements.codeDisplay;
 
-		fileList.innerHTML = '<div style="padding:1rem">Loading...</div>';
+		fileList.innerHTML = '<div class="loading-message">Loading...</div>';
 		display.textContent = "";
 
 		try {
@@ -242,7 +239,7 @@ const App = {
 			}
 		} catch (e) {
 			console.error("Failed to load files:", e);
-			fileList.innerHTML = `<div style="padding:1rem; color:var(--error-color)">Error loading files</div>`;
+			fileList.innerHTML = `<div class="error-message">Error loading files</div>`;
 			display.textContent = "Failed to load code files.";
 		}
 	},
@@ -251,29 +248,19 @@ const App = {
 		const fileList = document.getElementById("code-file-list");
 		fileList.innerHTML = "";
 
-		Object.keys(files).forEach((filename) => {
+		Object.entries(files).forEach(([filename, content]) => {
 			const div = document.createElement("div");
 			div.className = "file-item";
 			div.textContent = filename;
-			div.dataset.filename = filename;
+			div.onclick = () => {
+				document.querySelectorAll(".file-item").forEach((b) => {
+					b.classList.remove("active");
+				});
+				div.classList.add("active");
+				this.showFileContent(filename, content);
+			};
 			fileList.appendChild(div);
 		});
-
-		// Use event delegation on the container
-		fileList.onclick = (e) => {
-			const div = e.target.closest(".file-item");
-			if (!div) return;
-
-			// Update UI
-			fileList.querySelectorAll(".file-item").forEach((b) => {
-				b.classList.remove("active");
-			});
-			div.classList.add("active");
-
-			// Show content
-			const filename = div.dataset.filename;
-			this.showFileContent(filename, files[filename]);
-		};
 	},
 
 	showFileContent(filename, content) {
