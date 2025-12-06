@@ -37,7 +37,6 @@ body {
 		var(--accent-gradient-start),
 		var(--accent-gradient-end)
 	);
-	-webkit-background-clip: text;
 	background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
@@ -95,7 +94,7 @@ body {
 }
 
 .pattern-link.active {
-	background-color: rgba(88, 166, 255, 0.1);
+	background-color: rgb(88 166 255 / 10%);
 	border-color: var(--accent-color);
 	color: var(--accent-color);
 }
@@ -127,7 +126,7 @@ body {
 	align-items: center;
 	justify-content: space-between;
 	padding: 0 2rem;
-	background-color: rgba(15, 17, 23, 0.8);
+	background-color: rgb(15 17 23 / 80%);
 	backdrop-filter: blur(10px);
 	flex-shrink: 0;
 }
@@ -183,7 +182,7 @@ iframe {
 
 /* Code Viewer */
 .code-viewer {
-	display: none;
+	display: flex; /* Controlled by .hidden class */
 	height: 100%;
 	flex-direction: row;
 }
@@ -212,7 +211,7 @@ iframe {
 }
 
 .file-item.active {
-	background: rgba(88, 166, 255, 0.1);
+	background: rgb(88 166 255 / 10%);
 	color: var(--accent-color);
 	border-left: 2px solid var(--accent-color);
 }
@@ -222,15 +221,7 @@ iframe {
 	overflow: auto;
 	background: #0d1117;
 	padding: 0;
-}
-
-pre {
-	margin: 0;
-	padding: 1.5rem;
-	font-family: var(--font-mono);
-	font-size: 0.9rem;
-	line-height: 1.5;
-	background: #0d1117; /* Default background */
+	position: relative;
 }
 
 /* Code Viewer specific overrides if needed */
@@ -240,7 +231,7 @@ pre {
 
 /* Info Viewer */
 .info-viewer {
-	display: none;
+	display: block; /* Controlled by .hidden class */
 	height: 100%;
 	width: 100%;
 	background: #0d1117;
@@ -286,13 +277,14 @@ pre {
 }
 
 .markdown-container th {
-	background-color: rgba(255, 255, 255, 0.05);
+	background-color: rgb(255 255 255 / 5%);
 	font-weight: 600;
 }
 
 .markdown-container tr:nth-child(even) {
-	background-color: rgba(255, 255, 255, 0.02);
+	background-color: rgb(255 255 255 / 2%);
 }
+
 .mermaid {
 	width: 100%;
 	text-align: center;
@@ -312,7 +304,6 @@ pre {
 	font-size: 2.5rem;
 	margin-bottom: 1rem;
 	background: linear-gradient(45deg, #fff, #888);
-	-webkit-background-clip: text;
 	background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
@@ -324,16 +315,13 @@ pre {
 }
 
 /* Copy Button */
-.code-content {
-	position: relative;
-}
 
 .copy-btn {
 	position: absolute;
 	top: 10px;
 	right: 10px;
-	background: rgba(255, 255, 255, 0.1);
-	border: 1px solid rgba(255, 255, 255, 0.2);
+	background: rgb(255 255 255 / 10%);
+	border: 1px solid rgb(255 255 255 / 20%);
 	border-radius: 6px;
 	padding: 6px;
 	cursor: pointer;
@@ -346,9 +334,9 @@ pre {
 }
 
 .copy-btn:hover {
-	background: rgba(255, 255, 255, 0.2);
+	background: rgb(255 255 255 / 20%);
 	color: #fff;
-	border-color: rgba(255, 255, 255, 0.4);
+	border-color: rgb(255 255 255 / 40%);
 }
 
 .copy-btn svg {
@@ -357,8 +345,8 @@ pre {
 }
 
 .copy-btn.copied {
-	background: rgba(46, 160, 67, 0.2);
-	border-color: rgba(46, 160, 67, 0.5);
+	background: rgb(46 160 67 / 20%);
+	border-color: rgb(46 160 67 / 50%);
 	color: #3fb950;
 }
 

@@ -8,27 +8,23 @@
 	--sidebar-bg: #161b22;
 	--card-bg: #1e2228;
 	--input-bg: #222;
-
 	--text-color: #c9d1d9;
 	--text-muted: #8b949e;
 	--text-header: #fff;
-
 	--accent-color: #1f6feb;
 	--accent-hover: #79c0ff;
 	--accent-gradient-start: #4facfe;
 	--accent-gradient-end: #00f2fe;
-
 	--border-color: #30363d;
 	--hover-bg: #21262d;
-
 	--success-color: #2ea043;
 	--error-color: #f85149;
 
 	/* Typography */
 	--font-family:
-		"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-		Arial, sans-serif;
-	--font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+		"Inter", -apple-system, blinkmacsystemfont, "Segoe UI", roboto, helvetica,
+		arial, sans-serif;
+	--font-mono: "SFMono-Regular", consolas, "Liberation Mono", menlo, monospace;
 
 	/* Spacing */
 	--spacing-sm: 0.5rem;
@@ -40,6 +36,15 @@
 	--radius-sm: 4px;
 	--radius-md: 6px;
 	--radius-lg: 8px;
+
+	/* Glassmorphism */
+	--glass-bg: rgb(255 255 255 / 5%);
+	--glass-bg-subtle: rgb(255 255 255 / 3%);
+	--glass-bg-hover: rgb(255 255 255 / 10%);
+	--glass-bg-dark: rgb(0 0 0 / 20%);
+	--glass-bg-dark-hover: rgb(0 0 0 / 30%);
+	--glass-border: rgb(255 255 255 / 10%);
+	--glass-border-light: rgb(255 255 255 / 30%);
 }
 
 body {
@@ -80,21 +85,27 @@ a:hover {
 .flex {
 	display: flex;
 }
+
 .flex-col {
 	flex-direction: column;
 }
+
 .items-center {
 	align-items: center;
 }
+
 .justify-between {
 	justify-content: space-between;
 }
+
 .gap-sm {
 	gap: var(--spacing-sm);
 }
+
 .gap-md {
 	gap: var(--spacing-md);
 }
+
 .gap-lg {
 	gap: var(--spacing-lg);
 }
@@ -116,4 +127,35 @@ a:hover {
 
 ::-webkit-scrollbar-thumb:hover {
 	background: #555;
+}
+
+pre {
+	margin: 0;
+	padding: 1.5rem;
+	font-family: var(--font-mono);
+	font-size: 0.9rem;
+	line-height: 1.5;
+	background: #0d1117;
+}
+
+/* Utility Classes */
+.text-muted {
+	color: var(--text-muted);
+}
+
+.error-message {
+	padding: 1rem;
+	color: var(--error-color);
+}
+
+.loading-message {
+	padding: 1rem;
+}
+
+.d-block {
+	display: block;
+}
+
+.d-flex {
+	display: flex;
 }
