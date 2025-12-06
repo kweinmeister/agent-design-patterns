@@ -23,4 +23,4 @@ RUN useradd -m appuser && chown -R appuser:appuser $APP_HOME
 USER appuser
 
 # Run the web service
-CMD exec gunicorn --bind :$PORT --workers 1 --timeout 0 -k uvicorn.workers.UvicornWorker main:app
+CMD exec gunicorn --bind :$PORT --workers 1 --timeout 3600 -k uvicorn.workers.UvicornWorker main:app

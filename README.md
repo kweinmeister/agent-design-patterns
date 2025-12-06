@@ -57,7 +57,7 @@ The `docs/` directory contains a static, read-only version of the application. T
 
 2. **Configure Environment:**
 
-    Copy the example environment file and edit it with your API keys and configuration. See the[Google ADK Documentation](<https://google.github.io/adk-docs/agents/models/#using-google-gemini-models> for more information.
+    Copy the example environment file and edit it with your API keys and configuration. See the [Google ADK Documentation](https://google.github.io/adk-docs/agents/models/#using-google-gemini-models) for more information.
 
     ```bash
     cp .env.example .env
