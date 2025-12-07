@@ -40,12 +40,7 @@ The agent analyzes the user's request and determines if any available tools can 
 
 ## When to Use
 
-Use this pattern when your agent needs to:
-
-- Perform mathematical calculations.
-- Access real-time information (e.g., weather, stock prices).
-- Interact with external databases or APIs.
-- Execute specific actions (e.g., sending emails, creating files).
+Use this pattern when your agent needs to perform mathematical calculations, access real-time information (e.g., weather, stock prices), interact with external databases or APIs, or execute specific actions such as sending emails or creating files.
 
 ## Try the Code
 

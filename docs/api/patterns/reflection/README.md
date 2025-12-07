@@ -45,11 +45,11 @@ graph TD
 | **Critic** | Evaluates the output against specific criteria or general quality standards. |
 | **Refiner** | Uses the critique to improve the output. |
 
-## How it Works
+### How it Works
 
 The agent creates an initial response, then reviews its own work to identify errors or areas for improvement. Based on this critique, it generates a new version. This process repeats until a quality threshold is met or a maximum number of iterations is reached.
 
-## When to Use
+### When to Use
 
 Use this pattern for complex tasks requiring high accuracy or adherence to strict constraints, such as code generation or creative writing. It is ideal when the cost of an error outweighs the cost of extra compute time, or when catching hallucinations and logical fallacies is critical.
 

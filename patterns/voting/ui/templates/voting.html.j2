@@ -1,0 +1,56 @@
+{% extends "simple_agent_layout.html.j2" %}
+
+{% block head %}
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="/voting/static/voting.js"></script>
+{% endblock head %}
+{% block title %}
+  {{ pattern.name }}
+{% endblock title %}
+{% block pattern_name %}
+  {{ pattern.name }}
+{% endblock pattern_name %}
+{% block pattern_desc %}
+  {{ pattern.description }}. Enter a product description to generate ad copy.
+{% endblock pattern_desc %}
+{% block form_action %}
+  /demo/{{ pattern.id }}
+{% endblock form_action %}
+{% block placeholder %}
+  e.g. A smart coffee mug that keeps your drink hot for hours.
+{% endblock placeholder %}
+{% block results %}
+  <div id="results-container" class="results-grid" style="display: none;">
+    <div id="parallel-section">
+      <h2 style="margin-top: 1rem; color: var(--text-header);">Parallel Generations</h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        <!-- Humorous -->
+        <div class="result-card" style="border-left: 4px solid #9333ea; background-color: rgba(147, 51, 234, 0.1);">
+          <h3 style="color: #d8b4fe;">Humorous</h3>
+          <div id="result-humorous" class="content"></div>
+        </div>
+
+        <!-- Professional -->
+        <div class="result-card" style="border-left: 4px solid #2563eb; background-color: rgba(37, 99, 235, 0.1);">
+          <h3 style="color: #93c5fd;">Professional</h3>
+          <div id="result-professional" class="content"></div>
+        </div>
+
+        <!-- Urgent -->
+        <div class="result-card" style="border-left: 4px solid #ea580c; background-color: rgba(234, 88, 12, 0.1);">
+          <h3 style="color: #fdba74;">Urgent</h3>
+          <div id="result-urgent" class="content"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="judge-section" style="display: none;">
+      <h2 style="margin-top: 2rem; color: var(--text-header);">Judge's Decision</h2>
+      <div class="result-card final" style="border-left: 4px solid #16a34a; background-color: rgba(22, 163, 74, 0.1);">
+        <h3 style="color: #86efac;">Winner</h3>
+        <div id="result-judge" class="content markdown-body"></div>
+      </div>
+    </div>
+  </div>
+{% endblock results %}

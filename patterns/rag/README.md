@@ -46,18 +46,15 @@ graph TD
 
 ## How it Works
 
-1. **Ingestion**: Before the agent can answer questions, knowledge must be ingested. The `ingest.py` script reads data (e.g., from a CSV), generates embeddings for each chunk using a model like `gemini-embedding-001`, and saves them to a local SQLite database.
-2. **Retrieval**: When the user asks a question, the agent calls the `retrieve_knowledge` tool. This tool embeds the user's query and searches the vector database for the most similar content.
-3. **Generation**: The retrieved text chunks are returned to the agent. The agent then uses this context to generate a natural language response that directly answers the user's question based on the provided facts.
+Before the agent can answer questions, knowledge must be ingested. The `ingest.py` script reads data (e.g., from a CSV), generates embeddings for each chunk using a model like `gemini-embedding-001`, and saves them to a local SQLite database.
+
+When the user asks a question, the agent calls the `retrieve_knowledge` tool. This tool embeds the user's query and searches the vector database for the most similar content.
+
+The retrieved text chunks are returned to the agent. The agent then uses this context to generate a natural language response that directly answers the user's question based on the provided facts.
 
 ## When to Use
 
-Use this pattern when your application needs to:
-
-- **Access Private Data**: Answer questions about proprietary documents not in the model's training set.
-- **Provide Up-to-Date Information**: Reference data that changes frequently without retraining the model.
-- **Reduce Hallucinations**: Constrain the model to answer based *only* on the provided context.
-- **Cite Sources**: Allow the model to attribute its answers to specific documents.
+Use this pattern when your application needs to access private data, providing answers about proprietary documents not in the model's training set. It is also essential for providing up-to-date information by referencing data that changes frequently without retraining the model. RAG helps reduce hallucinations by constraining the model to answer based only on the provided context, and it allows the model to cite sources, attributing its answers to specific documents.
 
 ## Try the Code
 
