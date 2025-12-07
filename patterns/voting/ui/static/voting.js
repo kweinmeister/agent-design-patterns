@@ -53,25 +53,20 @@ document.addEventListener("DOMContentLoaded", () => {
 				if (data.type === "step") {
 					const agent = data.agent; // humorous, professional, urgent, judge
 					if (outputs[agent]) {
-						if (agent === "judge") {
-							// Reveal judge section when first token arrives
-							if (judgeSection && judgeSection.style.display === "none") {
-								judgeSection.style.display = "block";
-							}
+						// Reveal judge section when first token arrives
+						if (
+							agent === "judge" &&
+							judgeSection &&
+							judgeSection.style.display === "none"
+						) {
+							judgeSection.style.display = "block";
+						}
 
-							state[agent] += data.content;
-							if (typeof marked !== "undefined") {
-								outputs[agent].innerHTML = marked.parse(state[agent]);
-							} else {
-								outputs[agent].textContent = state[agent];
-							}
+						state[agent] += data.content;
+						if (typeof marked !== "undefined") {
+							outputs[agent].innerHTML = marked.parse(state[agent]);
 						} else {
-							state[agent] += data.content;
-							if (typeof marked !== "undefined") {
-								outputs[agent].innerHTML = marked.parse(state[agent]);
-							} else {
-								outputs[agent].textContent = state[agent];
-							}
+							outputs[agent].textContent = state[agent];
 						}
 					}
 				} else if (data.type === "complete") {

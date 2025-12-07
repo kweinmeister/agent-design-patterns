@@ -3,6 +3,7 @@
 {% block head %}
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="/voting/static/voting.js"></script>
+  <link rel="stylesheet" href="/voting/static/style.css">
 {% endblock head %}
 {% block title %}
   {{ pattern.name }}
@@ -24,22 +25,22 @@
     <div id="parallel-section">
       <h2 style="margin-top: 1rem; color: var(--text-header);">Parallel Generations</h2>
       
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+      <div class="voting-results-grid">
         <!-- Humorous -->
-        <div class="result-card" style="border-left: 4px solid #9333ea; background-color: rgba(147, 51, 234, 0.1);">
-          <h3 style="color: #d8b4fe;">Humorous</h3>
+        <div class="result-card result-card-humorous">
+          <h3>Humorous</h3>
           <div id="result-humorous" class="content"></div>
         </div>
 
         <!-- Professional -->
-        <div class="result-card" style="border-left: 4px solid #2563eb; background-color: rgba(37, 99, 235, 0.1);">
-          <h3 style="color: #93c5fd;">Professional</h3>
+        <div class="result-card result-card-professional">
+          <h3>Professional</h3>
           <div id="result-professional" class="content"></div>
         </div>
 
         <!-- Urgent -->
-        <div class="result-card" style="border-left: 4px solid #ea580c; background-color: rgba(234, 88, 12, 0.1);">
-          <h3 style="color: #fdba74;">Urgent</h3>
+        <div class="result-card result-card-urgent">
+          <h3>Urgent</h3>
           <div id="result-urgent" class="content"></div>
         </div>
       </div>
@@ -47,8 +48,8 @@
     
     <div id="judge-section" style="display: none;">
       <h2 style="margin-top: 2rem; color: var(--text-header);">Judge's Decision</h2>
-      <div class="result-card final" style="border-left: 4px solid #16a34a; background-color: rgba(22, 163, 74, 0.1);">
-        <h3 style="color: #86efac;">Winner</h3>
+      <div class="result-card final result-card-judge">
+        <h3>Winner</h3>
         <div id="result-judge" class="content markdown-body"></div>
       </div>
     </div>

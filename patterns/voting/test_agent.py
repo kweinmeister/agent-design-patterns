@@ -26,4 +26,6 @@ async def test_instructions_exist() -> None:
     # on the class, but LlmAgent typically has it. We check if it's not empty.
     # Accessing public attribute instruction for testing purposes
     assert humorous_agent.instruction, "Humorous agent missing instruction"
+    assert professional_agent.instruction, "Professional agent missing instruction"
+    assert urgent_agent.instruction, "Urgent agent missing instruction"
     assert judge_agent.instruction, "Judge agent missing instruction"

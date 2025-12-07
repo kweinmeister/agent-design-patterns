@@ -66,16 +66,26 @@ async def stream_voting_generator(user_request: str) -> AsyncGenerator[str, None
         ),
     ]
 
-    # 2. Consume queue until all tasks are done
-    # We'll check if queue is empty AND all tasks are done
-    while not (queue.empty() and all(t.done() for t in tasks)):
-        try:
-            # Wait for an item, but don't block forever to check task status
-            item = await asyncio.wait_for(queue.get(), timeout=0.1)
+    async def producer_manager() -> None:
+        """Wait for all tasks to complete and signal done."""
+        await asyncio.gather(*tasks)
+        await queue.put(None)  # Sentinel
+
+    # Start manager in background
+    _manager_task = asyncio.create_task(producer_manager())
+
+    try:
+        # 2. Consume queue until sentinel
+        while True:
+            item = await queue.get()
+            if item is None:
+                break
             yield f"data: {json.dumps(item)}\n\n"
             queue.task_done()
-        except TimeoutError:
-            continue
+    finally:
+        _manager_task.cancel()
+
+    # 3. Retrieve results from tasks (they are already done)
 
     # 3. Retrieve results from tasks
     results = await asyncio.gather(*tasks)
