@@ -1,0 +1,11 @@
+/* patterns/reflection/ui/static/style.css */
+
+.result-card.critique h3 {
+  color: var(--error-color);
+  border-bottom-color: rgb(248 81 73 / 30%);
+}
+
+.result-card.final h3 {
+  color: var(--success-color);
+  border-bottom-color: rgb(46 160 67 / 30%);
+}
