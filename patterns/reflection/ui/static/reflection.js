@@ -32,22 +32,29 @@ document.addEventListener("DOMContentLoaded", () => {
 				eventSource.onmessage = (event) => {
 					const data = JSON.parse(event.data);
 
+					const card = document.createElement("div");
+					const h3 = document.createElement("h3");
+					const contentDiv = document.createElement("div");
+					contentDiv.className = "content";
+					contentDiv.textContent = data.content;
+
 					if (data.role === "final") {
-						const card = document.createElement("div");
 						card.className = "result-card final";
-						card.innerHTML = `<h3>Final Result</h3><div class="content">${data.content}</div>`;
-						resultsGrid.appendChild(card);
-						stopLoading();
+						h3.textContent = "Final Result";
 					} else {
-						const card = document.createElement("div");
 						// Apply specific styling based on role
 						let cssClass = "result-card";
 						if (data.role === "Critic") cssClass += " critique";
 						if (data.role === "Refiner") cssClass += " final"; // Re-use final style or keep standard
-
 						card.className = cssClass;
-						card.innerHTML = `<h3>${data.role}</h3><div class="content">${data.content}</div>`;
-						resultsGrid.appendChild(card);
+						h3.textContent = data.role;
+					}
+
+					card.append(h3, contentDiv);
+					resultsGrid.appendChild(card);
+
+					if (data.role === "final") {
+						stopLoading();
 					}
 
 					// Scroll to bottom
