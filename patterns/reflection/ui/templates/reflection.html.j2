@@ -3,6 +3,7 @@
   {{ pattern.name }}
 {% endblock title %}
   {% block head %}
+    <link rel="stylesheet" href="/reflection/static/style.css">
   {% endblock head %}
   {% block pattern_name %}
     {{ pattern.name }}
@@ -18,27 +19,9 @@
   Write a haiku about rust
 {% endblock placeholder %}
 {% block results %}
-  {% if result %}
-    <div class="results-grid">
-      {% for step in result.history %}
-        {% set css_class = "result-card" %}
-        {% if
-          step.role == "Critic" %}
-          {% set css_class = "result-card critique" %}
-        {% elif
-          step.role == "Refiner" %}
-          {% set css_class = "result-card final" %}
-        {% endif
-        %}
-        <div class="{{ css_class }}">
-          <h3>{{ step.role }}</h3>
-          <div class="content">{{ step.content }}</div>
-        </div>
-      {% endfor %}
-      <div class="result-card final">
-        <h3>Final Result</h3>
-        <div class="content">{{ result.final }}</div>
-      </div>
+    <div id="results-grid" class="results-grid" style="display: none;">
+      <!-- Results will be injected here via JS -->
     </div>
-  {% endif %}
+
+    <script src="/reflection/static/reflection.js"></script>
 {% endblock results %}

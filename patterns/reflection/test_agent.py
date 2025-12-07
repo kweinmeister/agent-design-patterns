@@ -1,6 +1,7 @@
 """Tests for the Reflection Agent."""
 
 import asyncio
+import json
 
 import pytest
 from fastapi import FastAPI
@@ -8,7 +9,7 @@ from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
 
 from patterns.reflection.agent import STATE_CURRENT_DOC, root_agent
-from patterns.reflection.ui import register
+from patterns.reflection.ui import event_generator, register, run_reflection_agent
 
 
 @pytest.mark.asyncio
@@ -66,6 +67,47 @@ async def test_reflection_loop() -> None:
 
 if __name__ == "__main__":
     asyncio.run(test_reflection_loop())
+
+
+@pytest.mark.asyncio
+async def test_reflection_streaming_endpoint() -> None:
+    """Test the streaming endpoint returns SSE events."""
+    user_request = "Write a haiku about Python."
+
+    # Run the generator
+    events = [event async for event in event_generator(user_request)]
+
+    assert len(events) > 0, "Should receive events"
+
+    # Check format of events
+    has_final = False
+    for event in events:
+        assert event.startswith("data: "), "Event should start with data:"
+        assert event.endswith("\n\n"), "Event should end with double newline"
+
+        # Verify JSON content
+        json_str = event[6:].strip()
+        data = json.loads(json_str)
+        assert "role" in data
+        assert "content" in data
+
+        if data["role"] == "final":
+            has_final = True
+
+    assert has_final, "Should receive final result"
+
+
+@pytest.mark.asyncio
+async def test_run_reflection_agent() -> None:
+    """Test the non-streaming run_reflection_agent function."""
+    user_request = "Write a haiku about Python."
+    result = await run_reflection_agent(user_request)
+
+    assert "final" in result
+    assert "history" in result
+    assert isinstance(result["history"], list)
+    assert len(result["history"]) > 0
+    assert result["final"]
 
 
 def test_reflection_registration() -> None:
