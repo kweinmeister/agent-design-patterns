@@ -35,7 +35,7 @@ This is the full experience. Whether running locally via `main.py` or [deployed 
 
 ### 2. Static Documentation
 
-For quick reference, the `docs/` folder contains a read-only snapshot of the app. We generate this using `build.py` to compile the repository state into static HTML. This lets us host the examples directly on GitHub Pages without needing a backend server.
+For quick reference, the `docs/` folder contains a read-only snapshot of the app. We generate this using `build.py` to compile the repository state into static HTML, CSS, and JavaScript. This lets us host the examples directly on GitHub Pages without needing a backend server.
 
 ---
 
