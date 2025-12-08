@@ -2,6 +2,7 @@
 
 {% block head %}
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.3.0/purify.min.js"></script>
   <script src="/voting/static/voting.js"></script>
   <link rel="stylesheet" href="/voting/static/style.css">
 {% endblock head %}
@@ -21,9 +22,9 @@
   e.g. A smart coffee mug that keeps your drink hot for hours.
 {% endblock placeholder %}
 {% block results %}
-  <div id="results-container" class="results-grid" style="display: none;">
+  <div id="results-container" class="results-grid">
     <div id="parallel-section">
-      <h2 style="margin-top: 1rem; color: var(--text-header);">Parallel Generations</h2>
+      <h2 class="voting-section-header">Parallel Generations</h2>
       
       <div class="voting-results-grid">
         <!-- Humorous -->
@@ -46,8 +47,8 @@
       </div>
     </div>
     
-    <div id="judge-section" style="display: none;">
-      <h2 style="margin-top: 2rem; color: var(--text-header);">Judge's Decision</h2>
+    <div id="judge-section">
+      <h2 class="voting-section-header-large">Judge's Decision</h2>
       <div class="result-card final result-card-judge">
         <h3>Winner</h3>
         <div id="result-judge" class="content markdown-body"></div>

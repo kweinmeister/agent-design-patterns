@@ -41,3 +41,18 @@
 .result-card-judge h3 {
 	color: #86efac;
 }
+
+#results-container,
+#judge-section {
+	display: none;
+}
+
+.voting-section-header {
+	margin-top: 1rem;
+	color: var(--text-header);
+}
+
+.voting-section-header-large {
+	margin-top: 2rem;
+	color: var(--text-header);
+}

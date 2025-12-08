@@ -54,20 +54,19 @@ document.addEventListener("DOMContentLoaded", () => {
 					const agent = data.agent; // humorous, professional, urgent, judge
 					if (outputs[agent]) {
 						// Reveal judge section when first token arrives
-						if (
-							agent === "judge" &&
-							judgeSection &&
-							judgeSection.style.display === "none"
-						) {
+						if (agent === "judge" && judgeSection) {
 							judgeSection.style.display = "block";
 						}
 
 						state[agent] += data.content;
-						if (typeof marked !== "undefined") {
-							outputs[agent].innerHTML = marked.parse(state[agent]);
-						} else {
-							outputs[agent].textContent = state[agent];
-						}
+                        if (typeof marked !== "undefined" && typeof DOMPurify !== "undefined") {
+                            outputs[agent].innerHTML = DOMPurify.sanitize(marked.parse(state[agent]));
+                        } else if (typeof marked !== "undefined") {
+                             // Fallback if DOMPurify isn't loaded (though it should be)
+                            outputs[agent].innerHTML = marked.parse(state[agent]);
+                        } else {
+                            outputs[agent].textContent = state[agent];
+                        }
 					}
 				} else if (data.type === "complete") {
 					eventSource.close();

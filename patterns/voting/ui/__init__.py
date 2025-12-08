@@ -86,8 +86,6 @@ async def stream_voting_generator(user_request: str) -> AsyncGenerator[str, None
         _manager_task.cancel()
 
     # 3. Retrieve results from tasks (they are already done)
-
-    # 3. Retrieve results from tasks
     results = await asyncio.gather(*tasks)
     humorous_text, professional_text, urgent_text = results
 
