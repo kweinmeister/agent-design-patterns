@@ -25,10 +25,7 @@ class StreamHandler {
 				const data = JSON.parse(event.data);
 				this.onMessage(data);
 
-				if (
-					data.type === "complete" ||
-					(data.role === "final" && data.type !== "step")
-				) {
+				if (data.type === "complete") {
 					this.close();
 					if (this.onComplete) this.onComplete();
 				}

@@ -66,9 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
 									outputs[agent].innerHTML = DOMPurify.sanitize(
 										marked.parse(currentContent),
 									);
-								} else if (typeof marked !== "undefined") {
-									outputs[agent].innerHTML = marked.parse(currentContent);
 								} else {
+									// Fallback to plain text for security if libraries are missing.
 									outputs[agent].textContent = currentContent;
 								}
 							}

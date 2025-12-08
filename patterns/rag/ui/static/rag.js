@@ -177,21 +177,13 @@ const RagApp = {
 			contentDiv.className = "content markdown-body";
 
 			// XSS Prevention + Markdown
-			let safeHtml = content;
 			if (typeof marked !== "undefined" && typeof DOMPurify !== "undefined") {
-				safeHtml = DOMPurify.sanitize(marked.parse(content));
-			} else if (typeof marked !== "undefined") {
-				// Fallback (less safe, but unlikely to happen given imports)
-				safeHtml = marked.parse(content);
+				const dirtyHtml = marked.parse(content);
+				contentDiv.innerHTML = DOMPurify.sanitize(dirtyHtml);
 			} else {
-				// Escape if no markdown
+				// Fallback to plain text if marked or DOMPurify is missing for security.
 				contentDiv.textContent = content;
-				msgDiv.appendChild(contentDiv);
-				history.appendChild(msgDiv);
-				history.scrollTop = history.scrollHeight;
-				return;
 			}
-			contentDiv.innerHTML = safeHtml;
 			msgDiv.appendChild(contentDiv);
 		}
 
