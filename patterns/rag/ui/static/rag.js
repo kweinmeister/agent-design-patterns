@@ -28,11 +28,10 @@ const RagApp = {
 			ingestBtn.addEventListener("click", () => this.ingestKnowledge());
 		}
 
-		// Reset handled inline in HTML onclick, but could be moved here if we remove onclick attributes
-		// For now, exposing global functions for compatibility with existing inline calls
-		window.ingestKnowledge = () => this.ingestKnowledge();
-		window.resetKnowledge = () => this.resetKnowledge();
-		window.handleQuery = (e) => this.handleQuery(e);
+		const resetBtn = document.getElementById("reset-btn");
+		if (resetBtn) {
+			resetBtn.addEventListener("click", () => this.resetKnowledge());
+		}
 	},
 
 	async loadKnowledge() {
