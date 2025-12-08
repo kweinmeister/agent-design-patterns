@@ -1,5 +1,5 @@
 -r requirements.txt
 pyrefly==0.43.1
-pytest==9.0.1
+pytest==9.0.2
 pytest-asyncio==1.3.0
 ruff==0.14.7
