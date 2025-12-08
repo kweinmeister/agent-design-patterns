@@ -58,7 +58,9 @@ const RagApp = {
 					return DOMPurify.sanitize(content);
 				}
 				// Fallback if library fails to load
-				return this.escapeHtml(content);
+				const p = document.createElement("p");
+				p.textContent = content;
+				return p.innerHTML;
 			};
 
 			list.innerHTML = this.state.documents
