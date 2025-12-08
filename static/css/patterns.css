@@ -30,6 +30,23 @@ button:active,
 	transform: translateY(0);
 }
 
+.btn-secondary {
+	background: transparent;
+	border: 1px solid var(--border-color);
+	color: var(--text-muted);
+}
+
+.btn-secondary:hover {
+	background: var(--hover-bg);
+	border-color: var(--text-muted);
+	color: var(--text-color);
+}
+
+.btn-sm {
+	padding: 0.25rem 0.75rem;
+	font-size: 0.85rem;
+}
+
 input[type="text"],
 textarea,
 select {
@@ -120,6 +137,51 @@ button.loading::after {
 @keyframes spin {
 	to {
 		transform: rotate(360deg);
+	}
+}
+
+.spinner {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+	border-top-color: currentColor;
+	animation: spin 1s ease-in-out infinite;
+	margin-right: 0.5rem;
+	vertical-align: text-bottom;
+}
+
+.typing-indicator {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+}
+
+.typing-indicator span {
+	width: 6px;
+	height: 6px;
+	background: var(--text-muted);
+	border-radius: 50%;
+	animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator span:nth-child(1) {
+	animation-delay: -0.32s;
+}
+.typing-indicator span:nth-child(2) {
+	animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+	0%,
+	80%,
+	100% {
+		transform: scale(0);
+	}
+	40% {
+		transform: scale(1);
 	}
 }
 

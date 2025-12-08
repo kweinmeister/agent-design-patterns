@@ -27,7 +27,7 @@ block head %}
             <div class="message system">Try asking a question before and after ingesting knowledge!</div>
           </div>
           <div class="input-area">
-            <form id="query-form" onsubmit="handleQuery(event)">
+            <form id="query-form">
               <input type="text"
                      id="query-input"
                      class="form-input"
@@ -46,11 +46,11 @@ block head %}
           <div class="card-header">
             <h2>Knowledge Base</h2>
             <div class="actions">
-              <button onclick="resetKnowledge()"
-                      class="btn-secondary btn-sm"
+              <button class="btn-secondary btn-sm"
+                      id="reset-btn"
+                      onclick="resetKnowledge()"
                       title="Clear Database">Reset</button>
-              <button onclick="ingestKnowledge()"
-                      class="btn-primary btn-sm"
+              <button class="btn-primary btn-sm"
                       id="ingest-btn">Ingest Data</button>
             </div>
           </div>
