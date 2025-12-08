@@ -7,24 +7,9 @@ from patterns.utils import (
     PatternConfig,
     PatternMetadata,
     configure_pattern,
-    run_agent_standard,
 )
 
 router = APIRouter()
-
-
-async def run_template_agent(user_request: str) -> str:
-    """Run the agent."""
-    response_text = ""
-    async for event, _, _ in run_agent_standard(
-        root_agent, user_request, "template_app"
-    ):
-        if event.content and event.content.parts:
-            text = event.content.parts[0].text
-            if text:
-                response_text += text
-
-    return response_text
 
 
 def register(app: FastAPI) -> PatternMetadata:
@@ -32,13 +17,14 @@ def register(app: FastAPI) -> PatternMetadata:
     return configure_pattern(
         app=app,
         router=router,
+        agent=root_agent,
         config=PatternConfig(
             id="template",
             name="Template Pattern",
             description="A starting point for new patterns",
             icon="📝",
             base_file=__file__,
-            handler=run_template_agent,
+            handler=None,  # Handled by utils
             template_name="pattern.html.j2",
             copilotkit_path="/copilotkit/template",
         ),

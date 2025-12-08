@@ -15,59 +15,57 @@ document.addEventListener("DOMContentLoaded", () => {
 			// Clear previous results
 			resultsGrid.innerHTML = "";
 			resultsGrid.style.display = "grid";
+			submitBtn.disabled = true;
 
 			try {
-				const eventSource = new EventSource(
+				const streamHandler = new StreamHandler(
 					`/stream_reflection?prompt=${encodeURIComponent(prompt)}`,
+					(data) => {
+						// onMessage
+						if (data.type === "step") {
+							const card = document.createElement("div");
+							const h3 = document.createElement("h3");
+							const contentDiv = document.createElement("div");
+							contentDiv.className = "content";
+							contentDiv.textContent = data.content;
+
+							// Apply specific styling based on role
+							let cssClass = "result-card";
+							if (data.role === "CriticAgent") cssClass += " critique";
+							if (data.role === "RefinerAgent") cssClass += " final";
+							card.className = cssClass;
+							h3.textContent = data.role;
+
+							card.append(h3, contentDiv);
+							resultsGrid.appendChild(card);
+							window.scrollTo(0, document.body.scrollHeight);
+						} else if (data.type === "complete") {
+							// Optional: Handle completion explicitly if needed
+							submitBtn.disabled = false;
+						}
+					},
+					() => {
+						// onComplete
+						if (submitBtn) {
+							submitBtn.disabled = false;
+							submitBtn.classList.remove("loading");
+							submitBtn.textContent = "Run Agent";
+						}
+					},
+					(_error) => {
+						// onError
+						if (submitBtn) {
+							submitBtn.disabled = false;
+							submitBtn.classList.remove("loading");
+							submitBtn.textContent = "Run Agent";
+						}
+					},
 				);
-
-				const stopLoading = () => {
-					if (submitBtn) {
-						submitBtn.classList.remove("loading");
-						submitBtn.textContent = "Run Agent";
-					}
-					eventSource.close();
-				};
-
-				eventSource.onmessage = (event) => {
-					const data = JSON.parse(event.data);
-
-					const card = document.createElement("div");
-					const h3 = document.createElement("h3");
-					const contentDiv = document.createElement("div");
-					contentDiv.className = "content";
-					contentDiv.textContent = data.content;
-
-					if (data.role === "final") {
-						card.className = "result-card final";
-						h3.textContent = "Final Result";
-					} else {
-						// Apply specific styling based on role
-						let cssClass = "result-card";
-						if (data.role === "Critic") cssClass += " critique";
-						if (data.role === "Refiner") cssClass += " final"; // Re-use final style or keep standard
-						card.className = cssClass;
-						h3.textContent = data.role;
-					}
-
-					card.append(h3, contentDiv);
-					resultsGrid.appendChild(card);
-
-					if (data.role === "final") {
-						stopLoading();
-					}
-
-					// Scroll to bottom
-					window.scrollTo(0, document.body.scrollHeight);
-				};
-
-				eventSource.onerror = (error) => {
-					console.error("SSE Error:", error);
-					stopLoading();
-				};
+				streamHandler.start();
 			} catch (error) {
 				console.error("Fetch error:", error);
 				if (submitBtn) {
+					submitBtn.disabled = false;
 					submitBtn.classList.remove("loading");
 					submitBtn.textContent = "Run Agent";
 				}

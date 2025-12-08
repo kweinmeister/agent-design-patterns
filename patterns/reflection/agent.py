@@ -64,7 +64,8 @@ refiner_agent = LlmAgent(
 **Critique:** {{criticism}}
 
 **Task:**
-IF critique is "{COMPLETION_PHRASE}": Call 'exit_loop'.
+IF critique is "{COMPLETION_PHRASE}":
+        Output the draft text *exactly* as is, then Call 'exit_loop'.
 ELSE: Improve the draft based on critique. Output *only* the refined text.
 """,
     tools=[exit_loop],

@@ -9,6 +9,7 @@
 block head %}
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.3.0/purify.min.js"></script>
 <link rel="stylesheet" href="/rag/static/style.css">
 {% endblock head %}
 {% block content %}
@@ -29,6 +30,7 @@ block head %}
             <form id="query-form" onsubmit="handleQuery(event)">
               <input type="text"
                      id="query-input"
+                     class="form-input"
                      placeholder="e.g., What dangers exist in the galaxy?"
                      autocomplete="off" />
               <button type="submit" class="btn-primary">

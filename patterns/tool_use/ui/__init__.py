@@ -9,7 +9,7 @@ from patterns.utils import (
     PatternConfig,
     PatternMetadata,
     configure_pattern,
-    run_agent_standard,
+    run_and_collect_history,
 )
 
 router = APIRouter()
@@ -17,16 +17,7 @@ router = APIRouter()
 
 async def run_tool_use_agent(user_request: str) -> dict[str, Any]:
     """Run the tool use agent and capture the history."""
-    history = []
-
-    async for event, _, _ in run_agent_standard(
-        root_agent, user_request, "tool_use_app"
-    ):
-        if event.content and event.content.parts:
-            text = event.content.parts[0].text
-            if text:
-                history.append({"role": event.author, "content": text})
-
+    history = await run_and_collect_history(root_agent, user_request, "tool_use_app")
     return {"history": history}
 
 

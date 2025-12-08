@@ -29,10 +29,6 @@ DB_PATH = _get_db_path()
 logger.info("RAG Database path set to: %s", DB_PATH)
 
 
-# Global connection cache
-_connections: dict[str, sqlite3.Connection] = {}
-
-
 class VecConnection(sqlite3.Connection):
     """SQLite connection that automatically loads sqlite-vec."""
 
@@ -53,24 +49,13 @@ class VecConnection(sqlite3.Connection):
 def get_db_connection(db_path: str) -> Iterator[sqlite3.Connection]:
     """Context manager for database connections.
 
-    This uses a singleton pattern per database path, keeping connections open
-    for performance.
+    Creates a fresh connection per request to ensure thread safety.
     """
-    if db_path not in _connections:
-        _connections[db_path] = sqlite3.connect(
-            db_path, factory=VecConnection, check_same_thread=False
-        )
-
-    conn = _connections[db_path]
-    yield conn
-    # Do not close the connection, keep it alive for reuse
-
-
-def close_connections() -> None:
-    """Close all cached connections. Useful for testing."""
-    for path, conn in list(_connections.items()):
+    conn = sqlite3.connect(db_path, factory=VecConnection, check_same_thread=False)
+    try:
+        yield conn
+    finally:
         conn.close()
-        del _connections[path]
 
 
 def init_db(db_path: str) -> None:

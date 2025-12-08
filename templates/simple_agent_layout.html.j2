@@ -11,9 +11,10 @@
             class="run-form">
         <input type="text"
                name="prompt"
+               class="form-input"
                value="{{ prompt }}"
                placeholder="{%- block placeholder -%}{%- endblock placeholder -%}" />
-        <button type="submit">Run Agent</button>
+        <button type="submit" class="btn-primary">Run Agent</button>
       </form>
     </div>
     {% block results %}

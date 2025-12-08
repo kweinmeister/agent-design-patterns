@@ -9,7 +9,8 @@ from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
 
 from patterns.reflection.agent import STATE_CURRENT_DOC, root_agent
-from patterns.reflection.ui import event_generator, register, run_reflection_agent
+from patterns.reflection.ui import register
+from patterns.utils import stream_agent_events
 
 
 @pytest.mark.asyncio
@@ -75,7 +76,12 @@ async def test_reflection_streaming_endpoint() -> None:
     user_request = "Write a haiku about Python."
 
     # Run the generator
-    events = [event async for event in event_generator(user_request)]
+    events = [
+        event
+        async for event in stream_agent_events(
+            root_agent, user_request, "reflection_app"
+        )
+    ]
 
     assert len(events) > 0, "Should receive events"
 
@@ -88,26 +94,16 @@ async def test_reflection_streaming_endpoint() -> None:
         # Verify JSON content
         json_str = event[6:].strip()
         data = json.loads(json_str)
-        assert "role" in data
-        assert "content" in data
+        assert "type" in data
 
-        if data["role"] == "final":
+        if data["type"] == "step":
+            assert "role" in data
+            assert "content" in data
+        elif data["type"] == "complete":
             has_final = True
+            assert "final" in data
 
-    assert has_final, "Should receive final result"
-
-
-@pytest.mark.asyncio
-async def test_run_reflection_agent() -> None:
-    """Test the non-streaming run_reflection_agent function."""
-    user_request = "Write a haiku about Python."
-    result = await run_reflection_agent(user_request)
-
-    assert "final" in result
-    assert "history" in result
-    assert isinstance(result["history"], list)
-    assert len(result["history"]) > 0
-    assert result["final"]
+    assert has_final, "Should receive complete event"
 
 
 def test_reflection_registration() -> None:
