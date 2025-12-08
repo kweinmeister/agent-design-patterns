@@ -164,7 +164,7 @@ class PatternConfig(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
-def configure_pattern(
+def configure_pattern(  # noqa: C901
     app: FastAPI,
     router: APIRouter,
     config: PatternConfig,
@@ -186,6 +186,9 @@ def configure_pattern(
     if agent and not config.handler:
 
         async def default_handler(prompt: str) -> dict[str, Any]:
+            if not agent:
+                msg = "Agent is required for default handler"
+                raise ValueError(msg)
             # Uses the standard history collector
             history = await run_and_collect_history(agent, prompt, config.id)
             return {

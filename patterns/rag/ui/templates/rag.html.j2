@@ -10,6 +10,8 @@ block head %}
 
 <script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uuid@8/dist/umd/uuidv4.min.js"></script>
+<script src="/rag/static/rag.js"></script>
 <link rel="stylesheet" href="/rag/static/style.css">
 {% endblock head %}
 {% block content %}
@@ -20,14 +22,13 @@ block head %}
         <div class="card chat-card">
           <div class="card-header">
             <h2>Ask a Question</h2>
-            <span class="status-badge" id="agent-status">Ready</span>
           </div>
           <div class="chat-history" id="chat-history">
             <!-- Messages will appear here -->
             <div class="message system">Try asking a question before and after ingesting knowledge!</div>
           </div>
           <div class="input-area">
-            <form id="query-form">
+            <form id="query-form" onsubmit="return false;">
               <input type="text"
                      id="query-input"
                      class="form-input"
@@ -64,5 +65,4 @@ block head %}
       </div>
     </div>
   </div>
-  <script src="/rag/static/rag.js?v=8"></script>
 {% endblock content %}

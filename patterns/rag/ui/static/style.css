@@ -6,7 +6,7 @@ html,
 body {
 	height: 100%;
 	margin: 0;
-	overflow: auto; /* Allow scrolling for code browser */
+	overflow: hidden; /* Prevent body scrolling */
 }
 
 .container {
@@ -14,6 +14,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	padding-bottom: 2rem; /* Add some bottom padding */
+	box-sizing: border-box; /* Include padding in height */
 }
 
 .rag-layout {
@@ -29,6 +30,24 @@ body {
 .chat-column,
 .knowledge-column {
 	min-height: 0;
+	height: 100%; /* Force full height */
+}
+
+/* Ensure cards take full height */
+.card.chat-card,
+.card.knowledge-card {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden; /* Prevent card overflow */
+}
+
+.card-header {
+	flex-shrink: 0; /* Header shouldn't shrink */
+	margin-bottom: 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .input-area {
@@ -36,6 +55,7 @@ body {
 	padding-top: 1.5rem;
 	border-top: 1px solid var(--glass-border);
 	position: relative;
+	flex-shrink: 0; /* Input area shouldn't shrink */
 }
 
 /* Chat Column */
@@ -45,7 +65,7 @@ body {
 	padding-right: 0.5rem;
 	display: flex;
 	flex-direction: column;
-	flex-shrink: 0;
+	flex-shrink: 1; /* Allow shrinking */
 	gap: 1rem;
 	min-height: 0; /* Important for nested flex scrolling */
 }

@@ -12,7 +12,7 @@ const RagApp = {
 	},
 
 	init() {
-		this.state.sessionId = crypto.randomUUID();
+		this.state.sessionId = uuidv4();
 		this.loadKnowledge();
 		this.setupListeners();
 	},
