@@ -23,12 +23,6 @@ def mock_embeddings() -> Any:  # noqa: ANN401
         yield mock_text
 
 
-@pytest.fixture(autouse=True)
-def clear_db_pool() -> None:
-    """Clear the database connection pool before each test."""
-    db.close_connections()
-
-
 @pytest.fixture
 def temp_db(tmp_path: Path) -> str:
     """Create a temporary database path."""

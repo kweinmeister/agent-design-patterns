@@ -19,14 +19,17 @@ class QueryRequest(BaseModel):
     """Request model for RAG query."""
 
     query: str
+    session_id: str | None = None
 
 
-async def run_rag_agent(user_request: str) -> dict[str, str]:
+async def run_rag_agent(
+    user_request: str, session_id: str | None = None
+) -> dict[str, str]:
     """Run the RAG agent and capture the output."""
     response_text = ""
 
     async for event, _runner, _session_id in run_agent_standard(
-        rag_agent, user_request, "rag_app"
+        rag_agent, user_request, "rag_app", session_id
     ):
         if event.content and event.content.parts:
             text = event.content.parts[0].text
@@ -41,8 +44,6 @@ def register(app: FastAPI) -> PatternMetadata:
 
     Returns metadata about the pattern.
     """
-    # Ensure database connections are closed when the app shuts down
-    app.add_event_handler("shutdown", db.close_connections)
 
     @router.post("/rag/ingest")
     async def ingest_knowledge(background_tasks: BackgroundTasks) -> dict[str, str]:
@@ -65,7 +66,7 @@ def register(app: FastAPI) -> PatternMetadata:
     @router.post("/rag/query")
     async def query_rag(request: QueryRequest) -> dict[str, str]:
         """Run the RAG agent."""
-        return await run_rag_agent(request.query)
+        return await run_rag_agent(request.query, request.session_id)
 
     return configure_pattern(
         app=app,

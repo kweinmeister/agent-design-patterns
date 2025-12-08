@@ -1,20 +1,74 @@
 // Load knowledge on startup
 /** biome-ignore-all lint/correctness/noUnusedVariables: biome-ignore */
-document.addEventListener("DOMContentLoaded", loadKnowledge);
+document.addEventListener("DOMContentLoaded", () => {
+	RagApp.init();
+});
 
-async function loadKnowledge() {
-	const list = document.getElementById("knowledge-list");
-	try {
-		const response = await fetch("/rag/knowledge");
-		const data = await response.json();
+const RagApp = {
+	state: {
+		documents: [],
+		messages: [],
+		sessionId: null,
+	},
 
-		if (data.documents && data.documents.length > 0) {
-			list.innerHTML = data.documents
+	init() {
+		this.state.sessionId = uuidv4();
+		this.loadKnowledge();
+		this.setupListeners();
+	},
+
+	setupListeners() {
+		const form = document.getElementById("query-form");
+		if (form) {
+			form.addEventListener("submit", (e) => this.handleQuery(e));
+		}
+
+		const ingestBtn = document.getElementById("ingest-btn");
+		if (ingestBtn) {
+			ingestBtn.addEventListener("click", () => this.ingestKnowledge());
+		}
+
+		const resetBtn = document.getElementById("reset-btn");
+		if (resetBtn) {
+			resetBtn.addEventListener("click", () => this.resetKnowledge());
+		}
+	},
+
+	async loadKnowledge() {
+		const list = document.getElementById("knowledge-list");
+		try {
+			const response = await fetch("/rag/knowledge");
+			const data = await response.json();
+
+			this.state.documents = data.documents || [];
+			this.renderKnowledge();
+		} catch (error) {
+			console.error("Failed to load knowledge:", error);
+			list.innerHTML = `<div class="error-message">Failed to load knowledge base.</div>`;
+		}
+	},
+
+	renderKnowledge() {
+		const list = document.getElementById("knowledge-list");
+		if (this.state.documents.length > 0) {
+			// Check if DOMPurify is loaded (it is loaded in rag.html.j2)
+			const sanitize = (content) => {
+				if (typeof DOMPurify !== "undefined") {
+					return DOMPurify.sanitize(content);
+				}
+				// Fallback if library fails to load
+				const p = document.createElement("p");
+				p.textContent = content;
+				return p.innerHTML;
+			};
+
+			list.innerHTML = this.state.documents
 				.map(
 					(doc) => `
                 <div class="knowledge-item">
                     <div class="doc-icon">📄</div>
-                    <div class="doc-content">${doc}</div>
+                    <!-- Use sanitize instead of this.escapeHtml -->
+                    <div class="doc-content">${sanitize(doc)}</div>
                 </div>
             `,
 				)
@@ -27,103 +81,130 @@ async function loadKnowledge() {
                 </div>
             `;
 		}
-	} catch (error) {
-		console.error("Failed to load knowledge:", error);
-	}
-}
+	},
 
-async function ingestKnowledge() {
-	const btn = document.getElementById("ingest-btn");
-	btn.disabled = true;
-	btn.innerHTML = '<span class="spinner"></span> Ingesting...';
+	async ingestKnowledge() {
+		const btn = document.getElementById("ingest-btn");
+		btn.disabled = true;
 
-	try {
-		await fetch("/rag/ingest", { method: "POST" });
+		// Save original content
+		const originalContent = btn.innerHTML;
+		btn.innerHTML = '<span class="spinner"></span> Ingesting...';
 
-		// Poll for updates (simple version)
-		let retries = 0;
-		const interval = setInterval(async () => {
-			await loadKnowledge();
-			const list = document.getElementById("knowledge-list");
-			if (!list.querySelector(".empty-state") || retries > 10) {
-				clearInterval(interval);
-				btn.disabled = false;
-				btn.textContent = "Ingest Data";
+		try {
+			await fetch("/rag/ingest", { method: "POST" });
+
+			// Poll for updates (simple version)
+			let retries = 0;
+			const interval = setInterval(async () => {
+				await this.loadKnowledge();
+				const list = document.getElementById("knowledge-list");
+
+				// If we have documents, we are done
+				if (this.state.documents.length > 0 || retries > 10) {
+					clearInterval(interval);
+					btn.disabled = false;
+					btn.innerHTML = originalContent;
+				}
+				retries++;
+			}, 1000);
+		} catch (error) {
+			console.error("Ingestion failed:", error);
+			btn.disabled = false;
+			btn.innerHTML = originalContent;
+		}
+	},
+
+	async resetKnowledge() {
+		if (!confirm("Are you sure you want to clear the knowledge base?")) return;
+
+		try {
+			await fetch("/rag/reset", { method: "POST" });
+			await this.loadKnowledge();
+		} catch (error) {
+			console.error("Reset failed:", error);
+		}
+	},
+
+	async handleQuery(event) {
+		event.preventDefault();
+		const input = document.getElementById("query-input");
+		const history = document.getElementById("chat-history");
+		const query = input.value.trim();
+
+		if (!query) return;
+
+		// Add user message
+		this.appendMessage("user", query);
+		input.value = "";
+
+		// Show loading
+		const loadingId = this.appendLoading();
+
+		try {
+			const queryResponse = await fetch("/rag/query", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					query,
+					session_id: this.state.sessionId,
+				}),
+			});
+			const data = await queryResponse.json();
+
+			this.removeMessage(loadingId);
+			this.appendMessage("agent", data.final);
+		} catch (error) {
+			console.error("Query failed:", error);
+			this.removeMessage(loadingId);
+			this.appendMessage("agent error", "Sorry, something went wrong.");
+		}
+	},
+
+	appendMessage(role, content) {
+		const history = document.getElementById("chat-history");
+		const msgDiv = document.createElement("div");
+		msgDiv.className = `message ${role}`;
+
+		if (role.includes("user")) {
+			const contentDiv = document.createElement("div");
+			contentDiv.className = "content";
+			contentDiv.textContent = content; // Text only for user
+			msgDiv.appendChild(contentDiv);
+		} else {
+			const contentDiv = document.createElement("div");
+			contentDiv.className = "content markdown-body";
+
+			// XSS Prevention + Markdown
+			if (typeof marked !== "undefined" && typeof DOMPurify !== "undefined") {
+				const dirtyHtml = marked.parse(content);
+				contentDiv.innerHTML = DOMPurify.sanitize(dirtyHtml);
+			} else {
+				// Fallback to plain text if marked or DOMPurify is missing for security.
+				contentDiv.textContent = content;
 			}
-			retries++;
-		}, 1000);
-	} catch (error) {
-		console.error("Ingestion failed:", error);
-		btn.disabled = false;
-		btn.textContent = "Ingest Data";
-	}
-}
-
-async function resetKnowledge() {
-	if (!confirm("Are you sure you want to clear the knowledge base?")) return;
-
-	try {
-		await fetch("/rag/reset", { method: "POST" });
-		await loadKnowledge();
-	} catch (error) {
-		console.error("Reset failed:", error);
-	}
-}
-
-async function handleQuery(event) {
-	event.preventDefault();
-	const input = document.getElementById("query-input");
-	const history = document.getElementById("chat-history");
-	const query = input.value.trim();
-
-	if (!query) return;
-
-	// Add user message
-	history.innerHTML += `
-        <div class="message user">
-            <div class="content">${query}</div>
-        </div>
-    `;
-	input.value = "";
-	history.scrollTop = history.scrollHeight;
-
-	// Show loading
-	const loadingId = `loading-${Date.now()}`;
-	history.innerHTML += `
-        <div class="message agent loading" id="${loadingId}">
-            <div class="typing-indicator"><span></span><span></span><span></span></div>
-        </div>
-    `;
-	history.scrollTop = history.scrollHeight;
-
-	try {
-		const queryResponse = await fetch("/rag/query", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ query }),
-		});
-		const data = await queryResponse.json();
-
-		document.getElementById(loadingId).remove();
-
-		let parsedHtml = data.final;
-		if (data.final.includes("**")) {
-			parsedHtml = marked.parse(data.final);
+			msgDiv.appendChild(contentDiv);
 		}
 
-		history.innerHTML += `
-            <div class="message agent">
-                <div class="content markdown-body">${parsedHtml}</div>
-            </div>
-        `;
+		history.appendChild(msgDiv);
 		history.scrollTop = history.scrollHeight;
-	} catch (error) {
-		console.error("Query failed:", error);
-		document.getElementById(loadingId).remove();
-		history.innerHTML += `
-            <div class="message agent error">
-                <div class="content">Sorry, something went wrong.</div>
-            </div>
-        `;
-	}
-}
+	},
+
+	appendLoading() {
+		const history = document.getElementById("chat-history");
+		const id = `loading-${Date.now()}`;
+		const msgDiv = document.createElement("div");
+		msgDiv.className = "message agent loading";
+		msgDiv.id = id;
+		msgDiv.innerHTML =
+			'<div class="typing-indicator"><span></span><span></span><span></span></div>';
+		history.appendChild(msgDiv);
+		history.scrollTop = history.scrollHeight;
+		return id;
+	},
+
+	removeMessage(id) {
+		const el = document.getElementById(id);
+		if (el) el.remove();
+	},
+};

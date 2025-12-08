@@ -30,55 +30,61 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (judgeSection) judgeSection.style.display = "none";
 
 			for (const key in outputs) {
-				outputs[key].innerHTML = "";
+				if (outputs[key]) outputs[key].innerHTML = "";
 			}
-			submitBtn.disabled = true;
+			if (submitBtn) submitBtn.disabled = true;
 
-			// Start stream
-			const eventSource = new EventSource(
-				`/stream_voting?prompt=${encodeURIComponent(prompt)}`,
-			);
-
-			// Accumulate text for markdown parsing
-			const state = {
+			// Initialize state for this run
+			const accumulatedState = {
 				humorous: "",
 				professional: "",
 				urgent: "",
 				judge: "",
 			};
 
-			eventSource.onmessage = (event) => {
-				const data = JSON.parse(event.data);
+			// Start stream
+			const streamHandler = new StreamHandler(
+				`/stream_voting?prompt=${encodeURIComponent(prompt)}`,
+				(data) => {
+					// onMessage
+					if (data.type === "step") {
+						const agent = data.agent; // humorous, professional, urgent, judge
+						if (outputs[agent]) {
+							// Reveal judge section when first token arrives
+							if (agent === "judge" && judgeSection) {
+								judgeSection.style.display = "block";
+							}
 
-				if (data.type === "step") {
-					const agent = data.agent; // humorous, professional, urgent, judge
-					if (outputs[agent]) {
-						// Reveal judge section when first token arrives
-						if (agent === "judge" && judgeSection) {
-							judgeSection.style.display = "block";
+							if (accumulatedState[agent] !== undefined) {
+								accumulatedState[agent] += data.content;
+								const currentContent = accumulatedState[agent];
+
+								if (
+									typeof marked !== "undefined" &&
+									typeof DOMPurify !== "undefined"
+								) {
+									outputs[agent].innerHTML = DOMPurify.sanitize(
+										marked.parse(currentContent),
+									);
+								} else {
+									// Fallback to plain text for security if libraries are missing.
+									outputs[agent].textContent = currentContent;
+								}
+							}
 						}
-
-						state[agent] += data.content;
-                        if (typeof marked !== "undefined" && typeof DOMPurify !== "undefined") {
-                            outputs[agent].innerHTML = DOMPurify.sanitize(marked.parse(state[agent]));
-                        } else if (typeof marked !== "undefined") {
-                             // Fallback if DOMPurify isn't loaded (though it should be)
-                            outputs[agent].innerHTML = marked.parse(state[agent]);
-                        } else {
-                            outputs[agent].textContent = state[agent];
-                        }
 					}
-				} else if (data.type === "complete") {
-					eventSource.close();
-					submitBtn.disabled = false;
-				}
-			};
-
-			eventSource.onerror = (err) => {
-				console.error("EventSource failed:", err);
-				eventSource.close();
-				submitBtn.disabled = false;
-			};
+				},
+				() => {
+					// onComplete
+					if (submitBtn) submitBtn.disabled = false;
+				},
+				(err) => {
+					// onError
+					console.error("Stream error:", err);
+					if (submitBtn) submitBtn.disabled = false;
+				},
+			);
+			streamHandler.start();
 		});
 	}
 });
