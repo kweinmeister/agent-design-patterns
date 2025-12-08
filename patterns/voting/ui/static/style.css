@@ -1,0 +1,58 @@
+/* Voting Pattern Styles */
+
+.voting-results-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 1.5rem;
+}
+
+.result-card-humorous {
+	border-left: 4px solid #9333ea;
+	background-color: rgba(147, 51, 234, 0.1);
+}
+
+.result-card-humorous h3 {
+	color: #d8b4fe;
+}
+
+.result-card-professional {
+	border-left: 4px solid #2563eb;
+	background-color: rgba(37, 99, 235, 0.1);
+}
+
+.result-card-professional h3 {
+	color: #93c5fd;
+}
+
+.result-card-urgent {
+	border-left: 4px solid #ea580c;
+	background-color: rgba(234, 88, 12, 0.1);
+}
+
+.result-card-urgent h3 {
+	color: #fdba74;
+}
+
+.result-card-judge {
+	border-left: 4px solid #16a34a;
+	background-color: rgba(22, 163, 74, 0.1);
+}
+
+.result-card-judge h3 {
+	color: #86efac;
+}
+
+#results-container,
+#judge-section {
+	display: none;
+}
+
+.voting-section-header {
+	margin-top: 1rem;
+	color: var(--text-header);
+}
+
+.voting-section-header-large {
+	margin-top: 2rem;
+	color: var(--text-header);
+}

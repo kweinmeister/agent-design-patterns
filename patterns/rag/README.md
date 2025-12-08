@@ -52,12 +52,7 @@ graph TD
 
 ## When to Use
 
-Use this pattern when your application needs to:
-
-- **Access Private Data**: Answer questions about proprietary documents not in the model's training set.
-- **Provide Up-to-Date Information**: Reference data that changes frequently without retraining the model.
-- **Reduce Hallucinations**: Constrain the model to answer based *only* on the provided context.
-- **Cite Sources**: Allow the model to attribute its answers to specific documents.
+Use this pattern when your application needs to access private data, providing answers about proprietary documents not in the model's training set. It is also essential for providing up-to-date information by referencing data that changes frequently without retraining the model. RAG helps reduce hallucinations by constraining the model to answer based only on the provided context, and it allows the model to cite sources, attributing its answers to specific documents.
 
 ## Try the Code
 

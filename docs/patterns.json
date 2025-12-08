@@ -19,5 +19,12 @@
     "description": "Demonstrates an agent that can use tools",
     "icon": "\ud83d\udee0\ufe0f",
     "demo_url": ""
+  },
+  {
+    "id": "voting",
+    "name": "Voting",
+    "description": "Generates multiple options in parallel and selects the best one",
+    "icon": "\ud83d\uddf3\ufe0f",
+    "demo_url": ""
   }
 ]

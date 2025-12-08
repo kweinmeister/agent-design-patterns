@@ -1,0 +1,58 @@
+{% extends "simple_agent_layout.html.j2" %}
+
+{% block head %}
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.3.0/purify.min.js"></script>
+  <script src="/voting/static/voting.js"></script>
+  <link rel="stylesheet" href="/voting/static/style.css">
+{% endblock head %}
+{% block title %}
+  {{ pattern.name }}
+{% endblock title %}
+{% block pattern_name %}
+  {{ pattern.name }}
+{% endblock pattern_name %}
+{% block pattern_desc %}
+  {{ pattern.description }}. Enter a product description to generate ad copy.
+{% endblock pattern_desc %}
+{% block form_action %}
+  /demo/{{ pattern.id }}
+{% endblock form_action %}
+{% block placeholder %}
+  e.g. A smart coffee mug that keeps your drink hot for hours.
+{% endblock placeholder %}
+{% block results %}
+  <div id="results-container" class="results-grid">
+    <div id="parallel-section">
+      <h2 class="voting-section-header">Parallel Generations</h2>
+      
+      <div class="voting-results-grid">
+        <!-- Humorous -->
+        <div class="result-card result-card-humorous">
+          <h3>Humorous</h3>
+          <div id="result-humorous" class="content"></div>
+        </div>
+
+        <!-- Professional -->
+        <div class="result-card result-card-professional">
+          <h3>Professional</h3>
+          <div id="result-professional" class="content"></div>
+        </div>
+
+        <!-- Urgent -->
+        <div class="result-card result-card-urgent">
+          <h3>Urgent</h3>
+          <div id="result-urgent" class="content"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="judge-section">
+      <h2 class="voting-section-header-large">Judge's Decision</h2>
+      <div class="result-card final result-card-judge">
+        <h3>Winner</h3>
+        <div id="result-judge" class="content markdown-body"></div>
+      </div>
+    </div>
+  </div>
+{% endblock results %}
