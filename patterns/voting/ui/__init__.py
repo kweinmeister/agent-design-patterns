@@ -68,8 +68,10 @@ async def stream_voting_generator(user_request: str) -> AsyncGenerator[str, None
 
     async def producer_manager() -> None:
         """Wait for all tasks to complete and signal done."""
-        await asyncio.gather(*tasks)
-        await queue.put(None)  # Sentinel
+        try:
+            await asyncio.gather(*tasks)
+        finally:
+            await queue.put(None)  # Sentinel
 
     # Start manager in background
     _manager_task = asyncio.create_task(producer_manager())
