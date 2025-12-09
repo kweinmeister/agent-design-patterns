@@ -6,9 +6,12 @@ requires-python = ">=3.12"
 [tool.pyrefly]
 
 [tool.pytest.ini_options]
+env = ["GEMINI_MODEL=gemini-2.5-flash-lite"]
 filterwarnings = [
     "ignore::DeprecationWarning:google.adk.*",
     "ignore::DeprecationWarning:google.genai.*",
+    "ignore:\\[EXPERIMENTAL\\] ToolConfirmation:UserWarning",
+    "ignore::pydantic.warnings.PydanticDeprecatedSince20",
 ]
 
 [tool.ruff]
@@ -24,4 +27,3 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "test_*.py" = ["S101"]
-"tests/*" = ["S101"]

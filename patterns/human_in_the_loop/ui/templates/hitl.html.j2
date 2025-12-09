@@ -1,0 +1,138 @@
+{% extends "simple_agent_layout.html.j2" %}
+
+{% block title %}
+  {{ pattern.name }}
+{% endblock title %}
+
+{% block head %}
+  <script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/uuid@8/dist/umd/uuidv4.min.js"></script>
+  <link rel="stylesheet" href="/human_in_the_loop/static/style.css">
+  <script src="/human_in_the_loop/static/hitl.js"></script>
+{% endblock head %}
+
+{% block pattern_name %}
+  {{ pattern.name }}
+{% endblock pattern_name %}
+
+{% block pattern_desc %}
+  {{ pattern.description }}. 
+  <br>
+  <strong>Scenario:</strong> Ask the agent to "Announce our new flying car product". 
+  The agent will draft it. When it attempts to publish, it will pause and ask for confirmation.
+  You will then see the approval controls appear.
+{% endblock pattern_desc %}
+
+{% block content %}
+  <div class="container-fluid hitl-wrapper">
+    <!-- Left Column: Input Form -->
+    <div class="input-panel">
+      <div class="panel-header panel-header-layout">
+        <div>
+           <h3>📄 Press Release Details</h3>
+           <p class="text-muted" style="margin-bottom:0;">Fill in the details to generate a draft.</p>
+        </div>
+        <button id="btn-generate" type="submit" form="pr-form" class="btn btn-primary">Draft Press Release</button>
+      </div>
+      
+      <form id="pr-form" class="pr-form">
+        <!-- Form structure unchanged, button moved out -->
+        <div class="form-group">
+          <label>Company Name</label>
+          <input type="text" name="company" value="AeroDrive Innovations" class="form-control">
+        </div>
+        <!-- ... (Fields kept same for brevity if replacement chunks used right, but replacing whole block logic implies I output all fields) -->
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" name="product" value="SkyCommuter X1" class="form-control">
+        </div>
+        
+        <div class="form-group">
+          <label>Key Features & Innovations</label>
+          <textarea name="features" class="form-control" rows="3">Vertical Take-Off and Landing (VTOL), AI-assisted navigation, solar-electric hybrid engine, fits in a standard garage.</textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>Target Market</label>
+          <input type="text" name="audience" value="Urban commuters, exhausted drivers, tech enthusiasts" class="form-control">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group half">
+              <label>Availability</label>
+              <input type="text" name="availability" value="Pre-orders starting Q3 2026" class="form-control">
+            </div>
+            <div class="form-group half">
+              <label>Price</label>
+              <input type="text" name="price" value="$149,000 (estimated)" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group">
+          <label>Vision/Impact</label>
+          <textarea name="vision" class="form-control" rows="2">Solving traffic congestion by taking to the skies. Reclaiming time for what matters.</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>Key Quote</label>
+            <textarea name="quote" class="form-control" rows="2">"We aren't just building a car; we're giving people back their freedom." - Sarah Connor, CEO</textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group half">
+                <label>City/Country</label>
+                <input type="text" name="location" value="San Francisco, CA" class="form-control">
+            </div>
+            <div class="form-group half">
+                 <label>Event/Link</label>
+                 <input type="text" name="assets" value="www.aerodrive.example/launch" class="form-control">
+            </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column: Chat & Approval -->
+    <div class="results-panel">
+       <div class="panel-header">
+         <h3>💬 Agent Interaction</h3>
+       </div>
+
+      <div class="hitl-container">
+        <!-- Action Bar (Review Controls) -->
+        <div id="action-bar" class="action-bar hidden" style="margin-top: 0; margin-bottom: 1rem;">
+            <div class="action-buttons">
+                <button id="btn-approve" class="btn btn-action btn-approve" title="Approve & Publish">
+                   <span class="icon">✅</span> Approve
+                </button>
+                <button id="btn-reject" class="btn btn-action btn-reject" title="Reject & Provide Feedback">
+                   <span class="icon">❌</span> Reject
+                </button>
+            </div>
+        </div>
+
+        <!-- Feedback Input -->
+        <div id="feedback-input-area" class="feedback-input-area hidden" style="margin-top:0; margin-bottom: 1rem;">
+          <label>What needs to change?</label>
+          <div class="feedback-row">
+              <input type="text" id="feedback-text" placeholder="e.g. Make it more exciting, change the price..." class="form-input">
+              <div class="button-group-sm">
+                <button id="btn-send-feedback" class="btn btn-primary">Regenerate</button>
+                <button id="btn-cancel-feedback" class="btn btn-secondary">Cancel</button>
+              </div>
+          </div>
+        </div>
+
+        <!-- Document Preview -->
+        <div id="document-preview" class="document-preview">
+           <div class="placeholder-text">
+             <div class="icon">📄</div>
+             <p>Fill in the form to generate a draft press release.</p>
+           </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+{% endblock content %}

@@ -1,0 +1,288 @@
+/* Human in the Loop Styles */
+
+.hitl-wrapper {
+	display: flex;
+	gap: 2rem;
+	padding: 2rem;
+	height: calc(100vh - 100px);
+	max-width: 1400px;
+	margin: 0 auto;
+}
+
+.input-panel {
+	flex: 1;
+	background: var(--card-bg);
+	padding: 1.5rem;
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--border-color);
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.results-panel {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	min-width: 400px;
+}
+
+.panel-header {
+	margin-bottom: 1.5rem;
+	border-bottom: 1px solid var(--border-color);
+	padding-bottom: 0.5rem;
+}
+
+.panel-header-layout {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.panel-header h3 {
+	margin: 0;
+	font-size: 1.2rem;
+}
+.panel-header p {
+	margin: 0;
+	font-size: 0.9rem;
+}
+
+/* Form Styles */
+.pr-form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.form-group {
+	/* Use block layout for safety, flex sometimes causes issues with intrinsic heights */
+	display: block;
+	margin-bottom: 0.5rem;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-size: 0.85rem;
+	font-weight: 500;
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.form-control {
+	display: block;
+	width: 100%;
+	box-sizing: border-box; /* Crucial for padding/borders not adding to width */
+	padding: 0.75rem 1rem;
+	border-radius: var(--radius-md);
+	border: 1px solid var(--border-color);
+	background: var(--glass-bg-subtle);
+	color: var(--text-color);
+	font-family: inherit;
+	font-size: 0.95rem;
+	transition: all 0.2s;
+	line-height: 1.5;
+}
+.form-control:focus {
+	outline: none;
+	border-color: var(--accent-color);
+	background: var(--card-bg);
+	box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.form-row {
+	display: flex;
+	gap: 1rem;
+}
+.form-group.half {
+	flex: 1;
+}
+
+textarea.form-control {
+	resize: vertical;
+}
+
+.form-actions {
+	margin-top: 1rem;
+}
+.btn-block {
+	width: 100%;
+}
+
+/* Chat Area Overrides */
+.hitl-container {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin: 0; /* Override old margin */
+	max-width: none;
+	min-height: 0; /* Allow flex shrink */
+}
+
+.chat-history {
+	flex: 1;
+	min-height: 0; /* Allow flex scrolling */
+	max-height: none;
+}
+
+/* Action Bar & Controls */
+.action-bar {
+	background: var(--glass-bg);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-lg);
+	padding: 1rem;
+	text-align: center;
+	animation: slideUp 0.3s ease;
+	margin-bottom: 1rem; /* Space below action bar since it's now on top */
+}
+
+.action-buttons {
+	display: flex;
+	justify-content: center;
+	gap: 1.5rem;
+}
+
+.btn-action {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.8rem 1.5rem;
+	font-size: 1rem;
+	font-weight: 600;
+	border-radius: var(--radius-md);
+	transition: transform 0.1s ease;
+}
+.btn-action:hover {
+	transform: translateY(-2px);
+}
+.btn-action:active {
+	transform: translateY(0);
+}
+
+.btn-approve {
+	background: #10b981; /* Emerald 500 */
+	color: white;
+	border: none;
+}
+.btn-approve:hover {
+	background: #059669;
+}
+
+.btn-reject {
+	background: #ef4444; /* Red 500 */
+	color: white;
+	border: none;
+}
+.btn-reject:hover {
+	background: #dc2626;
+}
+
+.feedback-input-area {
+	margin-top: 1rem;
+	background: var(--glass-bg-subtle);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-lg);
+	padding: 1rem;
+	animation: slideUp 0.2s ease;
+}
+
+.feedback-input-area label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-size: 0.9rem;
+	color: var(--text-muted);
+}
+
+.feedback-row {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.feedback-row input {
+	flex: 1;
+}
+
+/* Follow-up area */
+.followup-area {
+	margin-top: auto;
+}
+.followup-form {
+	display: flex;
+	gap: 0.5rem;
+}
+.followup-form input {
+	flex: 1;
+}
+
+.hidden {
+	display: none;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(5px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideUp {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Document Preview */
+.document-preview {
+	flex: 1;
+	background: white; /* Document paper look */
+	color: #333; /* Standard document text color */
+	padding: 3rem;
+	border-radius: var(--radius-sm);
+	box-shadow:
+		0 4px 6px -1px rgba(0, 0, 0, 0.1),
+		0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	overflow-y: auto;
+	font-family: "Georgia", serif; /* Serif for press release feel */
+	line-height: 1.6;
+	min-height: 400px;
+	border: 1px solid var(--border-color);
+}
+
+.document-preview h1,
+.document-preview h2,
+.document-preview h3 {
+	color: #111;
+	margin-top: 1.5em;
+	margin-bottom: 0.8em;
+}
+
+.placeholder-text {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: #9ca3af;
+	text-align: center;
+	font-family: sans-serif;
+}
+.placeholder-text .icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+	opacity: 0.5;
+}
+
+/* Status Toast / Bar (if needed, or just rely on button feedback) */
