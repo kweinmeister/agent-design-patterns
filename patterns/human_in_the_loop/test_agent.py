@@ -53,23 +53,23 @@ async def test_hitl_agent_approval_flow() -> None:
     assert function_calls[0].name == "publish_press_release"
 
     # 3. Confirm
-    # With native ADK HITL, we send a specific confirmation payload or message
-    # In the absence of a dedicated confirmation method on the runner in this version,
-    # we simulate the user sending the confirmation JSON as text, which the agent/model
-    # should interpret as the tool confirmation input provided by the "system" (the UI).
-    async for _event, _, _ in run_agent_standard(
+    # We send the confirmation and verify the agent proceeds to publish.
+    final_history: list[str] = []
+    async for event, _, _ in run_agent_standard(
         hitl_agent, '{"confirmed": true}', app_name, session_id
     ):
-        pass  # We just want to ensure it runs without error
+        if event.content and event.content.parts:
+            final_history.extend(
+                [part.text for part in event.content.parts if part.text]
+            )
 
-    # Now it should call the tool
-    # Check if we have any response from the agent after confirmation.
-
-    # Asserting intent is sufficient for this unit test level.
-    # We verify that, upon user confirmation, the agent correctly attempts to call
-    # the tool.
-    assert function_calls, "Agent must attempt to publish"
-    assert function_calls[0].name == "publish_press_release"
+    # Assert that the agent confirmed the successful publication.
+    # We check for keywords indicating success. The exact wording depends on the
+    # model's generation.
+    assert any(
+        "published" in message.lower() or "success" in message.lower()
+        for message in final_history
+    ), f"Agent should confirm successful publication. History: {final_history}"
 
 
 def test_hitl_registration() -> None:

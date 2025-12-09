@@ -25,7 +25,7 @@ def publish_press_release(content: str) -> str:
     )
 
 
-def confirmation_criteria(content: str) -> bool:  # noqa: ARG001
+def confirmation_criteria(content: dict[str, str]) -> bool:  # noqa: ARG001
     """Determine if a tool call requires human approval.
 
     This function acts as a filter for tool execution. In this specific pattern,

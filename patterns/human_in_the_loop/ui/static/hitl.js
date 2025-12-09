@@ -135,16 +135,9 @@ IMPORTANT: Return ONLY the press release text. Do not include any conversational
 				if (lastMsg.role !== "user") {
 					this.updateDocument(lastMsg.content);
 
-					const contentLower = lastMsg.content.toLowerCase();
-
-					// State Detection using Structural Flags & Content
-
+					// State Detection using Structural Flags from Backend
 					// 1. Success / Published
-					// We check for success markers in the response text.
-					if (
-						contentLower.includes("success") ||
-						contentLower.includes("published")
-					) {
+					if (data.is_published) {
 						this.state.waitingForConfirmation = false;
 						this.state.isPublished = true;
 
@@ -152,7 +145,6 @@ IMPORTANT: Return ONLY the press release text. Do not include any conversational
 						if (btn) btn.textContent = "Published! ✅";
 					}
 					// 2. Confirmation Needed
-					// We rely on the backend flag `requires_confirmation` which checks for the specific function call.
 					else if (data.requires_confirmation) {
 						this.state.waitingForConfirmation = true;
 						this.showControls();

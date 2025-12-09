@@ -27,6 +27,7 @@ async def run_hitl_agent(request: HitlRequest) -> dict[str, Any]:
     """Run the agent and collect history."""
     history = []
     requires_confirmation = False
+    is_published = False
     app_name = "hitl_app"
 
     input_content = request.prompt
@@ -42,18 +43,44 @@ async def run_hitl_agent(request: HitlRequest) -> dict[str, Any]:
                 if part.text
             )
 
-            # Check for specific tool calls that trigger confirmation
-            # In this pattern, 'publish_press_release' is configured to require it.
-            # If the model emits this function call, the runner (in a real scenario)
-            # would pause. Use this event as the robust signal for the UI.
+            # Check confirmed tools.
             for part in event.content.parts:
-                if (
-                    part.function_call
-                    and part.function_call.name == "publish_press_release"
-                ):
-                    requires_confirmation = True
+                if not part.function_call:
+                    continue
 
-    return {"history": history, "requires_confirmation": requires_confirmation}
+                # Iterate agent tools to find matching function name and config.
+                for tool in hitl_agent.tools:
+                    # In ADK, tools can be FunctionTool or others.
+                    # We check for `name` attribute safely.
+                    tool_name = getattr(tool, "name", None)
+                    if tool_name == part.function_call.name and getattr(
+                        tool, "_require_confirmation", None
+                    ):
+                        requires_confirmation = True
+                        break
+
+                if requires_confirmation:
+                    break
+
+        # Check for successful publication in the history
+        # We look for the standard success message from the tool.
+        # This is logically sound because the tool output is deterministic.
+        if (
+            event.content
+            and event.content.parts
+            and any(
+                "SUCCESS: Press release published" in part.text
+                for part in event.content.parts
+                if part.text
+            )
+        ):
+            is_published = True
+
+    return {
+        "history": history,
+        "requires_confirmation": requires_confirmation,
+        "is_published": is_published,
+    }
 
 
 def register(app: FastAPI) -> PatternMetadata:
