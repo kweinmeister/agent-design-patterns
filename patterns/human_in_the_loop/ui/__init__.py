@@ -21,73 +21,39 @@ class HitlRequest(BaseModel):
 
     prompt: str
     session_id: str | None = None
-    # For tool confirmation
-    tool_confirmation: dict[str, Any] | None = None
 
 
 async def run_hitl_agent(request: HitlRequest) -> dict[str, Any]:
     """Run the agent and collect history."""
     history = []
+    requires_confirmation = False
     app_name = "hitl_app"
 
-    # If we have a confirmation payload, we need to pass that to the runner.
-    # However, the ADK runner run_async primarily takes a new_message.
-    # We might need to handle the confirmation as a specific input type or
-    # ensure the session state is expecting it.
-
-    # The article implies we send {confirmed: true} back to the agent.
-    # In ADK, this usually resolves the pending tool call.
-
-    # We need to construct the input message based on whether it's a new prompt
-    # or a confirmation.
-
-    # Note: run_agent_standard is a helper that wraps runner.run_async.
-    # If we need to pass a confirmation, it might be better to just pass it as text
-    # if the agent is designed to parse it, OR use the specific ADK mechanism
-    # if available.
-
-    # But based on the article: "provide {confirmed: true} to the agent".
-    # This suggests sending a tool response or a specific message.
-    # Let's assume for now we send the confirmation as a tool response or similar.
-
-    # Actually, looking at ADK docs (inferred), passing a tool output usually involves
-    # responding to the tool call.
-
-    # Let's stick to the standard runner for now and see what events we get.
-    # When a tool requires confirmation, the agent should effectively 'pause' or yield
-    # a request for user input.
-
-    # We'll rely on the agent's output to tell us what to do.
-
     input_content = request.prompt
-    if request.tool_confirmation:
-        # If we have a confirmation, we might need to format it for the agent
-        # or just pass it through if the session state is waiting.
-        # ADK typically handles this by resuming the session.
-        # For simplicity, if we are confirming, we send the prompt
-        # (which might be empty or "proceed")
-        pass
 
     async for event, _, _ in run_agent_standard(
         hitl_agent, input_content, app_name, request.session_id
     ):
         if event.content and event.content.parts:
+            # Collect text history
             history.extend(
                 {"role": event.author, "content": part.text}
                 for part in event.content.parts
                 if part.text
             )
 
-            # Check for functioning calling part if present and pending confirmation
-            # Note: ADK events for tool calls might be distinct.
-            # However, usually the text part will contain the model's thought process
-            # or the tool call request.
+            # Check for specific tool calls that trigger confirmation
+            # In this pattern, 'publish_press_release' is configured to require it.
+            # If the model emits this function call, the runner (in a real scenario)
+            # would pause. Use this event as the robust signal for the UI.
+            for part in event.content.parts:
+                if (
+                    part.function_call
+                    and part.function_call.name == "publish_press_release"
+                ):
+                    requires_confirmation = True
 
-            # If using FunctionTool with confirmation, the model emits a tool call,
-            # then execution pauses. We need to detect this pause state.
-            # The 'event' object might have metadata.
-
-    return {"history": history}
+    return {"history": history, "requires_confirmation": requires_confirmation}
 
 
 def register(app: FastAPI) -> PatternMetadata:
