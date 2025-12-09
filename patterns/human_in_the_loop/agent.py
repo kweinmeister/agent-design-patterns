@@ -19,10 +19,10 @@ def publish_press_release(content: str) -> str:
 
     """
     # In a real app, this would hit an API.
-    return (
-        f"SUCCESS: Press release published to global wires. "
-        f"Length: {len(content)} chars."
-    )
+    return f"{SUCCESS_MSG} Length: {len(content)} chars."
+
+
+SUCCESS_MSG = "SUCCESS: Press release published to global wires."
 
 
 def confirmation_criteria(content: dict[str, str]) -> bool:  # noqa: ARG001

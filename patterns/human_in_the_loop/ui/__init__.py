@@ -5,7 +5,7 @@ from typing import Any
 from fastapi import APIRouter, FastAPI
 from pydantic import BaseModel
 
-from patterns.human_in_the_loop.agent import hitl_agent
+from patterns.human_in_the_loop.agent import SUCCESS_MSG, hitl_agent
 from patterns.utils import (
     PatternConfig,
     PatternMetadata,
@@ -53,8 +53,11 @@ async def run_hitl_agent(request: HitlRequest) -> dict[str, Any]:
                     # In ADK, tools can be FunctionTool or others.
                     # We check for `name` attribute safely.
                     tool_name = getattr(tool, "name", None)
-                    if tool_name == part.function_call.name and getattr(
-                        tool, "_require_confirmation", None
+                    # we try to be safer.
+                    if (
+                        tool_name == part.function_call.name
+                        and hasattr(tool, "_require_confirmation")
+                        and tool._require_confirmation  # noqa: SLF001
                     ):
                         requires_confirmation = True
                         break
@@ -63,15 +66,11 @@ async def run_hitl_agent(request: HitlRequest) -> dict[str, Any]:
                     break
 
         # Check for successful publication in the history
-        # We look for the standard success message from the tool.
-        # This is logically sound because the tool output is deterministic.
         if (
             event.content
             and event.content.parts
             and any(
-                "SUCCESS: Press release published" in part.text
-                for part in event.content.parts
-                if part.text
+                SUCCESS_MSG in part.text for part in event.content.parts if part.text
             )
         ):
             is_published = True

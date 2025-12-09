@@ -33,6 +33,13 @@
 	border-bottom: 1px solid var(--border-color);
 	padding-bottom: 0.5rem;
 }
+
+.panel-header-layout {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
 .panel-header h3 {
 	margin: 0;
 	font-size: 1.2rem;

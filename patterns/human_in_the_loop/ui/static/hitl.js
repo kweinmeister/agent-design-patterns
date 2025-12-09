@@ -101,7 +101,7 @@ IMPORTANT: Return ONLY the press release text. Do not include any conversational
 			if (this.state.waitingForConfirmation) {
 				// If waiting for confirmation (ADK state), we must reject via JSON or it hangs?
 				// ADK usually expects a confirmation boolean.
-				this.sendMessage(`{"confirmed": false, "reason": "${val}"}`);
+				this.sendMessage(JSON.stringify({ confirmed: false, reason: val }));
 			} else {
 				// Just drafting feedback
 				this.sendMessage(
