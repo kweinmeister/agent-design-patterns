@@ -7,7 +7,6 @@ from patterns.config import GEMINI_MODEL
 
 
 # --- Tool Definition ---
-# --- Tool Definition ---
 def publish_press_release(content: str) -> str:
     """Publish the press release to the global newswire.
 
