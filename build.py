@@ -97,7 +97,7 @@ def process_patterns(patterns_data: list[dict], output_dir: Path) -> None:
             # Matches PatternContext.get_code_files in utils.py
             is_code_file = (
                 filename.endswith(".py")
-                and not filename.startswith("test")
+                and not filename.startswith("test_")
                 and filename != "__init__.py"
             )
 
