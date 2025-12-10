@@ -93,11 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 
 			emailSubject.textContent = subject;
-			// Convert newlines to breaks for HTML display
-			emailBody.innerHTML = body.replace(/\n/g, "<br>");
-
 			// Determine Severity for Badge from text content (since we don't get structured intermediate output easily in this simple setup)
-			emailBody.innerHTML = body.replace(/\n/g, "<br>");
+			emailBody.innerHTML = DOMPurify.sanitize(body.replace(/\n/g, "<br>"));
 		} catch (e) {
 			console.error(e);
 			emailBody.innerHTML = `<p class="text-error">Error: ${e.message}</p>`;

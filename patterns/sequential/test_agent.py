@@ -23,10 +23,28 @@ def test_pipeline_structure(agent: SequentialAgent) -> None:
     assert agent.sub_agents[2].name == "IncidentCommunicator"
 
 
+@pytest.mark.parametrize(
+    ("input_text", "checks", "case_sensitive"),
+    [
+        (
+            "PaymentService failed with 500 error for User 123",
+            ["[URGENT]", "Subject: [URGENT]"],
+            True,
+        ),
+        (
+            "The dashboard is loading slowly",
+            ["for your information", "fyi"],
+            False,
+        ),
+    ],
+)
 @pytest.mark.asyncio
-async def test_p1_scenario_e2e() -> None:
-    """Test Critical P1 scenario end-to-end."""
-    input_text = "PaymentService failed with 500 error for User 123"
+async def test_e2e_scenarios(
+    input_text: str,
+    checks: list[str],
+    case_sensitive: bool,  # noqa: FBT001
+) -> None:
+    """Test various scenarios end-to-end."""
     app_name = "sequential_app"
 
     events = []
@@ -46,38 +64,12 @@ async def test_p1_scenario_e2e() -> None:
         if part.text
     ]
 
-    if text_responses:
-        result = text_responses[-1]
-        # P1 Check
-        assert "[URGENT]" in result or "Subject: [URGENT]" in result
+    assert text_responses, "No response from IncidentCommunicator"
+    result = text_responses[-1]
+    if not case_sensitive:
+        result = result.lower()
 
-
-@pytest.mark.asyncio
-async def test_p3_scenario_e2e() -> None:
-    """Test Minor P3 scenario end-to-end."""
-    input_text = "The dashboard is loading slowly"
-    app_name = "sequential_app"
-
-    events = []
-    async for event, _, _ in run_agent_standard(
-        incident_triage_pipeline, input_text, app_name
-    ):
-        events.append(event)
-
-    text_responses = [
-        part.text
-        for event in events
-        if event.author == "IncidentCommunicator"
-        and event.content
-        and event.content.parts
-        for part in event.content.parts
-        if part.text
-    ]
-
-    if text_responses:
-        result = text_responses[-1].lower()
-        # P3 Check
-        assert "for your information" in result or "fyi" in result
+    assert any(check in result for check in checks)
 
 
 def test_registration() -> None:
