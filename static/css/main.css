@@ -69,13 +69,8 @@ body {
 
 .repo-link:hover {
 	background-color: var(--hover-bg);
-	border-color: var(--border-color);
 	text-decoration: none;
 	opacity: 1;
-}
-
-.repo-link svg {
-	opacity: 0.8;
 }
 
 
