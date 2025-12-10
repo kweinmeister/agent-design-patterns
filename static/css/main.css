@@ -73,7 +73,6 @@ body {
 	opacity: 1;
 }
 
-
 .pattern-link {
 	display: flex;
 	align-items: center;
@@ -399,7 +398,8 @@ iframe {
 }
 
 .sidebar-overlay {
-	display: none;
+	visibility: hidden;
+	pointer-events: none;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -409,11 +409,16 @@ iframe {
 	backdrop-filter: blur(2px);
 	z-index: 90;
 	opacity: 0;
-	transition: opacity 0.3s ease;
+	transition:
+		opacity 0.3s ease,
+		visibility 0s 0.3s;
 }
 
 .sidebar-overlay.active {
 	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+	transition: opacity 0.3s ease;
 }
 
 @media (max-width: 768px) {
@@ -438,9 +443,7 @@ iframe {
 		transform: translateX(0);
 	}
 
-	.sidebar-overlay.active {
-		display: block;
-	}
+	/* Removed display: block for .sidebar-overlay.active as it's handled by visibility */
 
 	.top-bar {
 		padding: 0 1rem;

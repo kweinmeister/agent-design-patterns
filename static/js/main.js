@@ -54,7 +54,11 @@ const App = {
 			this.loadPattern(id, url, name);
 
 			// Close sidebar on mobile on selection
-			if (window.innerWidth <= 768) {
+			// Check if sidebar toggle is visible to determine if we are in mobile mode
+			if (
+				this.elements.sidebarToggle &&
+				getComputedStyle(this.elements.sidebarToggle).display !== "none"
+			) {
 				this.toggleSidebar(false);
 			}
 		});
@@ -331,13 +335,8 @@ const App = {
 
 	toggleSidebar(show) {
 		const { sidebar, sidebarOverlay } = this.elements;
-		if (show) {
-			sidebar.classList.add("open");
-			sidebarOverlay.classList.add("active");
-		} else {
-			sidebar.classList.remove("open");
-			sidebarOverlay.classList.remove("active");
-		}
+		sidebar.classList.toggle("open", show);
+		sidebarOverlay.classList.toggle("active", show);
 	},
 };
 
