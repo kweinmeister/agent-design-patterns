@@ -1,5 +1,7 @@
 """Unit tests for the Sequential Agent Pattern."""
 
+import json
+
 import pytest
 from fastapi import FastAPI
 from google.adk.agents import SequentialAgent
@@ -65,7 +67,15 @@ async def test_e2e_scenarios(
     ]
 
     assert text_responses, "No response from IncidentCommunicator"
-    result = text_responses[-1]
+
+    try:
+        # The final output should be a JSON string
+        result_json = json.loads(text_responses[-1])
+        result = f"{result_json.get('subject', '')}\n{result_json.get('body', '')}"
+    except json.JSONDecodeError:
+        # Fallback for non-JSON responses during transition or if an error occurs
+        result = text_responses[-1]
+
     if not case_sensitive:
         result = result.lower()
 

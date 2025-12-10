@@ -78,22 +78,18 @@ document.addEventListener("DOMContentLoaded", () => {
 			await new Promise((r) => setTimeout(r, 600));
 
 			// Parse Output
-			// The agent returns a pure string (Email).
-			// We need to extract the Subject if possible, or just dump it.
+			// The agent returns a JSON string with subject and body.
 			const resultText = data.output;
-
-			// Simple parsing for demo purposes
 			let subject = "Incident Report";
-			let body = resultText;
-
-			const subjectMatch = resultText.match(/Subject: (.*)/);
-			if (subjectMatch) {
-				subject = subjectMatch[1];
-				body = resultText.replace(/Subject: .*/, "").trim();
+			let body = resultText; // Default to raw text in case of error
+			try {
+				const emailData = JSON.parse(resultText);
+				subject = emailData.subject || subject;
+				body = emailData.body || body;
+			} catch (e) {
+				console.error("Failed to parse agent response as JSON, showing raw output.", e);
 			}
-
 			emailSubject.textContent = subject;
-			// Determine Severity for Badge from text content (since we don't get structured intermediate output easily in this simple setup)
 			emailBody.innerHTML = DOMPurify.sanitize(body.replace(/\n/g, "<br>"));
 		} catch (e) {
 			console.error(e);

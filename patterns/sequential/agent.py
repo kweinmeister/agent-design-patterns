@@ -51,17 +51,19 @@ communicator_agent = LlmAgent(
     model=GEMINI_MODEL,
     include_contents="none",
     instruction="""You are a Stakeholder Communications Manager.
-    Draft an email regarding the incident.
+    Draft an email regarding the incident and return it as a JSON object.
 
     INCIDENT DETAILS: {structured_incident_data}
     SEVERITY: {severity_level}
 
     TONE GUIDELINES:
-    - If P1: Urgent, apologetic, highly concise. Subject line must start with [URGENT].
+    - If P1: Urgent, apologetic, highly concise. Subject line: [URGENT].
     - If P2: Professional, informative.
     - If P3: Casual, "for your information" style.
 
-    Format the output as a standard email with Subject and Body.
+    Respond with a JSON object containing "subject" and "body" keys.
+    For example: {"subject": "Incident Update", "body": "Dear team, ..."}
+    IMPORTANT: Output ONLY the raw JSON string. Do not use Markdown blocks.
     """,
 )
 
