@@ -48,6 +48,32 @@ body {
 	padding: 1rem;
 }
 
+.sidebar-footer {
+	padding: 1rem;
+	border-top: 1px solid var(--border-color);
+	margin-top: auto;
+}
+
+.repo-link {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.75rem 1rem;
+	text-decoration: none;
+	color: var(--text-color);
+	border-radius: var(--radius-md);
+	transition: all 0.2s ease;
+	opacity: 0.8;
+	font-weight: 500;
+}
+
+.repo-link:hover {
+	background-color: var(--hover-bg);
+	text-decoration: none;
+	opacity: 1;
+}
+
+
 .pattern-link {
 	display: flex;
 	align-items: center;
