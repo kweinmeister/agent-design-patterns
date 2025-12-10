@@ -1,0 +1,90 @@
+{% extends "simple_agent_layout.html.j2" %}
+
+{% block title %}
+  {{ pattern.name }}
+{% endblock title %}
+
+{% block head %}
+  <link rel="stylesheet" href="/sequential/static/style.css">
+  <script src="/sequential/static/sequential.js"></script>
+{% endblock head %}
+
+{% block pattern_name %}
+  {{ pattern.name }}
+{% endblock pattern_name %}
+
+{% block pattern_desc %}
+  {{ pattern.description }}.
+  <br>
+  <strong>Demo: Incident Triage Pipeline.</strong> Watch as raw logs are processed through Extraction, Assessment, and Communication stages.
+{% endblock pattern_desc %}
+
+{% block content %}
+<div class="triage-wrapper">
+    
+    <!-- Visual Pipeline Stepper -->
+    <div class="stepper-container">
+        <div class="step" id="step-extract">
+            <div class="step-circle">1</div>
+            <div class="step-label">Extract</div>
+        </div>
+        <div class="step" id="step-assess">
+            <div class="step-circle">2</div>
+            <div class="step-label">Assess</div>
+        </div>
+        <div class="step" id="step-communicate">
+            <div class="step-circle">3</div>
+            <div class="step-label">Communicate</div>
+        </div>
+    </div>
+
+    <div class="triage-console">
+        <!-- Input Section -->
+        <div class="input-section">
+            <h3>LOG INPUT</h3>
+            <p class="text-muted input-description">
+                Enter a raw log entry or user complaint below. The pipeline will normalize the data, 
+                assess its severity based on business rules, and draft an appropriate communication.
+            </p>
+            <div class="quick-scenarios">
+                <span class="text-muted template-label">Templates:</span>
+                <button class="btn btn-sm btn-scenario-p1" onclick="setScenario('p1')">Critical (P1)</button>
+                <button class="btn btn-sm btn-scenario-p2" onclick="setScenario('p2')">Major (P2)</button>
+                <button class="btn btn-sm btn-scenario-p3" onclick="setScenario('p3')">Minor (P3)</button>
+            </div>
+            
+            <textarea id="log-input" class="form-control" rows="8" placeholder="Paste raw log or user complaint here..."></textarea>
+            
+            <div class="mt-4">
+                <button id="btn-run-pipeline" class="btn btn-primary w-100">
+                    Run Triage Pipeline
+                </button>
+            </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-section">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3>OUTPUT</h3>
+            </div>
+            
+            <div class="email-preview">
+                <div class="email-header">
+                    <div class="email-field">
+                        <span class="email-label">To:</span> stakeholders@example.com
+                    </div>
+                    <div class="email-field">
+                        <span class="email-label">From:</span> incident-bot@example.com
+                    </div>
+                    <div class="email-field">
+                        <span class="email-label">Subject:</span> <span id="email-subject">...</span>
+                    </div>
+                </div>
+                <div id="email-body" class="email-body">
+                    <p class="text-muted">Waiting for pipeline...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

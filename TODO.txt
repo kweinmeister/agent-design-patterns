@@ -1,0 +1,4 @@
+Build /docs 
+Website:
+* Provide links back to my GitHub for context. and to adk, etc.
+CI/CD: for building github pages site, possibly building the app?

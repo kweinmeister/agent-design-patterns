@@ -1,0 +1,211 @@
+/* Triage Console Layout */
+.triage-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	padding: 2rem;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+/* Stepper Visualizer */
+.stepper-container {
+	display: flex;
+	justify-content: space-between;
+	position: relative;
+	margin-bottom: 2rem;
+}
+
+.stepper-container::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: var(--border-color);
+	transform: translateY(-50%);
+	z-index: 0;
+}
+
+.step {
+	position: relative;
+	z-index: 1;
+	background: var(--bg-color);
+	padding: 0 1rem;
+	text-align: center;
+	color: var(--text-muted);
+	transition: all 0.3s ease;
+}
+
+.step-circle {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: var(--card-bg);
+	border: 2px solid var(--border-color);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 0.5rem;
+	font-weight: bold;
+	transition: all 0.3s ease;
+}
+
+.step.active .step-circle {
+	border-color: var(--accent-color);
+	background: var(--accent-color);
+	color: white;
+	box-shadow: 0 0 0 4px var(--accent-color-alpha);
+}
+
+.step.completed .step-circle {
+	border-color: #10b981;
+	background: #10b981;
+	color: white;
+}
+
+.step-label {
+	font-size: 0.9rem;
+	font-weight: 500;
+}
+
+/* Input Panel */
+.triage-console {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 2rem;
+}
+
+.input-section {
+	margin-bottom: 2rem;
+	background: var(--card-bg);
+	padding: 2rem;
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--border-color);
+}
+
+#log-input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.input-description {
+	margin-bottom: 1rem;
+}
+
+.quick-scenarios {
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+	align-items: center;
+}
+
+.template-label {
+	margin-right: 8px;
+	font-weight: 500;
+}
+
+.btn-scenario-p1 {
+	background-color: #fee2e2;
+	color: #991b1b;
+	border: 1px solid #fecaca;
+}
+.btn-scenario-p1:hover {
+	background-color: #fecaca;
+}
+
+.btn-scenario-p2 {
+	background-color: #fef3c7;
+	color: #92400e;
+	border: 1px solid #fde68a;
+}
+.btn-scenario-p2:hover {
+	background-color: #fde68a;
+}
+
+.btn-scenario-p3 {
+	background-color: #d1fae5;
+	color: #065f46;
+	border: 1px solid #a7f3d0;
+}
+.btn-scenario-p3:hover {
+	background-color: #a7f3d0;
+}
+
+/* Output Panel (Email Preview) */
+.output-section {
+	background: var(--card-bg);
+	padding: 2rem;
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--border-color);
+	display: flex;
+	flex-direction: column;
+}
+
+.email-preview {
+	background: white;
+	color: #333;
+	padding: 2rem;
+	border-radius: var(--radius-sm);
+	border: 1px solid #e5e7eb;
+	margin-top: 1rem;
+	font-family: sans-serif;
+	flex: 1;
+}
+
+.email-header {
+	border-bottom: 1px solid #e5e7eb;
+	padding-bottom: 1rem;
+	margin-bottom: 1rem;
+}
+
+.email-field {
+	display: flex;
+	margin-bottom: 0.5rem;
+	gap: 0.5rem;
+}
+
+.email-label {
+	font-weight: 600;
+	color: #6b7280;
+}
+
+.severity-badge {
+	display: inline-block;
+	padding: 0.25rem 0.5rem;
+	border-radius: 999px;
+	font-size: 0.8rem;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.badge-p1 {
+	background: #fee2e2;
+	color: #991b1b;
+}
+.badge-p2 {
+	background: #fef3c7;
+	color: #92400e;
+}
+.badge-p3 {
+	background: #d1fae5;
+	color: #065f46;
+}
+
+/* Loading State */
+.pipeline-active .step.active .step-circle {
+	animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		box-shadow: 0 0 0 0 var(--accent-color-alpha);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}

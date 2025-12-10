@@ -20,6 +20,7 @@ Each pattern in this repository contains a self-contained ADK implementation (`a
 | :--- | :--- |
 | **[RAG](patterns/rag/)** | An agent that retrieves relevant information from a knowledge base to augment its context before generating a response. |
 | **[Reflection](patterns/reflection/)** | An agent that critiques its own output to fix errors and improve quality. It utilizes a "Draft → Critique → Refine" loop to ensure accuracy before finalizing a response. |
+| **[Sequential Agent](patterns/sequential/)** | An agent that executes a linear sequence of specialized sub-agents where the output of one step becomes the input for the next. |
 | **[Tool Use](patterns/tool_use/)** | An agent equipped with executable functions (e.g., a calculator or API) to perform specific, deterministic tasks that fall outside the scope of text generation. |
 | **[Voting](patterns/voting/)** | An agent that generates multiple options in parallel and selects the best one using a "judge" agent to ensure quality. |
 | **[Human in the Loop](patterns/human_in_the_loop/)** | An agent that pauses execution to request user approval before performing sensitive actions (e.g., publishing content). |
