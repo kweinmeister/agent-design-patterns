@@ -4,6 +4,8 @@
 
 This repository serves as a reference guide for engineering AI workflows. It provides executable implementations of common agentic architectures, allowing developers to test and inspect each design pattern.
 
+A static version of the [Agent Design Patterns](https://kweinmeister.github.io/agent-design-patterns) guide is available without interactive demos.
+
 ---
 
 ## What are Agent Design Patterns?
@@ -25,20 +27,6 @@ Each pattern in this repository contains a self-contained ADK implementation (`a
 | **[Voting](patterns/voting/)** | An agent that generates multiple options in parallel and selects the best one using a "judge" agent to ensure quality. |
 | **[Human in the Loop](patterns/human_in_the_loop/)** | An agent that pauses execution to request user approval before performing sensitive actions (e.g., publishing content). |
 | **[Template](patterns/template/)** | A standardized scaffold for creating and testing new agent patterns within this framework. |
-
----
-
-## 🏗 Repository Architecture
-
-You can use this application in two ways:
-
-### 1. Live Application
-
-This is the full experience. Whether running locally via `main.py` or [deployed to Cloud Run](#deploying-to-cloud-run), this is a dynamic **FastAPI** application. It loads the agents into memory and gives you an interactive playground to chat, run tools, and watch the reasoning loops unfold in real-time.
-
-### 2. Static Documentation
-
-For quick reference, the `docs/` folder contains a read-only snapshot of the app. We generate this using `build.py` to compile the repository state into static HTML, CSS, and JavaScript. This lets us host the examples directly on GitHub Pages without needing a backend server.
 
 ---
 
