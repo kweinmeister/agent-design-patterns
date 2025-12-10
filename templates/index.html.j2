@@ -49,6 +49,13 @@
     </div>
     <div class="main-content">
       <div class="top-bar">
+        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle Navigation">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
         <div class="current-pattern-title" id="page-title">Welcome</div>
         <div class="view-toggle hidden" id="view-toggle">
           <div class="toggle-btn" data-view="info">Info</div>
@@ -91,6 +98,7 @@
         </div>
       </div>
     </div>
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
     <script src="{{ url_for('static', path='js/main.js') }}"></script>
   </body>
 </html>
