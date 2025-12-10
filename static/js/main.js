@@ -22,6 +22,9 @@ const App = {
 		infoViewer: document.getElementById("info-viewer"),
 		toggleBtns: document.querySelectorAll(".toggle-btn"),
 		copyBtn: document.querySelector(".copy-btn"),
+		sidebar: document.querySelector(".sidebar"),
+		sidebarToggle: document.getElementById("sidebar-toggle"),
+		sidebarOverlay: document.getElementById("sidebar-overlay"),
 	},
 
 	init() {
@@ -49,6 +52,15 @@ const App = {
 			e.preventDefault();
 			const { id, url, name } = link.dataset;
 			this.loadPattern(id, url, name);
+
+			// Close sidebar on mobile on selection
+			// Check if sidebar toggle is visible to determine if we are in mobile mode
+			if (
+				this.elements.sidebarToggle &&
+				getComputedStyle(this.elements.sidebarToggle).display !== "none"
+			) {
+				this.toggleSidebar(false);
+			}
 		});
 
 		// 2. View Toggle delegation
@@ -62,6 +74,19 @@ const App = {
 		// 3. Copy Button
 		if (this.elements.copyBtn) {
 			this.elements.copyBtn.addEventListener("click", () => this.copyCode());
+		}
+
+		// 4. Sidebar Toggle (Mobile)
+		if (this.elements.sidebarToggle) {
+			this.elements.sidebarToggle.addEventListener("click", () => {
+				this.toggleSidebar(true);
+			});
+		}
+
+		if (this.elements.sidebarOverlay) {
+			this.elements.sidebarOverlay.addEventListener("click", () => {
+				this.toggleSidebar(false);
+			});
 		}
 	},
 
@@ -306,6 +331,12 @@ const App = {
 		} catch (err) {
 			console.error("Copy failed", err);
 		}
+	},
+
+	toggleSidebar(show) {
+		const { sidebar, sidebarOverlay } = this.elements;
+		sidebar.classList.toggle("open", show);
+		sidebarOverlay.classList.toggle("active", show);
 	},
 };
 
