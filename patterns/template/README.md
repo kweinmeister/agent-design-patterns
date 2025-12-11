@@ -38,24 +38,17 @@ graph TD
 
 [Explain the mechanics of the pattern. How do the components interact?]
 
+## Try the Demo
+
+1. **Enter a Message**: Type *"Hello, World!"*
+2. **Response**: The agent (a basic assistant) will reply to your greeting.
+
 ## When to Use
 
 Use this pattern when your agent needs to:
 
 - [Scenario 1]
 - [Scenario 2]
-
-## Try the Code
-
-1. **Prerequisites**: Follow the [setup instructions](../../README.md#setup) in the root of the project.
-2. **Run the Agent**:
-    Run the following command in the root of the project:
-
-    ```bash
-    adk web patterns
-    ```
-
-3. **Select Pattern**: Click on **[Pattern Name]** in the sidebar to start the demo.
 
 ## Resources
 

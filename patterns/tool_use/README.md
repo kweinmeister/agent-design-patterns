@@ -42,17 +42,12 @@ The agent analyzes the user's request and determines if any available tools can 
 
 Use this pattern when your agent needs to perform mathematical calculations, access real-time information (e.g., weather, stock prices), interact with external databases or APIs, or execute specific actions such as sending emails or creating files.
 
-## Try the Code
+## Try the Demo
 
-1. **Prerequisites**: Follow the [setup instructions](../../README.md#setup) in the root of the project.
-2. **Run the Agent**:
-    Run the following command in the root of the project:
-
-    ```bash
-    adk web patterns
-    ```
-
-3. **Select Pattern**: Click on **Tool Use** in the sidebar to start the demo.
+1. **Enter a Math Problem**: Type *"What is 12345 * 67890?"*
+2. **Tool Execution**: The agent recognizes it cannot do this reliability in its head.
+3. **Observation**: It calls the `calculator` tool with the expression.
+4. **Result**: The tool returns the exact number, and the agent presents it.
 
 ## Resources
 
