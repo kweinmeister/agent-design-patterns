@@ -124,6 +124,8 @@ You can deploy the live, dynamic version to Google [Cloud Run](https://cloud.goo
     export GOOGLE_CLOUD_PROJECT=your-project-id
     export GOOGLE_CLOUD_LOCATION=us-central1
     export GEMINI_MODEL=gemini-2.5-flash
+    export EMBEDDING_MODEL=gemini-embedding-001
+    export RAG_DB_PATH=/tmp/rag_demo.db
     ```
 
 2. **Deploy:**
@@ -133,7 +135,7 @@ You can deploy the live, dynamic version to Google [Cloud Run](https://cloud.goo
       --source . \
       --region $GOOGLE_CLOUD_LOCATION \
       --allow-unauthenticated \
-      --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=true,GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION,GEMINI_MODEL=$GEMINI_MODEL
+      --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=true,GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION,GEMINI_MODEL=$GEMINI_MODEL,EMBEDDING_MODEL=$EMBEDDING_MODEL,RAG_DB_PATH=$RAG_DB_PATH
     ```
 
     > ⚠️ **Security Warning**: The `--allow-unauthenticated` flag makes your deployment public. Remove it for internal/production use.
