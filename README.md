@@ -1,10 +1,10 @@
 # Agent Design Patterns
 
-![Agent Design Patterns](agent-design-patterns.gif)
-
 [![Python](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+![Agent Design Patterns](agent-design-patterns.gif)
 
 **A reference implementation of common architectural patterns for AI agents.**
 
