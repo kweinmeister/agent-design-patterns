@@ -49,8 +49,6 @@ Each pattern demonstrates a specific control flow strategy to solve distinct typ
 
 ### Installation
 
-We recommend using [uv](https://github.com/astral-sh/uv) for fast and reliable dependency management, but standard `pip` works as well.
-
 1. **Clone the repository:**
 
     ```bash
@@ -68,14 +66,6 @@ We recommend using [uv](https://github.com/astral-sh/uv) for fast and reliable d
 
 3. **Install Dependencies:**
 
-    **Using uv (Recommended):**
-
-    ```bash
-    uv sync
-    ```
-
-    **Using pip:**
-
     ```bash
     pip install -r requirements.txt
     ```
@@ -85,10 +75,6 @@ We recommend using [uv](https://github.com/astral-sh/uv) for fast and reliable d
 Start the interactive playground server:
 
 ```bash
-# Using uv
-uv run main.py
-
-# Using python
 python main.py
 ```
 
