@@ -1,0 +1,7 @@
+{
+	"config": {
+		"MD013": false,
+		"MD060": false
+	},
+	"ignores": [".venv"]
+}
