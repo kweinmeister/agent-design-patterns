@@ -54,21 +54,12 @@ graph TD
 
 Use this pattern when your application needs to access private data, providing answers about proprietary documents not in the model's training set. It is also essential for providing up-to-date information by referencing data that changes frequently without retraining the model. RAG helps reduce hallucinations by constraining the model to answer based only on the provided context, and it allows the model to cite sources, attributing its answers to specific documents.
 
-## Try the Code
+## Try the Demo
 
-1. **Prerequisites**: Follow the [setup instructions](../../README.md#setup) in the root of the project.
-2. **Run the Agent**:
-    Run the following command in the root of the project:
-
-    ```bash
-    adk web patterns
-    ```
-
-3. **Select Pattern**: Click on **RAG** in the sidebar to start the demo.
-4. **Experiment**:
-    - Ask a question *before* ingesting knowledge (e.g., "What is the secret code?").
-    - Click the **Ingest Knowledge** button in the UI.
-    - Ask the same question again to see the agent use the retrieved information.
+1. **Ask a Question**: Type *"What are the dangers in the galaxy?"* (The agent will likely say it doesn't know).
+2. **Ingest Knowledge**: Click the **Ingest Knowledge** button to load the sample data (a Space Captain's Log).
+3. **Ask Again**: Type *"What are the dangers in the galaxy?"* again.
+4. **Observe**: The agent now retrieves specific threats (like "Nebulon Spiders") from the local knowledge base.
 
 ## Resources
 

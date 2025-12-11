@@ -45,16 +45,15 @@ The user initiates a task, prompting the agent to generate a draft or plan. When
 
 This pattern is essential for high-stakes actions such as publishing content, financial transactions, or resource deletion where error is unacceptable. It is also valuable for compliance purposes to ensure a human audit trail, for creative collaboration where the user guides the output, and for training scenarios where human feedback can be used to evaluate agent performance.
 
-## Try the Code
+## Try the Demo
 
-1. **Run the Agent**: `adk web patterns`
-2. **Select Pattern**: Click **Human in the Loop**.
-3. **Scenario**:
-   1. Type: *"Draft a press release about our new coffee-flavored toothpaste."*
-   2. The agent drafts it.
-   3. Type: *"Looks good, publish it."*
-   4. The system will pause and asks for confirmation.
-   5. Click **Approve**. (The agent proceeds).
+1. Fill out the form fields for a new product (e.g., "Coffee Toothpaste").
+2. Click **Draft Press Release**.
+3. The agent generates a draft.
+4. Buttons ("Approve" / "Reject") appear below the draft.
+5. Click **Approve**.
+6. The system pauses and asks for final confirmation (simulating a "safety check").
+7. Confirm the action to publish.
 
 ## Resources
 

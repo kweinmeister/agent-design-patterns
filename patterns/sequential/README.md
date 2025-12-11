@@ -51,23 +51,14 @@ graph TD
 
 Use this pattern when a task is too complex for a single prompt or requires multiple distinct steps (e.g., "Research, then Plan, then Write"). It is ideal for workflows where the output of one step is strictly required for the next.
 
-## Demo: Incident Triage Pipeline
+## Try the Demo
 
-This specific implementation demonstrates the pattern with an Incident Triage scenario:
-
-1. **Input**: Raw server logs.
-2. **Agent 1 (Extractor)**: Normalizes logs into JSON.
-3. **Agent 2 (Assessor)**: Determines severity (P1-P3).
-4. **Agent 3 (Communicator)**: Drafts an email.
-
-## Try the Code
-
-1. **Run the Pattern**: `adk web patterns`
-2. **Select Pattern**: Click **Sequential Agent**.
-3. **Experiment**:
-    - Paste a raw log message in the input box.
-    - Click the "Quick Scenario" buttons to see how different inputs trigger different severity levels.
-    - Click **Run Triage Pipeline** and watch the stepper visualize the progress.
+1. **Select a Scenario**: Click one of the "Quick Scenario" buttons (e.g., **P1 Error**).
+2. **Run Pipeline**: Click **Run Triage Pipeline**.
+3. **Observe the Chain**:
+    - **Extract**: The agent parses the raw log into JSON.
+    - **Assess**: The agent evaluates the severity (e.g., "Critical").
+    - **Communicate**: The agent drafts an appropriate email notification.
 
 ## Resources
 

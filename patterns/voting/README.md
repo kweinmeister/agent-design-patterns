@@ -45,30 +45,18 @@ graph TD
 | **Parallel Agents** | A set of agents that receive the input. They can be identical (with high temperature) or configured with different personas/instructions to force diversity. |
 | **Merger/Judge** | An agent responsible for reviewing all generated options and selecting the best one based on quality, accuracy, or specific criteria. |
 
-## Demo Use Case: "The Marketing Copy Generator"
-
-In this implementation, we simulate a marketing team:
-
-- **Agent 1 (Humorous)**: Writes funny, witty copy.
-- **Agent 2 (Professional)**: Writes trustworthy, corporate copy.
-- **Agent 3 (Urgent)**: Writes high-pressure, FOMO-inducing copy.
-- **Judge**: The Senior Editor who picks the best angle for the product.
-
 ## When to Use
 
 Use this pattern when quality is paramount and you want to maximize the chance of a high-quality output by generating multiple candidates. It is particularly useful when subjectivity exists, as the "best" answer isn't strictly factual but depends on style or creativity. This approach also helps in reducing variance, as generating N options and picking one reduces the risk of a bad outlier compared to noisy individual LLM calls.
 
-## Try the Code
+## Try the Demo
 
-1. **Prerequisites**: Follow the [setup instructions](../../README.md#setup) in the root of the project.
-2. **Run the Agent**:
-    Run the following command in the root of the project:
-
-    ```bash
-    adk web patterns
-    ```
-
-3. **Select Pattern**: Click on **Voting** in the sidebar to start the demo.
+1. **Enter a Topic**: Type *"A smart collar that translates cat meows into English."*
+2. **Parallel Generation**:
+    - **Humorous Agent**: Writes a funny ad.
+    - **Professional Agent**: Writes a serious ad.
+    - **Urgent Agent**: Writes a "act now" ad.
+3. **Judging**: The **Judge Agent** evaluates all three and highlights the winner with a reason.
 
 ## Resources
 

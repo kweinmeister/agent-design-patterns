@@ -1,32 +1,42 @@
 # Agent Design Patterns
 
-**A catalog of architectural patterns for building AI agents using the [Google Agent Development Kit (ADK)](https://github.com/google/adk) and [Gemini](https://deepmind.google/technologies/gemini/).**
+![Agent Design Patterns](agent-design-patterns.gif)
 
-This repository serves as a reference guide for engineering AI workflows. It provides executable implementations of common agentic architectures, allowing developers to test and inspect each design pattern.
+[![Python](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-A static version of the [Agent Design Patterns](https://kweinmeister.github.io/agent-design-patterns) guide is available without interactive demos.
+**A reference implementation of common architectural patterns for AI agents.**
+
+This repository serves as an executable cookbook for building reliable, controlled, and effective AI agents using the [Google Agent Development Kit (ADK)](https://github.com/google/adk-python) and [Gemini](https://deepmind.google/technologies/gemini/).
+
+> [!TIP]
+> **View the Guide**: A static, non-interactive version of these patterns is available at [kweinmeister.github.io/agent-design-patterns](https://kweinmeister.github.io/agent-design-patterns).
 
 ---
 
-## What are Agent Design Patterns?
+## 🚀 Why Use This?
 
-Agent Design Patterns are architectural blueprints for structuring how Large Language Models process information. These patterns provide the necessary control flow to solve complex problems. By implementing architectures like self-correction loops or deterministic tool usage, developers can create systems that verify their own work and interact with external data, ensuring the final output adheres to specific constraints and business logic.
+* **Architectural Blueprints**: Learn *how* to structure control flow for complex LLM tasks, moving beyond simple prompt engineering.
+* **Google ADK Integration**: See best practices for using the Agent Development Kit in production-ready scenarios.
+* **Inspectable Code**: Every pattern is a self-contained, runnable Python application (`agent.py`) with a matching UI, allowing you to trace exactly how the agent thinks and acts.
+* **Pure Python**: Built with standard tools and easy-to-understand code.
 
 ---
 
 ## 📂 The Pattern Catalog
 
-Each pattern in this repository contains a self-contained ADK implementation (`agent.py`), a dedicated UI, and documentation.
+Each pattern demonstrates a specific control flow strategy to solve distinct types of problems.
 
-| Pattern | Description |
+| Pattern | Best For... |
 | :--- | :--- |
-| **[RAG](patterns/rag/)** | An agent that retrieves relevant information from a knowledge base to augment its context before generating a response. |
-| **[Reflection](patterns/reflection/)** | An agent that critiques its own output to fix errors and improve quality. It utilizes a "Draft → Critique → Refine" loop to ensure accuracy before finalizing a response. |
-| **[Sequential Agent](patterns/sequential/)** | An agent that executes a linear sequence of specialized sub-agents where the output of one step becomes the input for the next. |
-| **[Tool Use](patterns/tool_use/)** | An agent equipped with executable functions (e.g., a calculator or API) to perform specific, deterministic tasks that fall outside the scope of text generation. |
-| **[Voting](patterns/voting/)** | An agent that generates multiple options in parallel and selects the best one using a "judge" agent to ensure quality. |
-| **[Human in the Loop](patterns/human_in_the_loop/)** | An agent that pauses execution to request user approval before performing sensitive actions (e.g., publishing content). |
-| **[Template](patterns/template/)** | A standardized scaffold for creating and testing new agent patterns within this framework. |
+| **[RAG](patterns/rag/)** | **Knowledge & Context.** augmenting the agent's knowledge with external data retrieval before generating a response. |
+| **[Reflection](patterns/reflection/)** | **Quality Control.** Allowing an agent to critique and refine its own output to fix errors and catch hallucinations. |
+| **[Sequential Agent](patterns/sequential/)** | **Process Automation.** Breaking a complex workflow into a linear chain of specialized sub-agents. |
+| **[Tool Use](patterns/tool_use/)** | **Action Execution.** Giving an agent the ability to interact with the outside world via deterministic functions and APIs. |
+| **[Voting](patterns/voting/)** | **Decision Making.** Generating multiple options in parallel and using a "judge" to select the best outcome. |
+| **[Human in the Loop](patterns/human_in_the_loop/)** | **Safety & Approval.** Pausing execution to require human review before sensitive actions are taken. |
+| **[Template](patterns/template/)** | **Experimentation.** A clean slate for building your own custom agent architectures. |
 
 ---
 
@@ -34,10 +44,12 @@ Each pattern in this repository contains a self-contained ADK implementation (`a
 
 ### Prerequisites
 
-* Python 3.10+
+* Python 3.12+
 * A Google Cloud API Key (for Gemini)
 
 ### Installation
+
+We recommend using [uv](https://github.com/astral-sh/uv) for fast and reliable dependency management, but standard `pip` works as well.
 
 1. **Clone the repository:**
 
@@ -48,7 +60,7 @@ Each pattern in this repository contains a self-contained ADK implementation (`a
 
 2. **Configure Environment:**
 
-    Copy the example environment file and edit it with your API keys and configuration. See the [Google ADK Documentation](https://google.github.io/adk-docs/agents/models/#using-google-gemini-models) for more information.
+    Copy the example environment file and add your API keys.
 
     ```bash
     cp .env.example .env
@@ -56,48 +68,82 @@ Each pattern in this repository contains a self-contained ADK implementation (`a
 
 3. **Install Dependencies:**
 
+    **Using uv (Recommended):**
+
+    ```bash
+    uv sync
+    ```
+
+    **Using pip:**
+
     ```bash
     pip install -r requirements.txt
     ```
 
 ### Running Locally
 
-Start the server to test the patterns interactively:
+Start the interactive playground server:
 
 ```bash
+# Using uv
+uv run main.py
+
+# Using python
 python main.py
 ```
 
 Access the interface at **`http://localhost:8000`**.
 
-### Deploying to Cloud Run
+---
 
-First, set your Google Cloud project configuration. note, you can also specify these in your `.env` file.
+## 💬 Try the Interactive Chat
 
-```bash
-export GOOGLE_CLOUD_PROJECT=your-project-id
-export GOOGLE_CLOUD_LOCATION=us-central1
-export EMBEDDING_MODEL=gemini-embedding-001
-export GEMINI_MODEL=gemini-2.5-flash
-export RAG_DB_PATH=/tmp/rag_demo.db
-```
+The repository includes a unified chat interface for testing all patterns.
 
-Once you have tested the application locally, you can deploy the live, dynamic version to Google [Cloud Run](https://cloud.google.com/run):
+1. **Start the Pattern Server**:
 
-```bash
-gcloud run deploy agent-patterns \
-  --source . \
-  --region $GOOGLE_CLOUD_LOCATION \
-  --allow-unauthenticated \
-  --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=true,GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION,EMBEDDING_MODEL=$EMBEDDING_MODEL,GEMINI_MODEL=$GEMINI_MODEL,RAG_DB_PATH=$RAG_DB_PATH
-```
+    ```bash
+    adk web patterns
+    ```
 
-> ⚠️ The command above uses the `--allow-unauthenticated` flag, which makes your deployment publicly accessible. For production environments, remove this flag to restrict access.
+2. **Select a Pattern**:
+    The UI will launch in your browser. Use the sidebar to switch between different agent architectures (e.g., RAG, Tool Use, Reflection).
 
-### Building the Static Site
+3. **Run Scenarios**:
+    Each pattern comes with pre-defined scenarios to help you understand its capabilities.
 
-To regenerate the content in the `docs/` folder for static hosting:
+---
 
-```bash
-python build.py
-```
+## ☁️ Deploying to Cloud Run
+
+You can deploy the live, dynamic version to Google [Cloud Run](https://cloud.google.com/run).
+
+1. **Set Configuration:**
+
+    ```bash
+    export GOOGLE_CLOUD_PROJECT=your-project-id
+    export GOOGLE_CLOUD_LOCATION=us-central1
+    export GEMINI_MODEL=gemini-2.5-flash
+    ```
+
+2. **Deploy:**
+
+    ```bash
+    gcloud run deploy agent-patterns \
+      --source . \
+      --region $GOOGLE_CLOUD_LOCATION \
+      --allow-unauthenticated \
+      --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=true,GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION,GEMINI_MODEL=$GEMINI_MODEL
+    ```
+
+    > ⚠️ **Security Warning**: The `--allow-unauthenticated` flag makes your deployment public. Remove it for internal/production use.
+
+---
+
+## 🛠️ Contributing
+
+Contributions are welcome! If you have a new pattern idea or want to improve an existing one, please check out our [contribution guidelines](CONTRIBUTING.md) (if available) or open an issue.
+
+## 📄 License
+
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.

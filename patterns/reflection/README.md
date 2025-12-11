@@ -53,17 +53,14 @@ The agent creates an initial response, then reviews its own work to identify err
 
 Use this pattern for complex tasks requiring high accuracy or adherence to strict constraints, such as code generation or creative writing. It is ideal when the cost of an error outweighs the cost of extra compute time, or when catching hallucinations and logical fallacies is critical.
 
-## Try the Code
+## Try the Demo
 
-1. **Prerequisites**: Follow the [setup instructions](../../README.md#setup) in the root of the project.
-2. **Run the Agent**:
-    Run the following command in the root of the project:
-
-    ```bash
-    adk web patterns
-    ```
-
-3. **Select Pattern**: Click on **Reflection** in the sidebar to start the demo.
+1. **Enter a Prompt**: Type *"Write a short story about a lonely robot on Mars."*
+2. **Watch the Loop**:
+    - **Initial Draft**: The agent writes a first version.
+    - **Critique**: The Critic agent reviews it for improvements.
+    - **Refine**: The Refiner agent updates the story based on feedback.
+3. **Completion**: The loop continues until the Critic finds "No major issues."
 
 ## Resources
 
