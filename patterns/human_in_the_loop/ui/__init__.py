@@ -25,7 +25,7 @@ class HitlRequest(BaseModel):
 
 async def run_hitl_agent(request: HitlRequest) -> dict[str, Any]:
     """Run the agent and collect history."""
-    history = []
+    history: list[dict[str, str]] = []
     requires_confirmation = False
     is_published = False
     app_name = "hitl_app"
@@ -89,17 +89,6 @@ def register(app: FastAPI) -> PatternMetadata:
     async def run_hitl(request: HitlRequest) -> dict[str, Any]:
         return await run_hitl_agent(request)
 
-    # CopilotKit Adapter
-    async def standard_handler(prompt: str) -> dict[str, str]:
-        """Adapter for CopilotKit which expects string output."""
-        # For the simple copilot case, we just run it and return the last text
-        # This loses the rich UI approval control but allows basic text interaction
-        result = await run_hitl_agent(HitlRequest(prompt=prompt))
-        history = result.get("history", [])
-        if history:
-            return {"response": history[-1]["content"]}
-        return {"response": ""}
-
     return configure_pattern(
         app=app,
         router=router,
@@ -109,8 +98,12 @@ def register(app: FastAPI) -> PatternMetadata:
             description="Intervention pattern requiring human approval before action",
             icon="🛑",
             base_file=__file__,
-            handler=standard_handler,  # Use the adapter here
+            handler=web_handler,
             template_name="hitl.html.j2",
-            copilotkit_path="/copilotkit/hitl",
         ),
     )
+
+
+async def web_handler(prompt: str) -> dict[str, Any]:
+    """Execute the agent for the web interface request."""
+    return await run_hitl_agent(HitlRequest(prompt=prompt))

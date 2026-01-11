@@ -37,6 +37,5 @@ def register(app: FastAPI) -> PatternMetadata:
             base_file=__file__,
             handler=run_tool_use_agent,
             template_name="tool_use.html.j2",
-            copilotkit_path="/copilotkit/tool_use",
         ),
     )

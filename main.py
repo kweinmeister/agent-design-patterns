@@ -73,7 +73,7 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None]:
 app = FastAPI(lifespan=lifespan)
 
 # Ensure we trust the proxy headers (required for Cloud Run to handle HTTPS correctly)
-app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")  # type: ignore[arg-type]
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")

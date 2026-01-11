@@ -44,7 +44,7 @@ async def run_single_agent_to_queue(
 
 async def stream_voting_generator(user_request: str) -> AsyncGenerator[str, None]:
     """Yield SSE events for the parallel voting process."""
-    queue = asyncio.Queue()
+    queue: asyncio.Queue[dict[str, str] | None] = asyncio.Queue()
 
     # 1. Start parallel generators
     # We use asyncio.create_task to run them in background
@@ -154,6 +154,5 @@ def register(app: FastAPI) -> PatternMetadata:
             base_file=__file__,
             handler=run_voting_agent,
             template_name="voting.html.j2",
-            copilotkit_path="/copilotkit/voting",
         ),
     )

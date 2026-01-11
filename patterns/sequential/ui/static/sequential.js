@@ -87,7 +87,10 @@ document.addEventListener("DOMContentLoaded", () => {
 				subject = emailData.subject || subject;
 				body = emailData.body || body;
 			} catch (e) {
-				console.error("Failed to parse agent response as JSON, showing raw output.", e);
+				console.error(
+					"Failed to parse agent response as JSON, showing raw output.",
+					e,
+				);
 			}
 			emailSubject.textContent = subject;
 			emailBody.innerHTML = DOMPurify.sanitize(body.replace(/\n/g, "<br>"));

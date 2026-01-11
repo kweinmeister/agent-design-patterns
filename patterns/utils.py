@@ -6,8 +6,6 @@ from collections.abc import AsyncGenerator, Awaitable, Callable
 from pathlib import Path
 from typing import Any
 
-from copilotkit import Action, CopilotKitRemoteEndpoint
-from copilotkit.integrations.fastapi import add_fastapi_endpoint
 from fastapi import APIRouter, FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -159,12 +157,11 @@ class PatternConfig(BaseModel):
     base_file: str
     handler: Callable[[str], Awaitable[Any]] | None
     template_name: str
-    copilotkit_path: str | None = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
-def configure_pattern(  # noqa: C901
+def configure_pattern(
     app: FastAPI,
     router: APIRouter,
     config: PatternConfig,
@@ -246,19 +243,6 @@ def configure_pattern(  # noqa: C901
                 ),
             },
         )
-
-    # CopilotKit integration
-    if config.copilotkit_path and config.handler:
-        sdk = CopilotKitRemoteEndpoint(
-            actions=[
-                Action(
-                    name=f"run_{config.id}_agent",
-                    description=f"Runs a {config.name} agent.",
-                    handler=config.handler,
-                ),
-            ],
-        )
-        add_fastapi_endpoint(app, sdk, config.copilotkit_path)
 
     # Include the router in the main app
     app.include_router(router)
