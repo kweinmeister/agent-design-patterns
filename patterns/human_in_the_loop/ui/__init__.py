@@ -98,7 +98,12 @@ def register(app: FastAPI) -> PatternMetadata:
             description="Intervention pattern requiring human approval before action",
             icon="🛑",
             base_file=__file__,
-            handler=None,
+            handler=web_handler,
             template_name="hitl.html.j2",
         ),
     )
+
+
+async def web_handler(prompt: str) -> dict[str, Any]:
+    """Execute the agent for the web interface request."""
+    return await run_hitl_agent(HitlRequest(prompt=prompt))
