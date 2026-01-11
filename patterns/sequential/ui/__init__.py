@@ -60,7 +60,6 @@ def register(app: FastAPI) -> PatternMetadata:
             base_file=__file__,
             template_name="sequential.html.j2",
             handler=None,
-            agent=incident_triage_pipeline,
         ),
         agent=incident_triage_pipeline,
     )

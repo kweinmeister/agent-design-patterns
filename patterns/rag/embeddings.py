@@ -1,6 +1,7 @@
 """Embeddings helper module using Gemini API."""
 
 import os
+from typing import Any
 
 from dotenv import load_dotenv
 from google import genai
@@ -17,7 +18,7 @@ client = genai.Client()
 
 def _embed_content(text: str, task_type: str, title: str | None = None) -> list[float]:
     """Generate an embedding for a given text and task type."""
-    config_args = {"task_type": task_type}
+    config_args: dict[str, Any] = {"task_type": task_type}
     if title:
         config_args["title"] = title
 

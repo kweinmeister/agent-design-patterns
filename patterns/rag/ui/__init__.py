@@ -79,6 +79,5 @@ def register(app: FastAPI) -> PatternMetadata:
             base_file=__file__,
             handler=run_rag_agent,
             template_name="rag.html.j2",
-            copilotkit_path="/copilotkit/rag",
         ),
     )

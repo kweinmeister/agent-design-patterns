@@ -40,6 +40,5 @@ def register(app: FastAPI) -> PatternMetadata:
             base_file=__file__,
             handler=None,  # Handled by utils
             template_name="reflection.html.j2",
-            copilotkit_path="/copilotkit/reflection",
         ),
     )
