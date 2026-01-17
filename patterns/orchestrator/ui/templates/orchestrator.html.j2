@@ -1,0 +1,205 @@
+{% extends "base.html.j2" %}
+
+{% block head %}
+  <!-- Libraries -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"></script>
+  <script src="{{ url_for('static', path='js/stream-handler.js') }}"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/orchestrator/static/style.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            indigo: {
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+            },
+            slate: {
+              850: '#1e293b',
+              950: '#0f172a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer components {
+        body {
+            @apply bg-[#0f1117] text-slate-200 overflow-x-hidden;
+        }
+    }
+    /* Critical SVG fix */
+    svg {
+        display: inline-block;
+        vertical-align: middle;
+        flex-shrink: 0;
+    }
+    .main-container {
+        /* Optimized for iframe viewing */
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+    }
+  </style>
+{% endblock head %}
+
+{% block content %}
+<div class="main-container bg-[#0f1117]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <!-- Compact Header -->
+        <div class="flex flex-col md:flex-row items-center justify-between mb-12 gap-8 border-b border-white/5 pb-8">
+            <div class="flex items-center gap-6">
+                <div class="flex-shrink-0 w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center ring-1 ring-indigo-500/20">
+                    <span class="text-4xl">🎼</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-white tracking-tight">Orchestrator Pattern</h1>
+                    <p class="text-slate-400 font-medium">Parallel task delegation & synthesis.</p>
+                </div>
+            </div>
+            
+            <div class="flex gap-3">
+                <div class="px-4 py-2 bg-indigo-500/5 rounded-xl border border-indigo-500/10 flex items-center gap-2">
+                    <div class="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest leading-none">Dynamic Planning</span>
+                </div>
+                <div class="px-4 py-2 bg-emerald-500/5 rounded-xl border border-emerald-500/10 flex items-center gap-2">
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest leading-none">Parallel Execution</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left: Controls -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glass-card p-6 rounded-3xl shadow-xl border border-white/5">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="p-2 bg-indigo-500/10 rounded-lg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-indigo-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">New Request</h3>
+                    </div>
+                    
+                    <form id="orchestrator-form" class="space-y-4">
+                        <textarea 
+                            name="prompt" 
+                            class="w-full h-48 bg-slate-900/50 border border-white/10 rounded-2xl p-4 text-white placeholder-slate-600 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all resize-none font-medium"
+                            placeholder="Describe a multi-step task..."
+                            required
+                        ></textarea>
+                        
+                        <button 
+                            type="submit"
+                            id="submit-btn"
+                            class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20 active:scale-[0.98] group disabled:opacity-50 disabled:pointer-events-none"
+                        >
+                            <span>Initialize Agent</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="group-hover:translate-x-1 transition-transform">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Info Cards -->
+                <div class="p-6 bg-slate-900/40 rounded-3xl border border-white/5 space-y-4">
+                    <h4 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Architecture</h4>
+                    <div class="space-y-3">
+                        <div class="flex gap-4 p-3 hover:bg-white/5 rounded-2xl transition-colors group">
+                            <div class="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4V4z"/><path d="M9 9h6v6H9V9z"/></svg>
+                            </div>
+                            <div class="text-sm">
+                                <div class="text-white font-bold">Planner</div>
+                                <div class="text-slate-500">Structured Decomposition</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-3 hover:bg-white/5 rounded-2xl transition-colors group">
+                            <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </div>
+                            <div class="text-sm">
+                                <div class="text-white font-bold">Workers</div>
+                                <div class="text-slate-500">Specialized Execution</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Display -->
+            <div class="lg:col-span-8 space-y-6">
+                <!-- Status Bar -->
+                <div id="status-bar" class="hidden flex items-center justify-between px-6 py-4 bg-slate-900/80 border border-white/10 rounded-3xl backdrop-blur-md">
+                    <div class="flex items-center gap-4">
+                        <div class="status-pulse w-3 h-3 bg-indigo-500 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.6)]"></div>
+                        <span id="status-text" class="text-sm font-bold text-white uppercase tracking-wider">Awaiting Signal</span>
+                    </div>
+                    <div id="loading-dots" class="flex gap-1 hidden">
+                        <div class="w-1 h-1 bg-indigo-400 rounded-full animate-bounce"></div>
+                        <div class="w-1 h-1 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                        <div class="w-1 h-1 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                    </div>
+                </div>
+
+                <!-- Plan Content -->
+                <div id="plan-section" class="hidden space-y-6">
+                    <div class="flex items-center gap-3 ml-2">
+                        <div class="w-2 h-8 bg-indigo-500 rounded-full"></div>
+                        <h3 class="text-xl font-bold text-white tracking-tight">Execution Strategy</h3>
+                    </div>
+                    <div id="plan-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Workers cards -->
+                    </div>
+                </div>
+
+                <!-- Results Content -->
+                <div id="synthesis-section" class="hidden space-y-6">
+                    <div class="flex items-center gap-3 ml-2">
+                        <div class="w-2 h-8 bg-emerald-500 rounded-full"></div>
+                        <h3 class="text-xl font-bold text-white tracking-tight">Final Synthesis</h3>
+                    </div>
+                    <div class="glass-card p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+                        <div class="absolute -top-12 -right-12 w-48 h-48 bg-indigo-500/5 rounded-full blur-3xl"></div>
+                        <div id="synthesis-output" class="markdown-container text-slate-300 whitespace-pre-wrap leading-relaxed text-lg relative z-10 font-normal"></div>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="h-full min-h-[500px] flex flex-col items-center justify-center p-12 text-center border-2 border-dashed border-white/5 rounded-[3rem] bg-slate-900/5">
+                    <div class="w-24 h-24 bg-slate-900/50 rounded-full flex items-center justify-center mb-6 ring-1 ring-white/5">
+                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-slate-600">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-500">Manager Offline</h2>
+                    <p class="text-slate-600 mt-2 max-w-xs text-sm font-medium">Please submit a multi-faceted task to start the orchestration phase.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Logic -->
+<script src="/orchestrator/static/orchestrator.js"></script>
+<style>
+    .status-pulse {
+        animation: status-pulse-anim 2s infinite;
+    }
+    @keyframes status-pulse-anim {
+        0% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.2); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+</style>
+{% endblock %}

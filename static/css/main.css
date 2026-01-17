@@ -265,52 +265,6 @@ iframe {
 	padding: 0;
 }
 
-/* Container for markdown content to prevent smushing */
-.markdown-container {
-	max-width: 900px;
-	margin: 0 auto;
-	padding: 20px;
-}
-
-.markdown-container pre {
-	background: #161b22; /* Slightly lighter than bg for contrast in markdown */
-	border: 1px solid var(--border-color);
-	border-radius: 6px;
-	padding: 1.5rem; /* Match global pre padding */
-	overflow: auto;
-	margin-bottom: 16px;
-}
-
-/* Fix for double background with highlight.js */
-.markdown-container pre code,
-.markdown-container pre code.hljs {
-	background: transparent;
-	padding: 0;
-}
-
-.markdown-container table {
-	width: 100%;
-	border-collapse: collapse;
-	margin-bottom: 16px;
-	border: 1px solid var(--border-color);
-}
-
-.markdown-container th,
-.markdown-container td {
-	padding: 12px;
-	border: 1px solid var(--border-color);
-	text-align: left;
-}
-
-.markdown-container th {
-	background-color: rgb(255 255 255 / 5%);
-	font-weight: 600;
-}
-
-.markdown-container tr:nth-child(even) {
-	background-color: rgb(255 255 255 / 2%);
-}
-
 .mermaid {
 	width: 100%;
 	text-align: center;
