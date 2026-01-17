@@ -3,6 +3,7 @@
 import asyncio
 import json
 from collections.abc import AsyncGenerator
+from contextlib import suppress
 from typing import Any
 
 from fastapi import APIRouter, FastAPI
@@ -170,10 +171,12 @@ async def stream_orchestrator_generator(user_request: str) -> AsyncGenerator[str
             yield f"data: {json.dumps(item)}\n\n"
             queue.task_done()
     finally:
-        # If client disconnects, we might need to cancel?
-        # _execute_workers handles its own cancellation if awaited?
-        # But we are awaiting it below.
-        pass
+        # If the client disconnects, we need to cancel the background worker task
+        # to prevent orphaned tasks from consuming resources.
+        if not worker_task.done():
+            worker_task.cancel()
+            with suppress(asyncio.CancelledError):
+                await worker_task
 
     # Retrieve results
     worker_outputs = await worker_task

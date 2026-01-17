@@ -10,6 +10,8 @@ from patterns.sequential.agent import incident_triage_pipeline
 from patterns.sequential.ui import register
 from patterns.utils import run_agent_standard
 
+NUM_STEPS = 3
+
 
 @pytest.fixture
 def agent() -> SequentialAgent:
@@ -19,7 +21,7 @@ def agent() -> SequentialAgent:
 
 def test_pipeline_structure(agent: SequentialAgent) -> None:
     """Verifies the pipeline has 3 steps in the correct order."""
-    assert len(agent.sub_agents) == 3  # noqa: PLR2004
+    assert len(agent.sub_agents) == NUM_STEPS
     assert agent.sub_agents[0].name == "IncidentExtractor"
     assert agent.sub_agents[1].name == "IncidentAssessor"
     assert agent.sub_agents[2].name == "IncidentCommunicator"

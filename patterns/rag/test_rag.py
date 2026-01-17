@@ -44,9 +44,9 @@ def test_db_init(temp_db: str) -> None:
     conn.close()
 
 
+@pytest.mark.usefixtures("mock_embeddings")
 def test_add_and_query_documents(
     temp_db: str,
-    mock_embeddings: Any,  # noqa: ANN401, ARG001
 ) -> None:
     """Test adding and querying documents."""
     db.init_db(temp_db)
@@ -60,9 +60,9 @@ def test_add_and_query_documents(
     assert results[0] == "This is a test document."
 
 
+@pytest.mark.usefixtures("mock_embeddings")
 def test_ingest(
     temp_db: str,
-    mock_embeddings: Any,  # noqa: ANN401, ARG001
     tmp_path: Path,
 ) -> None:
     """Test ingestion process."""
@@ -89,7 +89,8 @@ def test_ingest(
         conn.close()
 
 
-def test_agent_tool(mock_embeddings: Any) -> None:  # noqa: ANN401, ARG001
+@pytest.mark.usefixtures("mock_embeddings")
+def test_agent_tool() -> None:
     """Test the agent's retrieval tool."""
     # Mock db.query_documents to return a result
     with patch("patterns.rag.db.query_documents") as mock_query_db:

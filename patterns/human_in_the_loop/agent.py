@@ -24,7 +24,7 @@ def publish_press_release(content: str) -> str:
 SUCCESS_MSG = "SUCCESS: Press release published to global wires."
 
 
-def confirmation_criteria(content: dict[str, str]) -> bool:  # noqa: ARG001
+def confirmation_criteria(_content: dict[str, str]) -> bool:
     """Determine if a tool call requires human approval.
 
     This function acts as a filter for tool execution. In this specific pattern,

@@ -7,6 +7,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi import FastAPI
+from google.adk.agents import BaseAgent
 
 from patterns.orchestrator.agent import (
     ExecutionPlan,
@@ -75,7 +76,7 @@ async def test_stream_orchestrator_generator() -> None:
     )
 
     async def mock_run_agent_standard(
-        agent: Any,  # noqa: ANN401
+        agent: BaseAgent,
         _prompt: str,
         _app_name: str,
     ) -> AsyncGenerator[tuple[Any, Any, Any], None]:

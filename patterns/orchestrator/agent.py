@@ -1,7 +1,5 @@
 """Orchestrator Agent Pattern Logic."""
 
-import uuid
-
 from google.adk.agents import LlmAgent
 from pydantic import BaseModel, Field
 
@@ -68,10 +66,6 @@ def create_worker_agent(name: str, instruction: str) -> LlmAgent:
     safe_name = "".join(c if c.isalnum() else "_" for c in name)
     if not safe_name or not safe_name[0].isalpha():
         safe_name = f"worker_{safe_name}"
-
-    # Fallback if name becomes just underscores or empty
-    if all(c == "_" for c in safe_name):
-        safe_name = f"worker_{uuid.uuid4().hex[:8]}"
 
     return LlmAgent(
         name=safe_name,
