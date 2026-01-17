@@ -265,6 +265,26 @@ iframe {
 	padding: 0;
 }
 
+.markdown-body {
+	padding: 0.5rem 2rem 2rem 2rem;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.markdown-container {
+	max-width: 1000px;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+@media (max-width: 768px) {
+	.markdown-body {
+		padding: 1.5rem;
+	}
+}
+
 .mermaid {
 	width: 100%;
 	text-align: center;

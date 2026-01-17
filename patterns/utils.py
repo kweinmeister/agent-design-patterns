@@ -63,14 +63,17 @@ def parse_json_from_text(text: str) -> dict[str, Any] | list[Any] | None:
     # Strip Markdown code blocks
     clean_text = text.strip()
     if clean_text.startswith("```"):
-        # Remove first line (```json or ```)
-        clean_text = clean_text.split("\n", 1)[1]
-        # Remove last line (```)
-        if clean_text.endswith("```"):
-            clean_text = clean_text.rsplit("\n", 1)[0]
-    
+        try:
+            # Remove first line (```json or ```)
+            clean_text = clean_text.split("\n", 1)[1]
+            # Remove last line (```)
+            if clean_text.endswith("```"):
+                clean_text = clean_text.rsplit("\n", 1)[0]
+        except IndexError:
+            return None
+
     clean_text = clean_text.strip()
-    
+
     try:
         return json.loads(clean_text)
     except json.JSONDecodeError:

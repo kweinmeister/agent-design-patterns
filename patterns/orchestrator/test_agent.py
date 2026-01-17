@@ -75,7 +75,9 @@ async def test_stream_orchestrator_generator() -> None:
     )
 
     async def mock_run_agent_standard(
-        agent: Any, _prompt: str, _app_name: str
+        agent: Any,  # noqa: ANN401
+        _prompt: str,
+        _app_name: str,
     ) -> AsyncGenerator[tuple[Any, Any, Any], None]:
         # 1. Orchestrator Plan
         if agent == orchestrator_agent:

@@ -30,12 +30,13 @@ Each pattern demonstrates a specific control flow strategy to solve distinct typ
 
 | Pattern | Best For... |
 | :--- | :--- |
+| **[Human in the Loop](patterns/human_in_the_loop/)** | **Safety & Approval.** Pausing execution to require human review before sensitive actions are taken. |
+| **[Orchestrator](patterns/orchestrator/)** | **Parallel Execution.** Breaking a complex request into sub-tasks that are executed in parallel by specialized workers and then synthesized. |
 | **[RAG](patterns/rag/)** | **Knowledge & Context.** augmenting the agent's knowledge with external data retrieval before generating a response. |
 | **[Reflection](patterns/reflection/)** | **Quality Control.** Allowing an agent to critique and refine its own output to fix errors and catch hallucinations. |
 | **[Sequential Agent](patterns/sequential/)** | **Process Automation.** Breaking a complex workflow into a linear chain of specialized sub-agents. |
 | **[Tool Use](patterns/tool_use/)** | **Action Execution.** Giving an agent the ability to interact with the outside world via deterministic functions and APIs. |
 | **[Voting](patterns/voting/)** | **Decision Making.** Generating multiple options in parallel and using a "judge" to select the best outcome. |
-| **[Human in the Loop](patterns/human_in_the_loop/)** | **Safety & Approval.** Pausing execution to require human review before sensitive actions are taken. |
 | **[Template](patterns/template/)** | **Experimentation.** A clean slate for building your own custom agent architectures. |
 
 ---

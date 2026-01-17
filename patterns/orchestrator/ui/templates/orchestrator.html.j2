@@ -4,49 +4,13 @@
   <!-- Libraries -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
   <script src="{{ url_for('static', path='js/stream-handler.js') }}"></script>
   
   <!-- Custom Styles -->
   <link rel="stylesheet" href="/orchestrator/static/style.css">
+  <script src="/orchestrator/static/orchestrator-config.js"></script>
   
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            indigo: {
-              400: '#818cf8',
-              500: '#6366f1',
-              600: '#4f46e5',
-            },
-            slate: {
-              850: '#1e293b',
-              950: '#0f172a',
-            }
-          }
-        }
-      }
-    }
-  </script>
-  
-  <style type="text/tailwindcss">
-    @layer components {
-        body {
-            @apply bg-[#0f1117] text-slate-200 overflow-x-hidden;
-        }
-    }
-    /* Critical SVG fix */
-    svg {
-        display: inline-block;
-        vertical-align: middle;
-        flex-shrink: 0;
-    }
-    .main-container {
-        /* Optimized for iframe viewing */
-        padding-top: 2rem;
-        padding-bottom: 4rem;
-    }
-  </style>
 {% endblock head %}
 
 {% block content %}
@@ -190,16 +154,27 @@
     </div>
 </div>
 
+<!-- Templates -->
+<template id="worker-card-template">
+    <div class="worker-card glass-card p-6 rounded-3xl opacity-40 transform translate-y-4 border border-white/5">
+        <div class="flex justify-between items-center mb-4">
+            <span class="worker-type px-3 py-1 bg-indigo-500/10 rounded-full text-[10px] font-black text-indigo-400 uppercase tracking-widest"></span>
+            <div class="status-indicator w-3 h-3 bg-slate-800 rounded-full border border-white/10"></div>
+        </div>
+        <p class="worker-rationale text-slate-400 text-sm mb-4 leading-relaxed"></p>
+        <div class="worker-progress hidden flex items-center gap-3 text-indigo-400 text-xs font-bold uppercase tracking-widest">
+            <div class="w-2 h-2 bg-indigo-500 rounded-full animate-ping"></div>
+            Processing
+        </div>
+        <div class="worker-done hidden flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-widest">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            Task Verified
+        </div>
+    </div>
+</template>
+
 <!-- Custom Logic -->
 <script src="/orchestrator/static/orchestrator.js"></script>
-<style>
-    .status-pulse {
-        animation: status-pulse-anim 2s infinite;
-    }
-    @keyframes status-pulse-anim {
-        0% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.5; transform: scale(1.2); }
-        100% { opacity: 1; transform: scale(1); }
-    }
-</style>
 {% endblock %}

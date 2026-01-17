@@ -1,5 +1,7 @@
 """Orchestrator Agent Pattern Logic."""
 
+import uuid
+
 from google.adk.agents import LlmAgent
 from pydantic import BaseModel, Field
 
@@ -14,7 +16,10 @@ class SubTask(BaseModel):
     title: str = Field(description="Short title of the sub-task")
     description: str = Field(description="Detailed instructions for the worker")
     worker_type: str = Field(
-        description="The type of persona needed (e.g., 'Researcher', 'Creative Writer', 'Fact Checker')"
+        description=(
+            "The type of persona needed (e.g., 'Researcher', 'Creative Writer', "
+            "'Fact Checker')"
+        )
     )
 
 
@@ -64,6 +69,10 @@ def create_worker_agent(name: str, instruction: str) -> LlmAgent:
     if not safe_name or not safe_name[0].isalpha():
         safe_name = f"worker_{safe_name}"
 
+    # Fallback if name becomes just underscores or empty
+    if all(c == "_" for c in safe_name):
+        safe_name = f"worker_{uuid.uuid4().hex[:8]}"
+
     return LlmAgent(
         name=safe_name,
         model=GEMINI_MODEL,
@@ -76,7 +85,8 @@ synthesizer_agent = LlmAgent(
     name="Synthesizer",
     model=GEMINI_MODEL,
     instruction="""You are a Meta-Aggregator and Final Reviewer.
-You will receive the original user request and the outputs from multiple specialized workers.
+You will receive the original user request and the outputs from
+multiple specialized workers.
 Your task is to synthesize these inputs into a final, cohesive,
 and high-quality response that directly addresses the user's original goal.
 
