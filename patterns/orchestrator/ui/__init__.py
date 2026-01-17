@@ -136,7 +136,8 @@ async def stream_orchestrator_generator(user_request: str) -> AsyncGenerator[str
     queue: asyncio.Queue[dict[str, Any] | None] = asyncio.Queue()
 
     # 1. Planning phase
-    await queue.put({"type": "status", "message": "Planning the orchestration..."})
+    data = {"type": "status", "message": "Planning the orchestration..."}
+    yield f"data: {json.dumps(data)}\n\n"
 
     # Run planning directly (it's sequential)
     plan_json = await _generate_plan(user_request)
@@ -148,7 +149,7 @@ async def stream_orchestrator_generator(user_request: str) -> AsyncGenerator[str
         yield f"data: {complete_msg}\n\n"
         return
 
-    await queue.put({"type": "plan", "plan": plan_json})
+    yield f"data: {json.dumps({'type': 'plan', 'plan': plan_json})}\n\n"
 
     # 2. Worker phase
     tasks_list = plan_json.get("tasks", [])
@@ -182,7 +183,8 @@ async def stream_orchestrator_generator(user_request: str) -> AsyncGenerator[str
     worker_outputs = await worker_task
 
     # 3. Synthesis phase
-    await queue.put({"type": "status", "message": "Synthesizing final response..."})
+    data = {"type": "status", "message": "Synthesizing final response..."}
+    yield f"data: {json.dumps(data)}\n\n"
 
     async for chunk in _synthesize_results(user_request, worker_outputs, tasks_list):
         yield chunk
