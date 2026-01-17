@@ -1,0 +1,98 @@
+/* static/css/orchestrator.css */
+
+.orchestrator-container {
+	background-color: #0f1117;
+	color: #e2e8f0;
+}
+
+.glass-card {
+	background: rgba(15, 23, 42, 0.4);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.animate-progress {
+	animation: orchestrator-progress 2s infinite linear;
+}
+
+@keyframes orchestrator-progress {
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(300%);
+	}
+}
+
+.loading-dots::after {
+	content: ".";
+	animation: orchestrator-dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes orchestrator-dots {
+	0%,
+	20% {
+		content: ".";
+	}
+	40% {
+		content: "..";
+	}
+	60% {
+		content: "...";
+	}
+	80%,
+	100% {
+		content: "";
+	}
+}
+
+/* Ensure SVGs don't explode if styles haven't loaded */
+svg {
+	max-width: 100%;
+	height: auto;
+}
+
+.worker-card {
+	transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.worker-card.active {
+	box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+	border-color: rgba(99, 102, 241, 0.4);
+}
+
+body {
+	background-color: #0f1117; /* bg-[#0f1117] */
+	color: #e2e8f0; /* text-slate-200 */
+	overflow-x: hidden; /* overflow-x-hidden */
+}
+
+svg {
+	display: inline-block;
+	vertical-align: middle;
+	flex-shrink: 0;
+}
+.main-container {
+	/* Optimized for iframe viewing */
+	padding-top: 2rem;
+	padding-bottom: 4rem;
+}
+
+.status-pulse {
+	animation: status-pulse-anim 2s infinite;
+}
+@keyframes status-pulse-anim {
+	0% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 0.5;
+		transform: scale(1.2);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}

@@ -47,6 +47,39 @@ class PatternContext:
         return dict(sorted(files.items()))
 
 
+def parse_json_from_text(text: str) -> dict[str, Any] | list[Any] | None:
+    """Robustly parse JSON from text, handling Markdown code blocks.
+
+    Args:
+        text: The string containing potential JSON.
+
+    Returns:
+        Parsed JSON object/list, or None if parsing fails.
+
+    """
+    if not text:
+        return None
+
+    # Strip Markdown code blocks
+    clean_text = text.strip()
+    if clean_text.startswith("```"):
+        try:
+            # Remove first line (```json or ```)
+            clean_text = clean_text.split("\n", 1)[1]
+            # Remove last line (```)
+            if clean_text.endswith("```"):
+                clean_text = clean_text.rsplit("\n", 1)[0]
+        except IndexError:
+            return None
+
+    clean_text = clean_text.strip()
+
+    try:
+        return json.loads(clean_text)
+    except json.JSONDecodeError:
+        return None
+
+
 async def run_agent_standard(
     agent: BaseAgent,
     user_request: str,
