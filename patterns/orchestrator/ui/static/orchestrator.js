@@ -101,7 +101,7 @@ class OrchestratorUI {
 
 			// Safe text content population
 			card.querySelector(".worker-type").textContent = task.worker_type;
-			card.querySelector(".worker-rationale").textContent = task.rationale;
+			card.querySelector(".worker-rationale").textContent = task.description;
 
 			this.planContainer.appendChild(clone);
 

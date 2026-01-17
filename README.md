@@ -109,10 +109,12 @@ You can deploy the live, dynamic version to Google [Cloud Run](https://cloud.goo
 
     ```bash
     export GOOGLE_CLOUD_PROJECT=your-project-id
-    export GOOGLE_CLOUD_LOCATION=us-central1
-    export GEMINI_MODEL=gemini-2.5-flash
+    export REGION=us-central1
+    export GOOGLE_CLOUD_LOCATION=global
+    export GEMINI_MODEL=gemini-3-flash-preview
     export EMBEDDING_MODEL=gemini-embedding-001
     export RAG_DB_PATH=/tmp/rag_demo.db
+    export FORWARDED_ALLOW_IPS="*"  # Use specific IP addresses for better security
     ```
 
 2. **Deploy:**
@@ -120,12 +122,12 @@ You can deploy the live, dynamic version to Google [Cloud Run](https://cloud.goo
     ```bash
     gcloud run deploy agent-patterns \
       --source . \
-      --region $GOOGLE_CLOUD_LOCATION \
+      --region $REGION \
       --allow-unauthenticated \
-      --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=true,GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION,GEMINI_MODEL=$GEMINI_MODEL,EMBEDDING_MODEL=$EMBEDDING_MODEL,RAG_DB_PATH=$RAG_DB_PATH
+      --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=true,GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION,GEMINI_MODEL=$GEMINI_MODEL,EMBEDDING_MODEL=$EMBEDDING_MODEL,RAG_DB_PATH=$RAG_DB_PATH,FORWARDED_ALLOW_IPS=$FORWARDED_ALLOW_IPS
     ```
 
-    > ⚠️ **Security Warning**: The `--allow-unauthenticated` flag makes your deployment public. Remove it for internal/production use.
+    > ⚠️ **Security Warning**: The `--allow-unauthenticated` flag makes your deployment public. For increased security, also consider restricting `FORWARDED_ALLOW_IPS` to the IP addresses of your trusted proxies.
 
 ---
 

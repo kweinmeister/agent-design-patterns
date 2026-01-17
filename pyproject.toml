@@ -12,6 +12,7 @@ filterwarnings = [
     "ignore::DeprecationWarning:google.genai.*",
     "ignore:\\[EXPERIMENTAL\\] ToolConfirmation:UserWarning",
     "ignore::pydantic.warnings.PydanticDeprecatedSince20",
+    "ignore:\\[EXPERIMENTAL\\] feature.*:UserWarning",
 ]
 
 [tool.ruff]

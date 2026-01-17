@@ -97,30 +97,13 @@ async def _execute_workers(
             )
         )
 
-    # Monitor tasks and signal when done
-    async def producer_manager() -> None:
-        try:
-            await asyncio.gather(*tasks)
-        finally:
-            await queue.put(None)
-
-    # Store reference
-    _manager_task = asyncio.create_task(producer_manager())  # noqa: RUF006
     try:
-        while True:
-            item = await queue.get()
-            if item is None:
-                break
-            queue.task_done()
-    except asyncio.CancelledError:
-        # Allow cancellation during shutdown
-        pass
-    except Exception:  # noqa: S110, BLE001
-        # Ignore other errors during shutdown
-        pass
-
-    # Wait for all to finish
-    return await asyncio.gather(*tasks)
+        # Wait for all workers to complete
+        results = await asyncio.gather(*tasks)
+        return list(results)
+    finally:
+        # Signal the stream generator that worker phase is done
+        await queue.put(None)
 
 
 async def _synthesize_results(
