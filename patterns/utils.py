@@ -43,24 +43,23 @@ class PatternContext:
         """Check if a Python file should be included in the code viewer."""
         if item.name.startswith("test_"):
             return False
-        return not (
-            item.name == "__init__.py"
-            and item.stat().st_size <= _INIT_FILE_SIZE_THRESHOLD
-        )
+        if item.name == "__init__.py":
+            return item.stat().st_size > _INIT_FILE_SIZE_THRESHOLD
+        return True
 
     def get_code_files(self) -> dict[str, str]:
         """Get code files for the pattern."""
         files = {}
-        for item in self.pattern_dir.glob("*.py"):
-            if self._should_include(item):
-                files[item.name] = item.read_text()
 
-        # Also scan the ui subdirectory
-        ui_dir = self.pattern_dir / "ui"
-        if ui_dir.is_dir():
-            for item in ui_dir.glob("*.py"):
+        def _scan_dir(directory: Path, prefix: str = "") -> None:
+            if not directory.is_dir():
+                return
+            for item in directory.glob("*.py"):
                 if self._should_include(item):
-                    files[f"ui/{item.name}"] = item.read_text()
+                    files[f"{prefix}{item.name}"] = item.read_text()
+
+        _scan_dir(self.pattern_dir)
+        _scan_dir(self.pattern_dir / "ui", "ui/")
 
         # Sort by filename
         return dict(sorted(files.items()))
