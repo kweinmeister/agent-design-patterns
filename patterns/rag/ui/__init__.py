@@ -23,13 +23,17 @@ class QueryRequest(BaseModel):
 
 
 async def run_rag_agent(
-    user_request: str, session_id: str | None = None
+    user_request: str,
+    session_id: str | None = None,
 ) -> dict[str, str]:
     """Run the RAG agent and capture the output."""
     response_text = ""
 
     async for event, _runner, _session_id in run_agent_standard(
-        rag_agent, user_request, "rag_app", session_id
+        rag_agent,
+        user_request,
+        "rag_app",
+        session_id,
     ):
         if event.content and event.content.parts:
             text = event.content.parts[0].text

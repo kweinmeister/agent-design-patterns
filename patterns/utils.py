@@ -31,7 +31,7 @@ class PatternContext:
             directory=[
                 self.base_path / "templates",
                 Path("templates").resolve(),
-            ]
+            ],
         )
         self.template_name = template_name
 
@@ -104,10 +104,14 @@ async def run_agent_standard(
 
     # Ensure the session exists in the global store
     if not await runner.session_service.get_session(
-        app_name=app_name, user_id="user", session_id=session_id
+        app_name=app_name,
+        user_id="user",
+        session_id=session_id,
     ):
         await runner.session_service.create_session(
-            app_name=app_name, user_id="user", session_id=session_id
+            app_name=app_name,
+            user_id="user",
+            session_id=session_id,
         )
 
     async for event in runner.run_async(
@@ -129,7 +133,10 @@ async def stream_agent_events(
 
     # Reuse run_agent_standard to ensure state persistence
     async for event, _, _ in run_agent_standard(
-        agent, user_request, app_name, session_id
+        agent,
+        user_request,
+        app_name,
+        session_id,
     ):
         if event.content and event.content.parts:
             text = event.content.parts[0].text
@@ -137,7 +144,7 @@ async def stream_agent_events(
                 final_text += text
                 # Standard step event
                 data = json.dumps(
-                    {"type": "step", "role": event.author, "content": text}
+                    {"type": "step", "role": event.author, "content": text},
                 )
                 yield f"data: {data}\n\n"
 

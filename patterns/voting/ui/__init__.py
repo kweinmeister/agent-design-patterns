@@ -26,13 +26,19 @@ router = APIRouter()
 
 
 async def run_single_agent_to_queue(
-    agent: BaseAgent, prompt: str, session_suffix: str, queue: asyncio.Queue, key: str
+    agent: BaseAgent,
+    prompt: str,
+    session_suffix: str,
+    queue: asyncio.Queue,
+    key: str,
 ) -> str:
     """Run an agent and put its tokens into a queue. Return full text."""
     full_text = ""
     # We use a unique app_name/session for each to ensure isolation
     async for event, _, _ in run_agent_standard(
-        agent, prompt, f"voting_{session_suffix}"
+        agent,
+        prompt,
+        f"voting_{session_suffix}",
     ):
         if event.content and event.content.parts:
             part_text = event.content.parts[0].text
@@ -51,18 +57,30 @@ async def stream_voting_generator(user_request: str) -> AsyncGenerator[str, None
     tasks = [
         asyncio.create_task(
             run_single_agent_to_queue(
-                humorous_agent, user_request, "humorous", queue, "humorous"
-            )
+                humorous_agent,
+                user_request,
+                "humorous",
+                queue,
+                "humorous",
+            ),
         ),
         asyncio.create_task(
             run_single_agent_to_queue(
-                professional_agent, user_request, "professional", queue, "professional"
-            )
+                professional_agent,
+                user_request,
+                "professional",
+                queue,
+                "professional",
+            ),
         ),
         asyncio.create_task(
             run_single_agent_to_queue(
-                urgent_agent, user_request, "urgent", queue, "urgent"
-            )
+                urgent_agent,
+                user_request,
+                "urgent",
+                queue,
+                "urgent",
+            ),
         ),
     ]
 
@@ -115,7 +133,7 @@ Decide which option is best for a general audience."""
             part_text = event.content.parts[0].text
             if part_text:
                 data = json.dumps(
-                    {"type": "step", "agent": "judge", "content": part_text}
+                    {"type": "step", "agent": "judge", "content": part_text},
                 )
                 yield f"data: {data}\n\n"
 
@@ -126,7 +144,8 @@ Decide which option is best for a general audience."""
 async def stream_voting(prompt: str) -> StreamingResponse:
     """Stream the voting agent's execution."""
     return StreamingResponse(
-        stream_voting_generator(prompt), media_type="text/event-stream"
+        stream_voting_generator(prompt),
+        media_type="text/event-stream",
     )
 
 

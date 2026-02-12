@@ -24,7 +24,7 @@ def mock_retrieval() -> Any:  # noqa: ANN401
         # Mock DB return
         mock_query_db.return_value = [
             "Mission ID: M-009\nLog: Received a distress signal from the GSS Bagel. "
-            "They are trapped in a cream cheese anomaly."
+            "They are trapped in a cream cheese anomaly.",
         ]
         yield mock_query_db
 
@@ -38,7 +38,10 @@ async def test_rag_agent_end_to_end(mock_retrieval: Any) -> None:  # noqa: ANN40
 
     events = []
     async for event, _, _ in run_agent_standard(
-        rag_agent, user_request, app_name, session_id
+        rag_agent,
+        user_request,
+        app_name,
+        session_id,
     ):
         events.append(event)
 

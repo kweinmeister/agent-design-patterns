@@ -38,7 +38,7 @@ def test_db_init(temp_db: str) -> None:
 
     # Check if table exists
     cursor.execute(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='documents'"
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='documents'",
     )
     assert cursor.fetchone() is not None
     conn.close()

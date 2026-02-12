@@ -53,7 +53,9 @@ async def test_e2e_scenarios(
 
     events = []
     async for event, _, _ in run_agent_standard(
-        incident_triage_pipeline, input_text, app_name
+        incident_triage_pipeline,
+        input_text,
+        app_name,
     ):
         events.append(event)
 

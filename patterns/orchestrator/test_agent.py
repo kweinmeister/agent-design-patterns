@@ -1,5 +1,6 @@
 """Unit tests for the Orchestrator Agent Pattern."""
 
+import asyncio
 import json
 from collections.abc import AsyncGenerator
 from typing import Any
@@ -135,3 +136,79 @@ async def test_stream_orchestrator_generator() -> None:
         plan_item = next(item for item in items if item["type"] == "plan")
         assert plan_item["plan"]["plan_title"] == "Tokyo Travel Guide"
         assert len(plan_item["plan"]["tasks"]) == len(mock_plan.tasks)
+
+
+@pytest.mark.asyncio
+async def test_stream_orchestrator_race_condition() -> None:
+    """Reproduces a race condition where worker_task is cancelled prematurely."""
+    user_request = "Any request"
+
+    # Mock plan
+    mock_plan = ExecutionPlan(
+        plan_title="Test Plan",
+        tasks=[SubTask(title="T1", description="D1", worker_type="W1")],
+    )
+
+    # 1. Mock orchestrator_agent to return plan
+    async def mock_run_agent_orchestrator(
+        _agent: BaseAgent,
+        _prompt: str,
+        _app_name: str,
+    ) -> AsyncGenerator[tuple[Any, Any, Any], None]:
+        event = MagicMock()
+        event.is_final_response.return_value = True
+        event.author = "Orchestrator"
+        part = MagicMock()
+        part.text = mock_plan.model_dump_json()
+        event.content.parts = [part]
+        yield event, None, None
+
+    # 2. Mock synthesizer_agent to return something
+    async def mock_run_agent_synthesizer(
+        _agent: BaseAgent,
+        _prompt: str,
+        _app_name: str,
+    ) -> AsyncGenerator[tuple[Any, Any, Any], None]:
+        event = MagicMock()
+        event.is_final_response.return_value = False
+        event.content.parts = [MagicMock(text="Synthesis content")]
+        yield event, None, None
+
+    # 3. Mock _execute_workers to simulate the race condition
+    # It puts None in the queue then sleeps, simulating the case where
+    # the task is still "running" but the signal has been sent.
+    async def mock_execute_workers_race(
+        _tasks_list: list[SubTask],
+        _user_request: str,
+        queue: asyncio.Queue,
+    ) -> list[str]:
+        await queue.put({"type": "worker_start", "task_id": 0})
+        await queue.put(None)
+        await asyncio.sleep(0.1)  # Simulate delay after signaling completion
+        return ["Worker Output"]
+
+    with (
+        patch(
+            "patterns.orchestrator.ui.run_agent_standard",
+            side_effect=lambda agent, *args: (
+                mock_run_agent_orchestrator(agent, *args)
+                if agent == orchestrator_agent
+                else mock_run_agent_synthesizer(agent, *args)
+            ),
+        ),
+        patch(
+            "patterns.orchestrator.ui._execute_workers",
+            side_effect=mock_execute_workers_race,
+        ),
+    ):
+        items = []
+        # This should proceed to synthesis despite the delay in _execute_workers
+        async for chunk in stream_orchestrator_generator(user_request):
+            if chunk.startswith("data: "):
+                data = json.loads(chunk[6:])
+                items.append(data)
+
+        types = [item["type"] for item in items]
+        # In the failing case, 'synthesis_step' might not be reached or it might crash
+        assert "synthesis_step" in types
+        assert "complete" in types

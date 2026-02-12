@@ -50,7 +50,8 @@ def build() -> None:
         static_patterns.append(p_copy)
 
     (OUTPUT_DIR / "patterns.json").write_text(
-        json.dumps(static_patterns, indent=2) + "\n", encoding="utf-8"
+        json.dumps(static_patterns, indent=2) + "\n",
+        encoding="utf-8",
     )
 
     logger.info("Processing %d patterns...", len(patterns_data))
@@ -115,7 +116,8 @@ def process_patterns(patterns_data: list[dict], output_dir: Path) -> None:
         # This creates a file at docs/api/code/<pattern_id>
         # main.js fetches 'api/code/<id>' and parses it as JSON.
         (code_api_root / p_id).write_text(
-            json.dumps(code_files_bundle), encoding="utf-8"
+            json.dumps(code_files_bundle),
+            encoding="utf-8",
         )
 
     logger.info("Build complete!")

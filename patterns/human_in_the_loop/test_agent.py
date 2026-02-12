@@ -16,7 +16,9 @@ async def test_hitl_agent_approval_flow() -> None:
     app_name = "hitl_test_app"
     runner = InMemoryRunner(agent=hitl_agent, app_name=app_name)
     await runner.session_service.create_session(
-        app_name=app_name, user_id="test_user", session_id="session_1"
+        app_name=app_name,
+        user_id="test_user",
+        session_id="session_1",
     )
 
     history: list[str] = []
@@ -27,9 +29,9 @@ async def test_hitl_agent_approval_flow() -> None:
             parts=[
                 Part(
                     text="Draft a press release for Project X, "
-                    "a revolutionary coffee-flavored toothpaste. It launches tomorrow."
-                )
-            ]
+                    "a revolutionary coffee-flavored toothpaste. It launches tomorrow.",
+                ),
+            ],
         ),
     ):
         if event.content and event.content.parts:
@@ -50,7 +52,7 @@ async def test_hitl_agent_approval_flow() -> None:
                     part.function_call
                     for part in event.content.parts
                     if part.function_call
-                ]
+                ],
             )
 
     # Agent should attempt to call the tool
@@ -71,7 +73,7 @@ async def test_hitl_agent_approval_flow() -> None:
             name="publish_press_release",
             response=tool_output,
             id=getattr(tool_call, "id", None),
-        )
+        ),
     )
 
     async for event in runner.run_async(
@@ -81,7 +83,7 @@ async def test_hitl_agent_approval_flow() -> None:
     ):
         if event.content and event.content.parts:
             final_history.extend(
-                [part.text for part in event.content.parts if part.text]
+                [part.text for part in event.content.parts if part.text],
             )
 
     # Assert that the agent confirmed the successful publication.

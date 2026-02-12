@@ -70,7 +70,7 @@ def init_db(db_path: str) -> None:
                 content TEXT UNIQUE,
                 embedding FLOAT[{embeddings.EMBEDDING_DIMENSIONS}]
             )
-            """
+            """,
         )
         conn.commit()
 
@@ -92,7 +92,9 @@ def add_documents(db_path: str, documents: list[tuple[str, list[float]]]) -> Non
 
 
 def query_documents(
-    db_path: str, query_embedding: list[float], limit: int = 5
+    db_path: str,
+    query_embedding: list[float],
+    limit: int = 5,
 ) -> list[str]:
     """Query the database for similar documents using cosine distance."""
     if not Path(db_path).exists():
