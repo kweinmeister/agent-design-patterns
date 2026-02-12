@@ -178,7 +178,7 @@ async def test_stream_orchestrator_race_condition() -> None:
     # It puts None in the queue then sleeps, simulating the case where
     # the task is still "running" but the signal has been sent.
     async def mock_execute_workers_race(
-        _tasks_list: list[SubTask],
+        _tasks_list: list[dict[str, Any]],
         _user_request: str,
         queue: asyncio.Queue,
     ) -> list[str]:
