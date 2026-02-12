@@ -76,12 +76,20 @@ document.addEventListener("DOMContentLoaded", () => {
 				},
 				() => {
 					// onComplete
-					if (submitBtn) submitBtn.disabled = false;
+					if (submitBtn) {
+						submitBtn.disabled = false;
+						submitBtn.classList.remove("loading");
+						submitBtn.textContent = "Run Agent";
+					}
 				},
 				(err) => {
 					// onError
 					console.error("Stream error:", err);
-					if (submitBtn) submitBtn.disabled = false;
+					if (submitBtn) {
+						submitBtn.disabled = false;
+						submitBtn.classList.remove("loading");
+						submitBtn.textContent = "Run Agent";
+					}
 				},
 			);
 			streamHandler.start();
