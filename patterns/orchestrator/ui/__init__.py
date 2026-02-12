@@ -49,7 +49,7 @@ async def run_worker_to_queue(
             if part_text:
                 full_text += part_text
                 await queue.put(
-                    {"type": "worker_step", "task_id": task_id, "content": part_text}
+                    {"type": "worker_step", "task_id": task_id, "content": part_text},
                 )
 
     await queue.put({"type": "worker_complete", "task_id": task_id, "final": full_text})
@@ -60,7 +60,9 @@ async def _generate_plan(user_request: str) -> dict[str, Any] | None:
     """Generate the execution plan."""
     plan_json = None
     async for event, _, _ in run_agent_standard(
-        orchestrator_agent, user_request, "orchestrator_plan"
+        orchestrator_agent,
+        user_request,
+        "orchestrator_plan",
     ):
         if (
             event.is_final_response()
@@ -79,7 +81,9 @@ async def _generate_plan(user_request: str) -> dict[str, Any] | None:
 
 
 async def _execute_workers(
-    tasks_list: list[dict[str, Any]], user_request: str, queue: asyncio.Queue
+    tasks_list: list[dict[str, Any]],
+    user_request: str,
+    queue: asyncio.Queue,
 ) -> list[str]:
     """Execute workers in parallel."""
     tasks = []
@@ -94,8 +98,8 @@ async def _execute_workers(
                     user_request,
                     queue,
                     i,
-                )
-            )
+                ),
+            ),
         )
 
     try:
@@ -122,7 +126,9 @@ async def _synthesize_results(
         synth_prompt += f"--- Worker: {title} ---\n{output}\n\n"
 
     async for event, _, _ in run_agent_standard(
-        synthesizer_agent, synth_prompt, "synthesis"
+        synthesizer_agent,
+        synth_prompt,
+        "synthesis",
     ):
         if event.content and event.content.parts:
             part_text = event.content.parts[0].text
@@ -162,19 +168,20 @@ async def stream_orchestrator_generator(user_request: str) -> AsyncGenerator[str
     # We need to run it in background to consume queue concurrently.
 
     worker_task = asyncio.create_task(_execute_workers(tasks_list, user_request, queue))
+    workers_completed = False
 
     # Consume queue
     try:
         while True:
             item = await queue.get()
             if item is None:
+                workers_completed = True
                 break
             yield f"data: {json.dumps(item)}\n\n"
             queue.task_done()
     finally:
-        # If the client disconnects, we need to cancel the background worker task
-        # to prevent orphaned tasks from consuming resources.
-        if not worker_task.done():
+        # Only cancel if we didn't finish normally (e.g. client disconnect)
+        if not workers_completed and not worker_task.done():
             worker_task.cancel()
             with suppress(asyncio.CancelledError):
                 await worker_task
@@ -196,7 +203,8 @@ async def stream_orchestrator_generator(user_request: str) -> AsyncGenerator[str
 async def stream_orchestrator(prompt: str) -> StreamingResponse:
     """Stream the orchestrator's execution."""
     return StreamingResponse(
-        stream_orchestrator_generator(prompt), media_type="text/event-stream"
+        stream_orchestrator_generator(prompt),
+        media_type="text/event-stream",
     )
 
 

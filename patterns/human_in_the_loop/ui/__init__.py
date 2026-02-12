@@ -33,7 +33,10 @@ async def run_hitl_agent(request: HitlRequest) -> dict[str, Any]:
     input_content = request.prompt
 
     async for event, _, _ in run_agent_standard(
-        hitl_agent, input_content, app_name, request.session_id
+        hitl_agent,
+        input_content,
+        app_name,
+        request.session_id,
     ):
         if event.content and event.content.parts:
             # Collect text history

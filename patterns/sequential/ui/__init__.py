@@ -42,7 +42,9 @@ def register(app: FastAPI) -> PatternMetadata:
 
         """
         history = await run_and_collect_history(
-            incident_triage_pipeline, request.input_text, "sequential_app"
+            incident_triage_pipeline,
+            request.input_text,
+            "sequential_app",
         )
         # extracting the final message content
         if history:

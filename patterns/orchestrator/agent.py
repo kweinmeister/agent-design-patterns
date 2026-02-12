@@ -17,7 +17,7 @@ class SubTask(BaseModel):
         description=(
             "The type of persona needed (e.g., 'Researcher', 'Creative Writer', "
             "'Fact Checker')"
-        )
+        ),
     )
 
 
@@ -26,7 +26,7 @@ class ExecutionPlan(BaseModel):
 
     plan_title: str = Field(description="Overarching goal of the plan")
     tasks: list[SubTask] = Field(
-        description="List of tasks to be performed in parallel"
+        description="List of tasks to be performed in parallel",
     )
 
 

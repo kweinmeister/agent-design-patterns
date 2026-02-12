@@ -79,7 +79,9 @@ async def test_reflection_streaming_endpoint() -> None:
     events = [
         event
         async for event in stream_agent_events(
-            root_agent, user_request, "reflection_app"
+            root_agent,
+            user_request,
+            "reflection_app",
         )
     ]
 

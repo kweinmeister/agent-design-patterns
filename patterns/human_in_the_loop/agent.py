@@ -54,6 +54,6 @@ Once the user is satisfied with the draft, you should publish it using the
 `publish_press_release` tool.
 """,
     tools=[
-        FunctionTool(publish_press_release, require_confirmation=confirmation_criteria)
+        FunctionTool(publish_press_release, require_confirmation=confirmation_criteria),
     ],
 )

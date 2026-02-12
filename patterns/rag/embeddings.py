@@ -49,7 +49,8 @@ def embed_texts(texts: list[str]) -> list[list[float]]:
         model=EMBEDDING_MODEL,
         contents=texts,
         config=types.EmbedContentConfig(
-            task_type="RETRIEVAL_DOCUMENT", title="Embedding of text chunks"
+            task_type="RETRIEVAL_DOCUMENT",
+            title="Embedding of text chunks",
         ),
     )
     if not result.embeddings:
