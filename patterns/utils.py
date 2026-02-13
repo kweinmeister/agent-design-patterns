@@ -20,6 +20,10 @@ from pydantic import BaseModel, ConfigDict
 _GLOBAL_SESSION_SERVICE = InMemorySessionService()
 
 
+# Threshold for including __init__.py files in code viewer
+_INIT_FILE_SIZE_THRESHOLD = 100
+
+
 class PatternContext:
     """Helper to manage file paths and templating."""
 
@@ -35,13 +39,27 @@ class PatternContext:
         )
         self.template_name = template_name
 
+    def _should_include(self, item: Path) -> bool:
+        """Check if a Python file should be included in the code viewer."""
+        if item.name.startswith("test_"):
+            return False
+        if item.name == "__init__.py":
+            return item.stat().st_size > _INIT_FILE_SIZE_THRESHOLD
+        return True
+
     def get_code_files(self) -> dict[str, str]:
         """Get code files for the pattern."""
         files = {}
-        for item in self.pattern_dir.glob("*.py"):
-            if item.name == "__init__.py" or item.name.startswith("test_"):
-                continue
-            files[item.name] = item.read_text()
+
+        def _scan_dir(directory: Path, prefix: str = "") -> None:
+            if not directory.is_dir():
+                return
+            for item in directory.glob("*.py"):
+                if self._should_include(item):
+                    files[f"{prefix}{item.name}"] = item.read_text()
+
+        _scan_dir(self.pattern_dir)
+        _scan_dir(self.pattern_dir / "ui", "ui/")
 
         # Sort by filename
         return dict(sorted(files.items()))
