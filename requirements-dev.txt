@@ -3,4 +3,4 @@ pyrefly==1.0.0
 pytest==9.0.3
 pytest-asyncio==1.4.0
 pytest-env==1.6.0
-ruff==0.15.15
+ruff==0.15.18
