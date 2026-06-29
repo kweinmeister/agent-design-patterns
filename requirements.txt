@@ -1,9 +1,9 @@
-fastapi==0.136.1
+fastapi==0.138.0
 google-adk==2.2.0
-google-genai==2.8.0
+google-genai==2.9.0
 gunicorn==26.0.0
 httpx==0.28.1
 jinja2==3.1.6
 python-dotenv==1.2.2
 sqlite-vec==0.1.9
-uvicorn==0.48.0
+uvicorn==0.49.0
