@@ -1,4 +1,4 @@
-fastapi==0.139.0
+fastapi==0.139.2
 google-adk==2.5.0
 google-genai==2.11.0
 gunicorn==26.0.0
