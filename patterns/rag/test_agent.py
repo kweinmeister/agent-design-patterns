@@ -23,8 +23,11 @@ def mock_retrieval() -> Any:  # noqa: ANN401
         mock_embed.return_value = [0.1] * 768
         # Mock DB return
         mock_query_db.return_value = [
-            "Mission ID: M-009\nLog: Received a distress signal from the GSS Bagel. "
-            "They are trapped in a cream cheese anomaly.",
+            (
+                "Mission ID: M-009\nLog: Received a distress "
+                "signal from the GSS Bagel. "
+                "They are trapped in a cream cheese anomaly."
+            ),
         ]
         yield mock_query_db
 
