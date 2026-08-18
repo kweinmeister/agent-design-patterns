@@ -111,7 +111,7 @@ You can deploy the live, dynamic version to Google [Cloud Run](https://cloud.goo
     export GOOGLE_CLOUD_PROJECT=your-project-id
     export REGION=us-central1
     export GOOGLE_CLOUD_LOCATION=global
-    export GEMINI_MODEL=gemini-3-flash-preview
+    export GEMINI_MODEL=gemini-3.7-flash
     export EMBEDDING_MODEL=gemini-embedding-001
     export RAG_DB_PATH=/tmp/rag_demo.db
     export FORWARDED_ALLOW_IPS="*"  # Use specific IP addresses for better security
