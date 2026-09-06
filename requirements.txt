@@ -1,5 +1,5 @@
 fastapi==0.141.1
-google-adk==2.7.1
+google-adk==2.8.0
 google-genai==2.21.0
 gunicorn==26.2.0
 httpx==0.28.1
