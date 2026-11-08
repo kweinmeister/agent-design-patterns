@@ -17,6 +17,7 @@ COMPLETION_PHRASE = "No major issues found."
 def exit_loop(tool_context: ToolContext) -> dict[str, Any]:
     """Call this when the critique indicates no further changes are needed."""
     tool_context.actions.escalate = True
+    tool_context.actions.skip_summarization = True
     return {}
 
 
