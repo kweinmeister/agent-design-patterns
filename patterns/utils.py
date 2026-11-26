@@ -286,9 +286,9 @@ def configure_pattern(
             result = await config.handler(prompt)
 
         return ctx.templates.TemplateResponse(
+            request,
             ctx.template_name,
             {
-                "request": request,
                 "prompt": prompt,
                 "result": result,
                 "code_files": ctx.get_code_files(),

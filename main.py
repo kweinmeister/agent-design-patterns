@@ -86,7 +86,7 @@ def get_patterns() -> list[PatternMetadata]:
 @app.get("/")
 def read_root(request: Request) -> Response:
     """Serve the static index.html."""
-    return templates.TemplateResponse("index.html.j2", {"request": request})
+    return templates.TemplateResponse(request, "index.html.j2")
 
 
 def main() -> None:
